@@ -1,0 +1,105 @@
+Game de Check
+
+Start   End     Tile count  Description
+$0068e  $00944  45          Font (Roman)
+
+$08000  $085d5  78          Street?
+$085d6  $0861f  6           ?
+$08620  $08a4f  64          Car?
+$08a50  $08f1f  64          Car?
+$08f20  $094ea  64          Car?
+$094eb  $098d6  64          Car?
+$098d7  $09d7a  64          Car?
+$09d7b  $0a1fa  64          Car?
+$0a1fa  $0a63c  44          ?
+$0a63d  $0bdde  249         Characters, some text
+
+$0c000  $0c369  31          Background?
+$0c36a  $0d0b0  150         Sprites?
+$0d0b1  $0dd95  164         Background
+$0dd96  $0ed70  188         Sprites
+
+$0ee7a  $0f0f8  99          Tokio Marine logo (with text)
+
+$0f184  $0f8e3  111         Logo text
+
+$10550  $1070e  32          Text: numbers
+$1070f  $108ec  36          Text
+$108ed  $10966  8           Text
+
+$18000  $189ac  122         Logo text
+
+$18b6d  $19650  140         Logo text
+
+
+
+$1b1af  $1b418  32          ?
+$1b419  $1b564  12          ?
+$1b565  $1b879  49          ?
+$1b87a  $1be24  76          Driving HUD sprites
+
+$20000  $205d7  71          ? Background
+
+$20adc  $217f2  122         ? Background
+
+$21973  $2231b  103         ?
+$2231c  $22c6c  91          ?
+
+$22e6d  $23167  53          ? Numbers
+$23168  $23a4f  82          ? Sprites
+
+$23CEE  $23fda  41          Police 
+
+$268C0  $27332  142         ?
+
+$2BF04  $2bf94  16          Text
+
+$2FB18  $2fbd1  10          1, 2, 3
+$2FBD2  $2fc24  4           Hand
+$2FC25  $2ff03  49          Control pad
+$2ff03  $2ff87  4           ?
+
+$30000  $30eaf  198         Street background?
+
+$32ED0  $32f3c  9           ?
+$32F81  $3333d  67          Text
+$3333e  $33499  23          Text
+$3349A  $336b3  38          Text
+$336B4  $339e7  57          Text
+
+$33F03  $33f86  4           ? Same as earlier
+
+$34000  $3418e  23          ?
+$3418f  $346ed  74          ?
+
+$34A88  $34d64  28          ?
+$34D65  $350f3  37          ?
+$350F4  $353d2  30          ?
+$353D3  $35737  38          ?
+$35738  $3599e  26          ?
+$3599F  $35c13  27          ?
+$35C14  $35ec7  29          ?
+$35EC8  $36216  38          ?
+$36217  $36538  35          ?
+$36539  $368bf  40          ?
+$368C0  $36bce  36          ?
+$36BCF  $36fb8  50          ?
+$36FB9  $372e6  41          ?
+
+$37F03  $37f86  4           ? Mirror of earlier bank?
+
+$3999F  $39c13  27          Mirror of earlier bank
+$39C14  $39ec7  29          
+$39EC8  $3a216  38          
+$3a217  $3a538  35          
+$3a539  $3a8bf  40          
+$3a8C0  $3abce  36          
+$3aBCF  $3afb8  50          
+$3aFB9  $3b2e6  41          
+
+$3bF03  $3bf86  4           Mirror of earlier bank
+
+$3c000  $3c00f  16B         Palette for following
+$3C010  $3c92c  135         Background: roads with speed limits
+
+$3FF03  $3ff86  4           Mirror of earlier bank
