@@ -11724,8 +11724,11 @@ _LABEL_578D_:
 
 ; Data from 5864 to 5877 (20 bytes)
 _DATA_5864_:
-.db $50 $78 $14 $9A $08 $79 $1D $9A $48 $7A $26 $9A $88 $7B $2E $9A
-.db $C8 $7C $3A $9A
+.dw $7850 $9A14 
+.dw $7908 $9A1D 
+.dw $7A48 $9A26 
+.dw $7B88 $9A2E
+.dw $7CC8 $9A3A
 
 ; Data from 5878 to 58A7 (48 bytes)
 _DATA_5878_:
@@ -11883,7 +11886,7 @@ _LABEL_595B_:
 	jp c, _LABEL_59E6_
 	rrca
 	ld hl, _DATA_599B_ - 2
-	call _LABEL_6191_
+	call _LABEL_6191_ReadAthPointerFromHL
 	jp (hl)
 
 ; Jump Table from 599B to 59B4 (13 entries, indexed by _RAM_C120_)
@@ -11906,9 +11909,9 @@ _LABEL_59B5_:
 	ld (_RAM_C800_CharacterDrawingVRAMAddress), hl
 	ld a, (_RAM_C120_)
 	ld hl, _DATA_1DFAB_ - 2
-	call _LABEL_6191_
+	call _LABEL_6191_ReadAthPointerFromHL
 	ld b, $02
-	call _LABEL_5AF5_
+	call _LABEL_5AF5_DrawString
 	jp _LABEL_18_
 
 ; 5th entry of Jump Table from 599B (indexed by _RAM_C120_)
@@ -11929,11 +11932,11 @@ _LABEL_59E6_:
 	ld (_RAM_C800_CharacterDrawingVRAMAddress), hl
 	ld a, (_RAM_C120_)
 	and $7F
-	ld hl, _DATA_1DFD1_
-	call _LABEL_6191_
+	ld hl, _DATA_1DFD3_ - 2
+	call _LABEL_6191_ReadAthPointerFromHL
 	ld b, (hl)
 	inc hl
-	call _LABEL_5AF5_
+	call _LABEL_5AF5_DrawString
 	call _LABEL_5AE4_
 	ld a, $8B
 	ld (_RAM_FFFF_), a
@@ -11945,7 +11948,7 @@ _LABEL_59E6_:
 	ld a, (_RAM_C120_)
 	sub $81
 	ld hl, _DATA_2FAC6_
-	call _LABEL_6191_
+	call _LABEL_6191_ReadAthPointerFromHL
 	ld b, (hl)
 -:
 	push bc
@@ -12020,7 +12023,7 @@ _LABEL_5AB3_:
 	ld (_RAM_FFFF_), a
 	ld a, (_RAM_C120_)
 	ld hl, _DATA_1DF65_ - 2
-	call _LABEL_6191_
+	call _LABEL_6191_ReadAthPointerFromHL
 	ld e, (hl)
 	inc hl
 	ld d, (hl)
@@ -12053,31 +12056,33 @@ _LABEL_5AED_:
 	ei
 	ret
 
-_LABEL_5AF5_:
+_LABEL_5AF5_DrawString:
+  ; b = line count
+  ; hl points to (tilemap address), (script address)
 	ld de, _RAM_C900_Buffer
 -:
 	push bc
-	ld c, (hl)
-	inc hl
-	ld b, (hl)
-	ld (_RAM_C802_StartTilemapAddress), bc
-	inc hl
-	ld a, (hl)
-	inc hl
-	push hl
-	ld h, (hl)
-	ld l, a
-	call _LABEL_6204_DrawString
-	ld hl, _RAM_C805_DrawnTilemapBytes
-	ld (hl), $00
-	pop hl
-	inc hl
+    ld c, (hl)
+    inc hl
+    ld b, (hl)
+    ld (_RAM_C802_StartTilemapAddress), bc
+    inc hl
+    ld a, (hl)
+    inc hl
+    push hl
+      ld h, (hl)
+      ld l, a
+      call _LABEL_6204_DrawString
+      ld hl, _RAM_C805_DrawnTilemapBytes
+      ld (hl), $00
+    pop hl
+    inc hl
 	pop bc
 	djnz -
 	ret
 
 _LABEL_5B14_:
-	call _LABEL_6191_
+	call _LABEL_6191_ReadAthPointerFromHL
 	ld c, (hl)
 	inc hl
 	ld b, (hl)
@@ -12425,7 +12430,7 @@ _LABEL_5D62_:
 _LABEL_5D95_:
 	push af
 	ld hl, _DATA_5DC8_
-	call _LABEL_6191_
+	call _LABEL_6191_ReadAthPointerFromHL
 	ld (_RAM_C870_), hl
 	pop af
 	add a, a
@@ -12771,7 +12776,7 @@ _LABEL_60AA_:
 	ld (iy+26), $10
 	ld a, (iy+25)
 	ld hl, _DATA_6189_ - 2
-	call _LABEL_6191_
+	call _LABEL_6191_ReadAthPointerFromHL
 	ld a, h
 	ld e, l
 	ld d, $C0
@@ -12870,7 +12875,8 @@ _LABEL_617F_:
 _DATA_6189_:
 .db $08 $3A $07 $2F $06 $2E $05 $3B
 
-_LABEL_6191_:
+_LABEL_6191_ReadAthPointerFromHL:
+  ; returns hl = word at (hl + 2a)
 	add a, a
 	ld c, a
 	ld b, $00
@@ -13601,7 +13607,7 @@ _LABEL_673E_:
 -:
 	ld a, (iy+22)
 	ld hl, _DATA_1D67D_
-	call _LABEL_6191_
+	call _LABEL_6191_ReadAthPointerFromHL
 	ld (_RAM_C826_), hl
 	ld a, (hl)
 	ld (_RAM_C828_), a
@@ -13823,7 +13829,7 @@ _LABEL_693C_:
 	set 7, (iy+0)
 	ld a, (iy+22)
 	ld hl, _DATA_1D6BF_
-	call _LABEL_6191_
+	call _LABEL_6191_ReadAthPointerFromHL
 	ld (_RAM_C823_), hl
 	ld a, (hl)
 	ld (_RAM_C825_), a
@@ -13949,7 +13955,7 @@ _LABEL_6A2D_:
 	set 7, (iy+0)
 	ld a, (iy+22)
 	ld hl, _DATA_1D6A9_
-	call _LABEL_6191_
+	call _LABEL_6191_ReadAthPointerFromHL
 	ld (_RAM_C829_), hl
 	ld a, (hl)
 	ld (_RAM_C82B_), a
@@ -14060,7 +14066,7 @@ _LABEL_6B15_:
 	set 7, (iy+0)
 	ld a, (iy+22)
 	ld hl, _DATA_1D6FB_
-	call _LABEL_6191_
+	call _LABEL_6191_ReadAthPointerFromHL
 	ld (_RAM_C82C_), hl
 	ld a, (hl)
 	ld (_RAM_C82E_), a
@@ -14262,7 +14268,7 @@ _LABEL_6CBE_:
 	call _LABEL_673E_
 	ld a, (iy+22)
 	ld hl, _DATA_6D0B_
-	call _LABEL_6191_
+	call _LABEL_6191_ReadAthPointerFromHL
 	ex de, hl
 	call _LABEL_CC4_
 	ld (iy+21), $FF
@@ -14358,7 +14364,7 @@ _LABEL_6DA2_:
 	call _LABEL_673E_
 	ld a, (iy+22)
 	ld hl, _DATA_6DF3_
-	call _LABEL_6191_
+	call _LABEL_6191_ReadAthPointerFromHL
 	ld (iy+4), l
 	ld (iy+5), h
 	ld (iy+21), $FF
@@ -14409,7 +14415,7 @@ _LABEL_6E4D_:
 	ret z
 	ld a, (_RAM_C0D0_)
 	ld hl, _DATA_6EB5_
-	call _LABEL_6191_
+	call _LABEL_6191_ReadAthPointerFromHL
 	dec hl
 	ld a, (iy+22)
 	ld c, a
@@ -22455,64 +22461,48 @@ _DATA_1DFCB_:
 ; Pointer Table from 1DFCD to 1DFD0 (2 entries, indexed by unknown)
 .dw _DATA_1D3B5_ $7904
 
-; Pointer Table from 1DFD1 to 1DFDC (6 entries, indexed by _RAM_C120_)
-_DATA_1DFD1_:
-.dw _DATA_1D60F_ _DATA_1DFDD_ _DATA_1DFEE_ _DATA_1DFFB_ _DATA_1E008_ _DATA_1E019_
+.dw _DATA_1D60F_ 
+
+_DATA_1DFD3_:
+.dw _DATA_1DFDD_ _DATA_1DFEE_ _DATA_1DFFB_ _DATA_1E008_ _DATA_1E019_
 
 ; 2nd entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_)
-; Data from 1DFDD to 1DFDF (3 bytes)
 _DATA_1DFDD_:
-.db $04 $D6 $79
-
-; Pointer Table from 1DFE0 to 1DFE3 (2 entries, indexed by unknown)
-.dw _DATA_1D3D8_ _DATA_7A96_
-
-; Pointer Table from 1DFE4 to 1DFED (5 entries, indexed by unknown)
-.dw _DATA_1D3EA_ _DATA_7B56_ _DATA_1D3E1_ _DATA_7C46_ _DATA_1D3BF_
+.db $04 ; Line count
+.dw $79D6, _DATA_1D3D8_ ; せんたくボタン。[EOS]
+.dw $7A96, _DATA_1D3EA_ ; つかわない。[EOS]
+.dw $7B56, _DATA_1D3E1_ ; けっていボタン。[EOS]
+.dw $7C46, _DATA_1D3BF_ ; そうさほうほうがわかったら[LF]　をおしてください。[EOS]
 
 ; 3rd entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_)
-; Data from 1DFEE to 1DFF0 (3 bytes)
 _DATA_1DFEE_:
-.db $03 $16 $7A
-
-; Pointer Table from 1DFF1 to 1DFF4 (2 entries, indexed by unknown)
-.dw _DATA_1D3EA_ _DATA_7B16_
-
-; Pointer Table from 1DFF5 to 1DFFA (3 entries, indexed by unknown)
-.dw _DATA_1D3F1_ _DATA_7C46_ _DATA_1D3BF_
+.db $03 
+.dw $7A16, _DATA_1D3EA_
+.dw $7B16, _DATA_1D3F1_ ; あみをふりおろす。[EOS]
+.dw $7C46, _DATA_1D3BF_
 
 ; 4th entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_)
-; Data from 1DFFB to 1DFFD (3 bytes)
 _DATA_1DFFB_:
-.db $03 $D6 $79
-
-; Pointer Table from 1DFFE to 1E001 (2 entries, indexed by unknown)
-.dw _DATA_1D3FB_ _DATA_7AD6_
-
-; Pointer Table from 1E002 to 1E007 (3 entries, indexed by unknown)
-.dw _DATA_1D3EA_ _DATA_7C46_ _DATA_1D3BF_
+.db $03
+.dw $79D6, _DATA_1D3FB_
+.dw $7AD6, _DATA_1D3EA_
+.dw $7C46, _DATA_1D3BF_
 
 ; 5th entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_)
-; Data from 1E008 to 1E00A (3 bytes)
 _DATA_1E008_:
-.db $04 $CA $79
-
-; Pointer Table from 1E00B to 1E00E (2 entries, indexed by unknown)
-.dw _DATA_1D404_ _DATA_7A8A_
-
-; Pointer Table from 1E00F to 1E018 (5 entries, indexed by unknown)
-.dw _DATA_1D404_ _DATA_7B4A_ _DATA_1D404_ _DATA_7C46_ _DATA_1D3BF_
+.db $04 
+.dw $79ca, _DATA_1D404_
+.dw $7A8A, _DATA_1D404_
+.dw $7B4A, _DATA_1D404_
+.dw $7C46, _DATA_1D3BF_
 
 ; 6th entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_)
-; Data from 1E019 to 1E01B (3 bytes)
 _DATA_1E019_:
-.db $04 $D6 $79
-
-; Pointer Table from 1E01C to 1E01F (2 entries, indexed by unknown)
-.dw _DATA_1D3FB_ _DATA_7A96_
-
-; Pointer Table from 1E020 to 1E029 (5 entries, indexed by unknown)
-.dw _DATA_1D412_ _DATA_7B56_ _DATA_1D418_ _DATA_7C46_ _DATA_1D3BF_
+.db $04 
+.dw $79D6, _DATA_1D3FB_
+.dw $7A96, _DATA_1D412_
+.dw $7B56, _DATA_1D418_
+.dw $7C46, _DATA_1D3BF_
 
 ; Pointer Table from 1E02A to 1E03B (9 entries, indexed by _RAM_C120_)
 _DATA_1E02A_:
