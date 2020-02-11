@@ -6065,7 +6065,7 @@ _LABEL_2C77_:
 	jp _LABEL_4EE_
 
 _script_2ca4:
-; えらんでください。[LF][LF][CRLF]
+; えらんでください。[LF][LF][LF+]
 ; 　　　　じどうしゃ[LF][LF][LF]
 ; 　　　　オートバイ[EOS]
 .db $03 $3F $46 $21 $07 $1E $0F $01 $48 $FF $FF $FD $99 $99 $99 $99
@@ -12941,7 +12941,7 @@ _LABEL_6204_DrawString:
 ; hl = script data
 ; _RAM_C800_CharacterDrawingVRAMAddress = where to draw tiles in VRAM
 ; _RAM_C804_StartTileIndex = tile index that maps to
-; _RAM_C104_ScriptRendererTilemapHighByte = ?
+; _RAM_C104_ScriptRendererTilemapHighByte = high byte for tilemap entries
 ; _RAM_C802_StartTilemapAddress = tilemap address for writing tile data
 
   ; Record the first tile index, as it cannot be a repeat
