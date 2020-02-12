@@ -106,6 +106,15 @@ def dump(rom):
   lines = get_lines(rom)
   for line in lines:
     print(line)
+    
+def to_db(line):
+  if line.endswith('[EOS]'):
+    line = line[:-5]
+  line = f'.db "{line}", $fe'
+  line = line.replace('[LF]', '", $ff, "')
+  line = line.replace('[LF+]', '", $fd, "')
+  line = line.replace('"", ', '')
+  return line
         
 def generate(rom, translation):
   lines = get_lines(rom)
@@ -127,8 +136,7 @@ def generate(rom, translation):
   # Line sections
   for line in lines:
     print(f'.section "Script{line.offset:x}" free')
-    # TODO: replace EOS etc
-    print(f'Script{line.offset:x}: .db "{script[line.offset]}"')
+    print(f'Script{line.offset:x}: {to_db(script[line.offset])}')
     print('.ends')
     
   # Source pointers

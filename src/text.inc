@@ -55,172 +55,172 @@
 .unbackground $1dea2 $1dee3
 .unbackground $1dee4 $1df1c
 .section "Script2ca4" free
-Script2ca4: .db "Hello world!"
+Script2ca4: .db "Hello world!", $ff, $ff, $fd, "!", $fe
 .ends
 .section "Script2d50" free
-Script2d50: .db "Hello world!"
+Script2d50: .db "Hello world!", $fe
 .ends
 .section "Script5fdf" free
-Script5fdf: .db "Hello world!"
+Script5fdf: .db "Hello world!", $fe
 .ends
 .section "Script1d398" free
-Script1d398: .db "Hello world!"
+Script1d398: .db "Hello world!", $fe
 .ends
 .section "Script1d3a1" free
-Script1d3a1: .db "Hello world!"
+Script1d3a1: .db "Hello world!", $fe
 .ends
 .section "Script1d3a9" free
-Script1d3a9: .db "Hello world!"
+Script1d3a9: .db "Hello world!", $fe
 .ends
 .section "Script1d3b5" free
-Script1d3b5: .db "Hello world!"
+Script1d3b5: .db "Hello world!", $fe
 .ends
 .section "Script1d3bf" free
-Script1d3bf: .db "Hello world!"
+Script1d3bf: .db "Hello world!", $fe
 .ends
 .section "Script1d3d8" free
-Script1d3d8: .db "Hello world!"
+Script1d3d8: .db "Hello world!", $fe
 .ends
 .section "Script1d3e1" free
-Script1d3e1: .db "Hello world!"
+Script1d3e1: .db "Hello world!", $fe
 .ends
 .section "Script1d3ea" free
-Script1d3ea: .db "Hello world!"
+Script1d3ea: .db "Hello world!", $fe
 .ends
 .section "Script1d3f1" free
-Script1d3f1: .db "Hello world!"
+Script1d3f1: .db "Hello world!", $fe
 .ends
 .section "Script1d3fb" free
-Script1d3fb: .db "Hello world!"
+Script1d3fb: .db "Hello world!", $fe
 .ends
 .section "Script1d404" free
-Script1d404: .db "Hello world!"
+Script1d404: .db "Hello world!", $fe
 .ends
 .section "Script1d412" free
-Script1d412: .db "Hello world!"
+Script1d412: .db "Hello world!", $fe
 .ends
 .section "Script1d418" free
-Script1d418: .db "Hello world!"
+Script1d418: .db "Hello world!", $fe
 .ends
 .section "Script1d41e" free
-Script1d41e: .db "Hello world!"
+Script1d41e: .db "Hello world!", $fe
 .ends
 .section "Script1d428" free
-Script1d428: .db "Hello world!"
+Script1d428: .db "Hello world!", $fe
 .ends
 .section "Script1d42e" free
-Script1d42e: .db "Hello world!"
+Script1d42e: .db "Hello world!", $fe
 .ends
 .section "Script1d439" free
-Script1d439: .db "Hello world!"
+Script1d439: .db "Hello world!", $fe
 .ends
 .section "Script1d491" free
-Script1d491: .db "Hello world!"
+Script1d491: .db "Hello world!", $fe
 .ends
 .section "Script1d4f0" free
-Script1d4f0: .db "Hello world!"
+Script1d4f0: .db "Hello world!", $fe
 .ends
 .section "Script1d4fe" free
-Script1d4fe: .db "Hello world!"
+Script1d4fe: .db "Hello world!", $fe
 .ends
 .section "Script1d50f" free
-Script1d50f: .db "Hello world!"
+Script1d50f: .db "Hello world!", $fe
 .ends
 .section "Script1d51a" free
-Script1d51a: .db "Hello world!"
+Script1d51a: .db "Hello world!", $fe
 .ends
 .section "Script1d522" free
-Script1d522: .db "Hello world!"
+Script1d522: .db "Hello world!", $fe
 .ends
 .section "Script1d56b" free
-Script1d56b: .db "Hello world!"
+Script1d56b: .db "Hello world!", $fe
 .ends
 .section "Script1d5b6" free
-Script1d5b6: .db "Hello world!"
+Script1d5b6: .db "Hello world!", $fe
 .ends
 .section "Script1d60f" free
-Script1d60f: .db "Hello world!"
+Script1d60f: .db "Hello world!", $fe
 .ends
 .section "Script1d668" free
-Script1d668: .db "Hello world!"
+Script1d668: .db "Hello world!", $fe
 .ends
 .section "Script1d671" free
-Script1d671: .db "Hello world!"
+Script1d671: .db "Hello world!", $fe
 .ends
 .section "Script1da14" free
-Script1da14: .db "Hello world!"
+Script1da14: .db "Hello world!", $fe
 .ends
 .section "Script1da1d" free
-Script1da1d: .db "Hello world!"
+Script1da1d: .db "Hello world!", $fe
 .ends
 .section "Script1da26" free
-Script1da26: .db "Hello world!"
+Script1da26: .db "Hello world!", $fe
 .ends
 .section "Script1da2e" free
-Script1da2e: .db "Hello world!"
+Script1da2e: .db "Hello world!", $fe
 .ends
 .section "Script1da3a" free
-Script1da3a: .db "Hello world!"
+Script1da3a: .db "Hello world!", $fe
 .ends
 .section "Script1da5e" free
-Script1da5e: .db "Hello world!"
+Script1da5e: .db "Hello world!", $fe
 .ends
 .section "Script1da96" free
-Script1da96: .db "Hello world!"
+Script1da96: .db "Hello world!", $fe
 .ends
 .section "Script1dace" free
-Script1dace: .db "Hello world!"
+Script1dace: .db "Hello world!", $fe
 .ends
 .section "Script1db16" free
-Script1db16: .db "Hello world!"
+Script1db16: .db "Hello world!", $fe
 .ends
 .section "Script1db60" free
-Script1db60: .db "Hello world!"
+Script1db60: .db "Hello world!", $fe
 .ends
 .section "Script1dba8" free
-Script1dba8: .db "Hello world!"
+Script1dba8: .db "Hello world!", $fe
 .ends
 .section "Script1dbed" free
-Script1dbed: .db "Hello world!"
+Script1dbed: .db "Hello world!", $fe
 .ends
 .section "Script1dc37" free
-Script1dc37: .db "Hello world!"
+Script1dc37: .db "Hello world!", $fe
 .ends
 .section "Script1dc79" free
-Script1dc79: .db "Hello world!"
+Script1dc79: .db "Hello world!", $fe
 .ends
 .section "Script1dcc0" free
-Script1dcc0: .db "Hello world!"
+Script1dcc0: .db "Hello world!", $fe
 .ends
 .section "Script1dd09" free
-Script1dd09: .db "Hello world!"
+Script1dd09: .db "Hello world!", $fe
 .ends
 .section "Script1dd52" free
-Script1dd52: .db "Hello world!"
+Script1dd52: .db "Hello world!", $fe
 .ends
 .section "Script1dd97" free
-Script1dd97: .db "Hello world!"
+Script1dd97: .db "Hello world!", $fe
 .ends
 .section "Script1dde2" free
-Script1dde2: .db "Hello world!"
+Script1dde2: .db "Hello world!", $fe
 .ends
 .section "Script1dde8" free
-Script1dde8: .db "Hello world!"
+Script1dde8: .db "Hello world!", $fe
 .ends
 .section "Script1ddf6" free
-Script1ddf6: .db "Hello world!"
+Script1ddf6: .db "Hello world!", $fe
 .ends
 .section "Script1de3b" free
-Script1de3b: .db "Hello world!"
+Script1de3b: .db "Hello world!", $fe
 .ends
 .section "Script1de70" free
-Script1de70: .db "Hello world!"
+Script1de70: .db "Hello world!", $fe
 .ends
 .section "Script1dea2" free
-Script1dea2: .db "Hello world!"
+Script1dea2: .db "Hello world!", $fe
 .ends
 .section "Script1dee4" free
-Script1dee4: .db "Hello world!"
+Script1dee4: .db "Hello world!", $fe
 .ends
 .bank 0 slot 0
 .orga $2d2e
