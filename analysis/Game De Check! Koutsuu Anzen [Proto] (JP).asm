@@ -5821,7 +5821,7 @@ _LABEL_2A3B_:
 	inc b
 +:
 	ld a, b
-	ld hl, _DATA_1DE33_ - 2
+	ld hl, _DATA_1DE31_
 	jp _LABEL_24AF_
 
 ; 8th entry of Jump Table from 2730 (indexed by _RAM_C10D_)
@@ -11911,7 +11911,7 @@ _LABEL_59B5_:
 	ld hl, _DATA_1DFAB_ - 2
 	call _LABEL_6191_ReadAthPointerFromHL
 	ld b, $02
-	call _LABEL_5AF5_DrawString
+	call _LABEL_5AF5_DrawMultipleStrings
 	jp _LABEL_18_
 
 ; 5th entry of Jump Table from 599B (indexed by _RAM_C120_)
@@ -11936,7 +11936,7 @@ _LABEL_59E6_:
 	call _LABEL_6191_ReadAthPointerFromHL
 	ld b, (hl)
 	inc hl
-	call _LABEL_5AF5_DrawString
+	call _LABEL_5AF5_DrawMultipleStrings
 	call _LABEL_5AE4_
 	ld a, $8B
 	ld (_RAM_FFFF_), a
@@ -11990,7 +11990,7 @@ _LABEL_5A53_:
 	ld a, (_RAM_C120_)
 	sub $04
 	ld hl, _DATA_1E02A_ - 2
-	call _LABEL_5B14_
+	call _LABEL_5B14_DrawIndexedScriptEntry
 	ld a, (_RAM_C120_)
 	cp $05
 	ret nz
@@ -12056,7 +12056,7 @@ _LABEL_5AED_:
 	ei
 	ret
 
-_LABEL_5AF5_DrawString:
+_LABEL_5AF5_DrawMultipleStrings:
   ; b = line count
   ; hl points to (tilemap address), (script address)
 	ld de, _RAM_C900_Buffer
@@ -12081,7 +12081,10 @@ _LABEL_5AF5_DrawString:
 	djnz -
 	ret
 
-_LABEL_5B14_:
+_LABEL_5B14_DrawIndexedScriptEntry:
+  ; hl = table
+  ; a = index into it
+  ; data is VRAM address, script pointer
 	call _LABEL_6191_ReadAthPointerFromHL
 	ld c, (hl)
 	inc hl
@@ -12484,9 +12487,9 @@ _LABEL_5DD6_:
 	ld (hl), $00
 	ld hl, $4320
 	ld (_RAM_C800_CharacterDrawingVRAMAddress), hl
-	ld a, $09
-	ld hl, $A028
-	jp _LABEL_5B14_
+	ld a, $09 ; hard-coded index into table
+	ld hl, _DATA_1E02A_ - 2
+	jp _LABEL_5B14_DrawIndexedScriptEntry
 
 ; 33rd entry of Jump Table from 312E (indexed by _RAM_C70C_)
 _LABEL_5E06_:
@@ -22307,13 +22310,16 @@ _DATA_1DD97_:
 .db $98 $86 $45 $03 $3F $46 $21 $07 $1E $0F $01 $48 $FD $FF $99 $99
 .db $6F $8E $4E $7B $95 $59 $5F $95 $5E $69 $5E $6A $FD $99 $99 $06
 .db $38 $28 $7D $5E $6A $6F $8E $4E $7A $98 $FD $99 $99 $80 $97 $95
-.db $06 $1A $4D $6F $7D $95 $67 $8D $98 $FE $3B $9E
+.db $06 $1A $4D $6F $7D $95 $67 $8D $98 $FE 
+
 
 ; Pointer Table from 1DE33 to 1DE3A (4 entries, indexed by _RAM_C120_)
-_DATA_1DE33_:
+_DATA_1DE31_:
+.dw +
 .dw _DATA_1DE70_ _DATA_1DEA2_ _DATA_1DEE4_ _DATA_1DB16_
 
 ; Data from 1DE3B to 1DE6F (53 bytes)
++:
 .db $00 $23 $19 $28 $47 $1D $1C $3B $3D $02 $10 $4B $02 $23 $FD $6F
 .db $8E $4E $7A $98 $21 $11 $48 $FD $99 $09 $27 $1A $4C $02 $10 $21
 .db $00 $46 $17 $46 $02 $46 $FD $1C $46 $45 $09 $09 $43 $0A $08 $37
@@ -22427,41 +22433,23 @@ _DATA_1DFA7_:
 
 ; Pointer Table from 1DFAB to 1DFB2 (4 entries, indexed by _RAM_C120_)
 _DATA_1DFAB_:
-.dw _DATA_1DFB3_ _DATA_1DFBB_ _DATA_1DFC3_ _DATA_1DFCB_
+.dw + ++ +++ ++++
 
-; 1st entry of Pointer Table from 1DFAB (indexed by _RAM_C120_)
-; Data from 1DFB3 to 1DFB4 (2 bytes)
-_DATA_1DFB3_:
-.db $D0 $78
++:
+.dw $78d0 _DATA_1D398_
+.dw $7984 _DATA_1D522_
 
-; Pointer Table from 1DFB5 to 1DFBA (3 entries, indexed by unknown)
-.dw _DATA_1D398_ _DATA_7984_ _DATA_1D522_
+++:
+.dw $7892 _DATA_1D3A1_
+.dw $7946 _DATA_1D56B_
 
-; 2nd entry of Pointer Table from 1DFAB (indexed by _RAM_C120_)
-; Data from 1DFBB to 1DFBC (2 bytes)
-_DATA_1DFBB_:
-.db $92 $78
++++:
+.dw $784A _DATA_1D3A9_ 
+.dw $7904 _DATA_1D5B6_
 
-; Pointer Table from 1DFBD to 1DFC2 (3 entries, indexed by unknown)
-.dw _DATA_1D3A1_ _DATA_7946_ _DATA_1D56B_
-
-; 3rd entry of Pointer Table from 1DFAB (indexed by _RAM_C120_)
-; Data from 1DFC3 to 1DFC4 (2 bytes)
-_DATA_1DFC3_:
-.db $4A $78
-
-; Pointer Table from 1DFC5 to 1DFCA (3 entries, indexed by unknown)
-.dw _DATA_1D3A9_ $7904 _DATA_1D5B6_
-
-; 4th entry of Pointer Table from 1DFAB (indexed by _RAM_C120_)
-; Data from 1DFCB to 1DFCC (2 bytes)
-_DATA_1DFCB_:
-.db $4E $78
-
-; Pointer Table from 1DFCD to 1DFD0 (2 entries, indexed by unknown)
-.dw _DATA_1D3B5_ $7904
-
-.dw _DATA_1D60F_ 
+++++:
+.dw $784E _DATA_1D3B5_ 
+.dw $7904 _DATA_1D60F_ 
 
 _DATA_1DFD3_:
 .dw _DATA_1DFDD_ _DATA_1DFEE_ _DATA_1DFFB_ _DATA_1E008_ _DATA_1E019_
@@ -22506,75 +22494,27 @@ _DATA_1E019_:
 
 ; Pointer Table from 1E02A to 1E03B (9 entries, indexed by _RAM_C120_)
 _DATA_1E02A_:
-.dw _DATA_1E03C_ $A040 _DATA_1E044_ _DATA_1E048_ _DATA_1E04C_ _DATA_1E050_ _DATA_1E054_ _DATA_1E058_
+.dw _DATA_1E03C_ _DATA_1E040_ _DATA_1E044_ _DATA_1E048_ _DATA_1E04C_ _DATA_1E050_ _DATA_1E054_ _DATA_1E058_
 .dw _DATA_1E05C_
 
-; 1st entry of Pointer Table from 1E02A (indexed by _RAM_C120_)
-; Data from 1E03C to 1E03D (2 bytes)
 _DATA_1E03C_:
-.db $90 $7C
-
-; Pointer Table from 1E03E to 1E041 (2 entries, indexed by unknown)
-.dw _DATA_1D41E_ _DATA_7AD6_
-
-; Pointer Table from 1E042 to 1E043 (1 entries, indexed by unknown)
-.dw _DATA_1D428_
-
-; 3rd entry of Pointer Table from 1E02A (indexed by _RAM_C120_)
-; Data from 1E044 to 1E045 (2 bytes)
+.dw $7C90 _DATA_1D41E_ 
+_DATA_1E040_:
+.dw $7AD6 _DATA_1D428_
 _DATA_1E044_:
-.db $CE $7A
-
-; Pointer Table from 1E046 to 1E047 (1 entries, indexed by unknown)
-.dw _DATA_1D42E_
-
-; 4th entry of Pointer Table from 1E02A (indexed by _RAM_C120_)
-; Data from 1E048 to 1E049 (2 bytes)
+.dw $7ACE _DATA_1D42E_
 _DATA_1E048_:
-.db $86 $78
-
-; Pointer Table from 1E04A to 1E04B (1 entries, indexed by unknown)
-.dw _DATA_1D439_
-
-; 5th entry of Pointer Table from 1E02A (indexed by _RAM_C120_)
-; Data from 1E04C to 1E04D (2 bytes)
+.dw $7886 _DATA_1D439_
 _DATA_1E04C_:
-.db $84 $78
-
-; Pointer Table from 1E04E to 1E04F (1 entries, indexed by unknown)
-.dw _DATA_1D491_
-
-; 6th entry of Pointer Table from 1E02A (indexed by _RAM_C120_)
-; Data from 1E050 to 1E051 (2 bytes)
+.dw $7884 _DATA_1D491_
 _DATA_1E050_:
-.db $86 $70
-
-; Pointer Table from 1E052 to 1E053 (1 entries, indexed by unknown)
-.dw _DATA_1D4F0_
-
-; 7th entry of Pointer Table from 1E02A (indexed by _RAM_C120_)
-; Data from 1E054 to 1E055 (2 bytes)
+.dw $7086 _DATA_1D4F0_
 _DATA_1E054_:
-.db $86 $70
-
-; Pointer Table from 1E056 to 1E057 (1 entries, indexed by unknown)
-.dw _DATA_1D4FE_
-
-; 8th entry of Pointer Table from 1E02A (indexed by _RAM_C120_)
-; Data from 1E058 to 1E059 (2 bytes)
+.dw $7086 _DATA_1D4FE_
 _DATA_1E058_:
-.db $CE $7A
-
-; Pointer Table from 1E05A to 1E05B (1 entries, indexed by unknown)
-.dw _DATA_1D50F_
-
-; 9th entry of Pointer Table from 1E02A (indexed by _RAM_C120_)
-; Data from 1E05C to 1E05D (2 bytes)
+.dw $7ACE _DATA_1D50F_
 _DATA_1E05C_:
-.db $92 $70
-
-; Pointer Table from 1E05E to 1E05F (1 entries, indexed by unknown)
-.dw _DATA_1D51A_
+.dw $7092 _DATA_1D51A_
 
 ; 3rd entry of Pointer Table from 3174 (indexed by _RAM_C0D0_)
 ; Data from 1E060 to 1E482 (1059 bytes)
