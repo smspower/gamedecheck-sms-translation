@@ -3,13 +3,13 @@ import json
 import struct
 
 tables =  [
-  { 'start': 0x02d28 + 6, 'bank': 7, 'stride': 8, 'count': 5 },
+  { 'start': 0x02d28+6, 'bank': 7, 'stride': 8, 'count': 5 },
 
   { 'start': 0x1de31, 'bank': 7, 'stride': 2, 'count': 5 },
 
   { 'start': 0x1da44, 'bank': 7, 'stride': 2, 'count': 13 },
 
-  { 'start': 0x05866, 'bank': 7, 'stride': 4, 'count': 5 },
+  { 'start': 0x05864+2, 'bank': 7, 'stride': 4, 'count': 5 },
 
   # 4 consecutive tables of 2
   { 'start': 0x1dfab+10, 'bank': 7, 'stride': 4, 'count': 8 },
@@ -21,8 +21,10 @@ tables =  [
   { 'start': 0x1e008+3, 'bank': 7, 'stride': 4, 'count': 4 },
   { 'start': 0x1e019+3, 'bank': 7, 'stride': 4, 'count': 4 },
 
-  { 'start': 0x1e03e, 'bank': 7, 'stride': 4, 'count': 9 },
+  # 9 consecutive tables of 1
+  { 'start': 0x1e03c+2, 'bank': 7, 'stride': 4, 'count': 9 },
 
+  # Bare references to script lines
   { 'start': 0x05e55, 'bank': 7, 'stride': 1, 'count': 1 },
   { 'start': 0x05ea1, 'bank': 7, 'stride': 1, 'count': 1 },
   { 'start': 0x05fa2, 'bank': 7, 'stride': 1, 'count': 1 },
@@ -48,17 +50,30 @@ mapping = {
   0xfe:'[EOS]',
 }
 
-def read_script(f):
-  result = ''
+class Line:
+  def __init__(self, offset, length, text):
+    self.offset = offset
+    self.length = length
+    self.text = text
+    
+  def __str__(self):
+    return f'${self.offset:x}: {self.text} // {self.length}'
+    
+def read_script(f, offset):
+  text = ''
+  length = 0
+  f.seek(offset)
   while 1:
     b = int.from_bytes(f.read(1), byteorder='little')
-    result = result + mapping[b]
+    length += 1
+    text += mapping[b]
     if b == 0xfe:
-      return result;
+      return Line(offset, length, text);
     
 
 def dump(rom):
   seen_pointers = set()
+  lines = []
 
   with open(rom, mode='rb') as f:
     for table in tables:
@@ -80,14 +95,19 @@ def dump(rom):
           p += 0x4000 * bank
         
         if p not in seen_pointers:
-          f.seek(p)
-          text = read_script(f)
-          print(f'${p:x}: "{text}"')
+          line = read_script(f, p)
+          print(line)
+          lines.append(line)
           
         seen_pointers.add(p)
         
         # move to the next one
         offset += stride
+        
+  # emit some unbackgrounding
+  lines.sort(key=lambda x: x.offset)
+  for line in lines:
+    print(f'.unbackground ${line.offset:x} ${line.offset + line.length - 1:x}')
 
 def main():
   dump(sys.argv[1])
