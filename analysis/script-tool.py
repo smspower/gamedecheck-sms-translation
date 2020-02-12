@@ -1,6 +1,6 @@
 import sys
 import json
-import struct
+import re
 
 tables =  [
   { 'start': 0x02d28+6, 'bank': 7, 'stride': 8, 'count': 5 },
@@ -24,7 +24,7 @@ tables =  [
   # 9 consecutive tables of 1
   { 'start': 0x1e03c+2, 'bank': 7, 'stride': 4, 'count': 9 },
 
-  # Bare references to script lines
+  # Bare references to script lines, not really tables but we can treat them as such
   { 'start': 0x05e55, 'bank': 7, 'stride': 1, 'count': 1 },
   { 'start': 0x05ea1, 'bank': 7, 'stride': 1, 'count': 1 },
   { 'start': 0x05fa2, 'bank': 7, 'stride': 1, 'count': 1 },
@@ -57,7 +57,7 @@ class Line:
     self.text = text
     
   def __str__(self):
-    return f'${self.offset:x}: {self.text} // {self.length}'
+    return f'${self.offset:x}: {self.text}'
     
 def read_script(f, offset):
   text = ''
@@ -71,7 +71,7 @@ def read_script(f, offset):
       return Line(offset, length, text);
     
 
-def dump(rom):
+def get_lines(rom):
   seen_pointers = set()
   lines = []
 
@@ -82,8 +82,6 @@ def dump(rom):
       stride = table['stride']
       count = table['count']
 
-      print(f'offset: ${offset:x}, bank: {bank}, stride: {stride}, count: {count}')
-      
       for _ in range(count):
         # read the pointer
         f.seek(offset)
@@ -96,21 +94,80 @@ def dump(rom):
         
         if p not in seen_pointers:
           line = read_script(f, p)
-          print(line)
           lines.append(line)
           
         seen_pointers.add(p)
         
         # move to the next one
         offset += stride
+  return lines
+  
+def dump(rom):
+  lines = get_lines(rom)
+  for line in lines:
+    print(line)
         
-  # emit some unbackgrounding
+def generate(rom, translation):
+  lines = get_lines(rom)
+
+  # Unbackgrounding the old script
   lines.sort(key=lambda x: x.offset)
   for line in lines:
     print(f'.unbackground ${line.offset:x} ${line.offset + line.length - 1:x}')
+    
+  # Read in the script
+  script = {}
 
+  with open(translation) as f:
+    for line in f:
+      m = re.search('\$([0-9a-fA-F]+): ?(.+)\[EOS\]', line)
+      if m:
+        script[int(m.group(1), 16)] = m.group(2)
+    
+  # Line sections
+  for line in lines:
+    print(f'.section "Script{line.offset:x}" free')
+    # TODO: replace EOS etc
+    print(f'Script{line.offset:x}: .db "{script[line.offset]}"')
+    print('.ends')
+    
+  # Source pointers
+  with open(rom, mode='rb') as f:
+    for table in tables:
+      offset = table['start']
+      bank = table['bank']
+      stride = table['stride']
+      count = table['count']
+      
+      for _ in range(count):
+        # read the pointer
+        f.seek(offset)
+        p = int.from_bytes(f.read(2), byteorder='little')
+      
+        if p >= 0x8000:
+          p -= 0x8000
+          p += 0x4000 * bank
+          
+        # Patch the new location
+        if offset < 0x8000:
+          print('.bank 0 slot 0')
+          print(f'.orga ${offset:x}')
+        else:
+          print(f'.bank {offset // 0x4000} slot 2')
+          print(f'.org ${offset % 0x4000:x}')
+        print(f'.section "Patch at {offset:x}" overwrite')
+        print(f'.dw Script{p:x}')
+        print('.ends')
+        
+        # move to the next one
+        offset += stride
+    
 def main():
-  dump(sys.argv[1])
+  verb = sys.argv[1]
+  if verb == 'dump':
+    dump(sys.argv[2])
+  elif verb == 'generate':
+    generate(sys.argv[2], sys.argv[3])
   
 if __name__ == "__main__":
     main()
