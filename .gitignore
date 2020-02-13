@@ -1,3 +1,5 @@
 *.sms
 *.exe
 *.sym
+*.1bpp
+linkfile

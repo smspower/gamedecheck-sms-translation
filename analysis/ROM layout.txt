@@ -21,7 +21,13 @@ $0dd96  $0ed70  188         Sprites
 
 $0ee7a  $0f0f8  99          Tokio Marine logo (with text)
 
+$0f10c  $0f183  15          1bpp "(c)TOKIMARNE1987"
 $0f184  $0f8e3  111         Logo text
+
+$10000  $100ff  32          1bpp numbers
+
+$10158  $10177  4           1bpp box
+$10178  $1032f  55          1bpp text
 
 $10550  $1070e  32          Text: numbers
 $1070f  $108ec  36          Text
@@ -38,6 +44,10 @@ $1b419  $1b564  12          ?
 $1b565  $1b879  49          ?
 $1b87a  $1be24  76          Driving HUD sprites
 
+$1c000  $1ce77  927         Japanese font tiles
+
+$19baf  $1b1ae  352         4bpp uncompressed: car, bike
+
 $20000  $205d7  71          ? Background
 
 $20adc  $217f2  122         ? Background
@@ -48,9 +58,15 @@ $2231c  $22c6c  91          ?
 $22e6d  $23167  53          ? Numbers
 $23168  $23a4f  82          ? Sprites
 
+$23a6e  $23ced  20          4bpp uncompressed: ?
+
 $23CEE  $23fda  41          Police 
 
+$24000  $268bf  26          4bpp uncompressed: vehicles, ...
+
 $268C0  $27332  142         ?
+
+$28000  $2f9f1  Lots        Rabbit sprites 4bpp uncompressed with some metadata
 
 $2BF04  $2bf94  16          Text
 
