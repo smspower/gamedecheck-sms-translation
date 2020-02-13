@@ -28,6 +28,9 @@ tables =  [
   { 'start': 0x05e55, 'bank': 7, 'stride': 1, 'count': 1 },
   { 'start': 0x05ea1, 'bank': 7, 'stride': 1, 'count': 1 },
   { 'start': 0x05fa2, 'bank': 7, 'stride': 1, 'count': 1 },
+  
+  # Base text for ???
+  { 'start': 0x05cc1, 'bank': 7, 'stride': 1, 'count': 1, 'length': 23 },
 ]
   
 mapping = {
@@ -59,7 +62,7 @@ class Line:
   def __str__(self):
     return f'${self.offset:x}: {self.text}'
     
-def read_script(f, offset):
+def read_script(f, offset, fixed_length):
   text = ''
   length = 0
   f.seek(offset)
@@ -67,7 +70,7 @@ def read_script(f, offset):
     b = int.from_bytes(f.read(1), byteorder='little')
     length += 1
     text += mapping[b]
-    if b == 0xfe:
+    if b == 0xfe or length == fixed_length:
       return Line(offset, length, text);
     
 
@@ -81,6 +84,7 @@ def get_lines(rom):
       bank = table['bank']
       stride = table['stride']
       count = table['count']
+      length = table['length'] if 'length' in table else 0
 
       for _ in range(count):
         # read the pointer
@@ -93,7 +97,7 @@ def get_lines(rom):
           p += 0x4000 * bank
         
         if p not in seen_pointers:
-          line = read_script(f, p)
+          line = read_script(f, p, length)
           lines.append(line)
           
         seen_pointers.add(p)
@@ -108,13 +112,24 @@ def dump(rom):
     print(line)
     
 def to_db(line):
-  if line.endswith('[EOS]'):
-    line = line[:-5]
-  line = f'.db "{line}", $fe'
+  line = f'.db "{line}"'
+  line = line.replace('[EOS]', '", $fe, "')
   line = line.replace('[LF]', '", $ff, "')
   line = line.replace('[LF+]', '", $fd, "')
-  line = line.replace('"", ', '')
+  line = line.replace(', ""', '')
   return line
+  
+def print_bank(offset):
+  if offset < 0x8000:
+    print('.bank 0 slot 0')
+  else:
+    print(f'.bank {offset // 0x4000} slot 2')
+
+def print_org(offset):
+  if offset < 0x8000:
+    print(f'.orga ${offset:x}')
+  else:
+    print(f'.org ${offset % 0x4000:x}')
         
 def generate(rom, translation):
   lines = get_lines(rom)
@@ -129,12 +144,14 @@ def generate(rom, translation):
 
   with open(translation) as f:
     for line in f:
-      m = re.search('\$([0-9a-fA-F]+): ?(.+)\[EOS\]', line)
+      m = re.search('\$([0-9a-fA-F]+): ?(.+)', line)
       if m:
         script[int(m.group(1), 16)] = m.group(2)
     
   # Line sections
   for line in lines:
+    print_bank(line.offset)
+    # free sections so no need for an org
     print(f'.section "Script{line.offset:x}" free')
     print(f'Script{line.offset:x}: {to_db(script[line.offset])}')
     print('.ends')
@@ -157,12 +174,9 @@ def generate(rom, translation):
           p += 0x4000 * bank
           
         # Patch the new location
-        if offset < 0x8000:
-          print('.bank 0 slot 0')
-          print(f'.orga ${offset:x}')
-        else:
-          print(f'.bank {offset // 0x4000} slot 2')
-          print(f'.org ${offset % 0x4000:x}')
+        print_bank(offset)
+        # forced location so org is important
+        print_org(offset)
         print(f'.section "Patch at {offset:x}" overwrite')
         print(f'.dw Script{p:x}')
         print('.ends')

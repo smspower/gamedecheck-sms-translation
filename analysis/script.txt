@@ -54,3 +54,4 @@ $1d51a: Hello world![EOS]
 $1d668: Hello world![EOS]
 $1d671: Hello world![EOS]
 $5fdf: Hello world![EOS]
+$5c0c: Hello world!

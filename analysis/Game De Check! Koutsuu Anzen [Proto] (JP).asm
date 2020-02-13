@@ -12170,7 +12170,7 @@ _LABEL_5B50_:
 	ld hl, _RAM_C859_
 	add hl, bc
 	ld a, (hl)
-	cp $99
+	cp $99 ; space
 	ret z
 	ld a, $89
 	ld (_RAM_DE04_), a
@@ -12295,10 +12295,12 @@ _LABEL_5C23_:
 	call _LABEL_630C_
 	ld a, (_RAM_C874_)
 	call _LABEL_5D95_
-	ld hl, _DATA_5C0C_
-	ld de, _RAM_C859_
+
+	ld hl, _DATA_5C0C_ ; base text
+	ld de, _RAM_C859_ ; buffer
 	ld bc, $0017
 	ldir
+  
 	ld hl, _RAM_C871_
 	ld c, $05
 	call _LABEL_5D22_
@@ -12307,11 +12309,13 @@ _LABEL_5C23_:
 	call _LABEL_5D22_
 	ld a, $02
 	ld (_RAM_C80C_), a
-	ld hl, _RAM_C859_
+
+	ld hl, _RAM_C859_ ; load tiles to VRAM
 	ld b, $17
 	ld de, $5000
 	call _LABEL_6308_SetVRAMAddressToDE
-	call _LABEL_5D62_LoadFontTileWithColour
+	call _LABEL_5D62_LoadFontTilesWithColour
+
 	ld a, (_RAM_C872_)
 	cp $60
 	jr nc, +
@@ -12320,11 +12324,12 @@ _LABEL_5C23_:
 	jr nz, +
 	ld a, $0D
 	ld (_RAM_C80C_), a
-	ld hl, _RAM_C866_
+
+	ld hl, _RAM_C866_ ; Load tiles to VRAM again, last 10 only
 	ld b, $0A
 	ld de, $5680
 	call _LABEL_6308_SetVRAMAddressToDE
-	call _LABEL_5D62_LoadFontTileWithColour
+	call _LABEL_5D62_LoadFontTilesWithColour
 +:
 	ld hl, $7288
 	ld (_RAM_C802_StartTilemapAddress), hl
@@ -12387,7 +12392,7 @@ _LABEL_5D22_:
 	ld (hl), a
 	ret
 
-_LABEL_5D62_LoadFontTileWithColour:
+_LABEL_5D62_LoadFontTilesWithColour:
 	ld a, (hl) ; read character index
 	push hl
 	push bc
@@ -12426,7 +12431,7 @@ _LABEL_5D62_LoadFontTileWithColour:
 	pop bc
 	pop hl
 	inc hl
-	djnz _LABEL_5D62_LoadFontTileWithColour
+	djnz _LABEL_5D62_LoadFontTilesWithColour
 	ret
 
 _LABEL_5D95_:
