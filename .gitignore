@@ -3,3 +3,4 @@
 *.sym
 *.1bpp
 linkfile
+*.o

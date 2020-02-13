@@ -12311,7 +12311,7 @@ _LABEL_5C23_:
 	ld b, $17
 	ld de, $5000
 	call _LABEL_6308_SetVRAMAddressToDE
-	call _LABEL_5D62_
+	call _LABEL_5D62_LoadFontTileWithColour
 	ld a, (_RAM_C872_)
 	cp $60
 	jr nc, +
@@ -12324,7 +12324,7 @@ _LABEL_5C23_:
 	ld b, $0A
 	ld de, $5680
 	call _LABEL_6308_SetVRAMAddressToDE
-	call _LABEL_5D62_
+	call _LABEL_5D62_LoadFontTileWithColour
 +:
 	ld hl, $7288
 	ld (_RAM_C802_StartTilemapAddress), hl
@@ -12387,47 +12387,46 @@ _LABEL_5D22_:
 	ld (hl), a
 	ret
 
-_LABEL_5D62_:
-	ld a, (hl)
+_LABEL_5D62_LoadFontTileWithColour:
+	ld a, (hl) ; read character index
 	push hl
 	push bc
-	ld h, $00
-	ld l, a
-	add hl, hl
-	add hl, hl
-	add hl, hl
-	ld bc, _DATA_1CE78_Characters
-	add hl, bc
-	ld c, $04
+    ld h, $00
+    ld l, a
+    add hl, hl
+    add hl, hl
+    add hl, hl
+    ld bc, _DATA_1CE78_Characters
+    add hl, bc ; look up in pointer table
+    ld c, $04 ; pointer count
 ---:
-	ld e, (hl)
-	inc hl
-	ld d, (hl)
-	ld b, $08
+    ld e, (hl) ; look up pointer
+    inc hl
+    ld d, (hl)
+    ld b, $08 ; byte count
 --:
-	ld a, (_RAM_C80C_)
-	push bc
-	ld b, $04
+    ld a, (_RAM_C80C_) ; bitmask for selecting the colour, we emit the tile data for 1s and 0 for 0s, 4 bits extracted from the right
+    push bc
+      ld b, $04 ; bitplane count
 -:
-	rra
-	push af
-	ld a, (de)
-	jr c, +
-	xor a
-+:
-	out (Port_VDPData), a
-	pop af
-	djnz -
-	inc de
-	pop bc
-	djnz --
-	inc hl
-	dec c
-	jr nz, ---
+      rra ; check bit
+      push af
+        ld a, (de) ; use data or 0 depending on bit
+        jr c, +
+        xor a
++:      out (Port_VDPData), a
+      pop af
+      djnz -
+      inc de
+    pop bc
+    djnz --
+    inc hl
+    dec c
+    jr nz, ---
 	pop bc
 	pop hl
 	inc hl
-	djnz _LABEL_5D62_
+	djnz _LABEL_5D62_LoadFontTileWithColour
 	ret
 
 _LABEL_5D95_:
