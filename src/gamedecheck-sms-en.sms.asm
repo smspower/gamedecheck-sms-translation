@@ -33,4 +33,13 @@ banks BankCount-2
 .sdsctag 0.01, "Game de Check English translation", "", "SMS Power!"
 
 ; We remove the original data...
+.unbackground $1c000 $1d397 ; font tiles and lookup
+
+; Insert a new font
+.bank 7 slot 2
+.section "New font" force
+.incbin "font.1bpp"
+.ends
+
+; Generated script insertion
 .include "text.inc"
