@@ -41,5 +41,12 @@ banks BankCount-2
 .incbin "font.1bpp"
 .ends
 
+; TODO: hack the font engine for 8x16
+; No need for lookup though - just index by character
+
 ; Generated script insertion
 .include "text.inc"
+
+; TODO: burnt-in text
+; TODO: popup-window text using alternate font
+; TODO: police screen is custom
