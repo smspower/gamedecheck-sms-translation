@@ -119,18 +119,6 @@ def to_db(line):
   line = line.replace(', ""', '')
   return line
   
-def print_bank(offset):
-  if offset < 0x8000:
-    print('.bank 0 slot 0')
-  else:
-    print(f'.bank {offset // 0x4000} slot 2')
-
-def print_org(offset):
-  if offset < 0x8000:
-    print(f'.orga ${offset:x}')
-  else:
-    print(f'.org ${offset % 0x4000:x}')
-        
 def generate(rom, translation):
   lines = get_lines(rom)
 
@@ -150,7 +138,10 @@ def generate(rom, translation):
     
   # Line sections
   for line in lines:
-    print_bank(line.offset)
+    if line.offset < 0x8000:
+      print('.bank 0 slot 0')
+    else:
+      print(f'.bank {line.offset // 0x4000} slot 2')
     # free sections so no need for an org
     print(f'.section "Script{line.offset:x}" free')
     print(f'Script{line.offset:x}: {to_db(script[line.offset])}')
@@ -174,12 +165,7 @@ def generate(rom, translation):
           p += 0x4000 * bank
           
         # Patch the new location
-        print_bank(offset)
-        # forced location so org is important
-        print_org(offset)
-        print(f'.section "Patch at {offset:x}" overwrite')
-        print(f'.dw Script{p:x}')
-        print('.ends')
+        print(f'  PatchW ${offset:x} Script{p:x}')
         
         # move to the next one
         offset += stride

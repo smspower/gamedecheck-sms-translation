@@ -283,338 +283,70 @@ Script1dea2: .db "Hello world!", $fe
 .section "Script1dee4" free
 Script1dee4: .db "Hello world!", $fe
 .ends
-.bank 0 slot 0
-.orga $2d2e
-.section "Patch at 2d2e" overwrite
-.dw Script2ca4
-.ends
-.bank 0 slot 0
-.orga $2d36
-.section "Patch at 2d36" overwrite
-.dw Script2d50
-.ends
-.bank 0 slot 0
-.orga $2d3e
-.section "Patch at 2d3e" overwrite
-.dw Script1dde2
-.ends
-.bank 0 slot 0
-.orga $2d46
-.section "Patch at 2d46" overwrite
-.dw Script1dde8
-.ends
-.bank 0 slot 0
-.orga $2d4e
-.section "Patch at 2d4e" overwrite
-.dw Script1ddf6
-.ends
-.bank 7 slot 2
-.org $1e31
-.section "Patch at 1de31" overwrite
-.dw Script1de3b
-.ends
-.bank 7 slot 2
-.org $1e33
-.section "Patch at 1de33" overwrite
-.dw Script1de70
-.ends
-.bank 7 slot 2
-.org $1e35
-.section "Patch at 1de35" overwrite
-.dw Script1dea2
-.ends
-.bank 7 slot 2
-.org $1e37
-.section "Patch at 1de37" overwrite
-.dw Script1dee4
-.ends
-.bank 7 slot 2
-.org $1e39
-.section "Patch at 1de39" overwrite
-.dw Script1db16
-.ends
-.bank 7 slot 2
-.org $1a44
-.section "Patch at 1da44" overwrite
-.dw Script1da5e
-.ends
-.bank 7 slot 2
-.org $1a46
-.section "Patch at 1da46" overwrite
-.dw Script1da96
-.ends
-.bank 7 slot 2
-.org $1a48
-.section "Patch at 1da48" overwrite
-.dw Script1dace
-.ends
-.bank 7 slot 2
-.org $1a4a
-.section "Patch at 1da4a" overwrite
-.dw Script1db16
-.ends
-.bank 7 slot 2
-.org $1a4c
-.section "Patch at 1da4c" overwrite
-.dw Script1db60
-.ends
-.bank 7 slot 2
-.org $1a4e
-.section "Patch at 1da4e" overwrite
-.dw Script1dbed
-.ends
-.bank 7 slot 2
-.org $1a50
-.section "Patch at 1da50" overwrite
-.dw Script1dc37
-.ends
-.bank 7 slot 2
-.org $1a52
-.section "Patch at 1da52" overwrite
-.dw Script1dcc0
-.ends
-.bank 7 slot 2
-.org $1a54
-.section "Patch at 1da54" overwrite
-.dw Script1dd52
-.ends
-.bank 7 slot 2
-.org $1a56
-.section "Patch at 1da56" overwrite
-.dw Script1dba8
-.ends
-.bank 7 slot 2
-.org $1a58
-.section "Patch at 1da58" overwrite
-.dw Script1dc79
-.ends
-.bank 7 slot 2
-.org $1a5a
-.section "Patch at 1da5a" overwrite
-.dw Script1dd09
-.ends
-.bank 7 slot 2
-.org $1a5c
-.section "Patch at 1da5c" overwrite
-.dw Script1dd97
-.ends
-.bank 0 slot 0
-.orga $5866
-.section "Patch at 5866" overwrite
-.dw Script1da14
-.ends
-.bank 0 slot 0
-.orga $586a
-.section "Patch at 586a" overwrite
-.dw Script1da1d
-.ends
-.bank 0 slot 0
-.orga $586e
-.section "Patch at 586e" overwrite
-.dw Script1da26
-.ends
-.bank 0 slot 0
-.orga $5872
-.section "Patch at 5872" overwrite
-.dw Script1da2e
-.ends
-.bank 0 slot 0
-.orga $5876
-.section "Patch at 5876" overwrite
-.dw Script1da3a
-.ends
-.bank 7 slot 2
-.org $1fb5
-.section "Patch at 1dfb5" overwrite
-.dw Script1d398
-.ends
-.bank 7 slot 2
-.org $1fb9
-.section "Patch at 1dfb9" overwrite
-.dw Script1d522
-.ends
-.bank 7 slot 2
-.org $1fbd
-.section "Patch at 1dfbd" overwrite
-.dw Script1d3a1
-.ends
-.bank 7 slot 2
-.org $1fc1
-.section "Patch at 1dfc1" overwrite
-.dw Script1d56b
-.ends
-.bank 7 slot 2
-.org $1fc5
-.section "Patch at 1dfc5" overwrite
-.dw Script1d3a9
-.ends
-.bank 7 slot 2
-.org $1fc9
-.section "Patch at 1dfc9" overwrite
-.dw Script1d5b6
-.ends
-.bank 7 slot 2
-.org $1fcd
-.section "Patch at 1dfcd" overwrite
-.dw Script1d3b5
-.ends
-.bank 7 slot 2
-.org $1fd1
-.section "Patch at 1dfd1" overwrite
-.dw Script1d60f
-.ends
-.bank 7 slot 2
-.org $1fe0
-.section "Patch at 1dfe0" overwrite
-.dw Script1d3d8
-.ends
-.bank 7 slot 2
-.org $1fe4
-.section "Patch at 1dfe4" overwrite
-.dw Script1d3ea
-.ends
-.bank 7 slot 2
-.org $1fe8
-.section "Patch at 1dfe8" overwrite
-.dw Script1d3e1
-.ends
-.bank 7 slot 2
-.org $1fec
-.section "Patch at 1dfec" overwrite
-.dw Script1d3bf
-.ends
-.bank 7 slot 2
-.org $1ff1
-.section "Patch at 1dff1" overwrite
-.dw Script1d3ea
-.ends
-.bank 7 slot 2
-.org $1ff5
-.section "Patch at 1dff5" overwrite
-.dw Script1d3f1
-.ends
-.bank 7 slot 2
-.org $1ff9
-.section "Patch at 1dff9" overwrite
-.dw Script1d3bf
-.ends
-.bank 7 slot 2
-.org $1ffe
-.section "Patch at 1dffe" overwrite
-.dw Script1d3fb
-.ends
-.bank 7 slot 2
-.org $2002
-.section "Patch at 1e002" overwrite
-.dw Script1d3ea
-.ends
-.bank 7 slot 2
-.org $2006
-.section "Patch at 1e006" overwrite
-.dw Script1d3bf
-.ends
-.bank 7 slot 2
-.org $200b
-.section "Patch at 1e00b" overwrite
-.dw Script1d404
-.ends
-.bank 7 slot 2
-.org $200f
-.section "Patch at 1e00f" overwrite
-.dw Script1d404
-.ends
-.bank 7 slot 2
-.org $2013
-.section "Patch at 1e013" overwrite
-.dw Script1d404
-.ends
-.bank 7 slot 2
-.org $2017
-.section "Patch at 1e017" overwrite
-.dw Script1d3bf
-.ends
-.bank 7 slot 2
-.org $201c
-.section "Patch at 1e01c" overwrite
-.dw Script1d3fb
-.ends
-.bank 7 slot 2
-.org $2020
-.section "Patch at 1e020" overwrite
-.dw Script1d412
-.ends
-.bank 7 slot 2
-.org $2024
-.section "Patch at 1e024" overwrite
-.dw Script1d418
-.ends
-.bank 7 slot 2
-.org $2028
-.section "Patch at 1e028" overwrite
-.dw Script1d3bf
-.ends
-.bank 7 slot 2
-.org $203e
-.section "Patch at 1e03e" overwrite
-.dw Script1d41e
-.ends
-.bank 7 slot 2
-.org $2042
-.section "Patch at 1e042" overwrite
-.dw Script1d428
-.ends
-.bank 7 slot 2
-.org $2046
-.section "Patch at 1e046" overwrite
-.dw Script1d42e
-.ends
-.bank 7 slot 2
-.org $204a
-.section "Patch at 1e04a" overwrite
-.dw Script1d439
-.ends
-.bank 7 slot 2
-.org $204e
-.section "Patch at 1e04e" overwrite
-.dw Script1d491
-.ends
-.bank 7 slot 2
-.org $2052
-.section "Patch at 1e052" overwrite
-.dw Script1d4f0
-.ends
-.bank 7 slot 2
-.org $2056
-.section "Patch at 1e056" overwrite
-.dw Script1d4fe
-.ends
-.bank 7 slot 2
-.org $205a
-.section "Patch at 1e05a" overwrite
-.dw Script1d50f
-.ends
-.bank 7 slot 2
-.org $205e
-.section "Patch at 1e05e" overwrite
-.dw Script1d51a
-.ends
-.bank 0 slot 0
-.orga $5e55
-.section "Patch at 5e55" overwrite
-.dw Script1d668
-.ends
-.bank 0 slot 0
-.orga $5ea1
-.section "Patch at 5ea1" overwrite
-.dw Script1d671
-.ends
-.bank 0 slot 0
-.orga $5fa2
-.section "Patch at 5fa2" overwrite
-.dw Script5fdf
-.ends
-.bank 0 slot 0
-.orga $5cc1
-.section "Patch at 5cc1" overwrite
-.dw Script5c0c
-.ends
+  PatchW $2d2e Script2ca4
+  PatchW $2d36 Script2d50
+  PatchW $2d3e Script1dde2
+  PatchW $2d46 Script1dde8
+  PatchW $2d4e Script1ddf6
+  PatchW $1de31 Script1de3b
+  PatchW $1de33 Script1de70
+  PatchW $1de35 Script1dea2
+  PatchW $1de37 Script1dee4
+  PatchW $1de39 Script1db16
+  PatchW $1da44 Script1da5e
+  PatchW $1da46 Script1da96
+  PatchW $1da48 Script1dace
+  PatchW $1da4a Script1db16
+  PatchW $1da4c Script1db60
+  PatchW $1da4e Script1dbed
+  PatchW $1da50 Script1dc37
+  PatchW $1da52 Script1dcc0
+  PatchW $1da54 Script1dd52
+  PatchW $1da56 Script1dba8
+  PatchW $1da58 Script1dc79
+  PatchW $1da5a Script1dd09
+  PatchW $1da5c Script1dd97
+  PatchW $5866 Script1da14
+  PatchW $586a Script1da1d
+  PatchW $586e Script1da26
+  PatchW $5872 Script1da2e
+  PatchW $5876 Script1da3a
+  PatchW $1dfb5 Script1d398
+  PatchW $1dfb9 Script1d522
+  PatchW $1dfbd Script1d3a1
+  PatchW $1dfc1 Script1d56b
+  PatchW $1dfc5 Script1d3a9
+  PatchW $1dfc9 Script1d5b6
+  PatchW $1dfcd Script1d3b5
+  PatchW $1dfd1 Script1d60f
+  PatchW $1dfe0 Script1d3d8
+  PatchW $1dfe4 Script1d3ea
+  PatchW $1dfe8 Script1d3e1
+  PatchW $1dfec Script1d3bf
+  PatchW $1dff1 Script1d3ea
+  PatchW $1dff5 Script1d3f1
+  PatchW $1dff9 Script1d3bf
+  PatchW $1dffe Script1d3fb
+  PatchW $1e002 Script1d3ea
+  PatchW $1e006 Script1d3bf
+  PatchW $1e00b Script1d404
+  PatchW $1e00f Script1d404
+  PatchW $1e013 Script1d404
+  PatchW $1e017 Script1d3bf
+  PatchW $1e01c Script1d3fb
+  PatchW $1e020 Script1d412
+  PatchW $1e024 Script1d418
+  PatchW $1e028 Script1d3bf
+  PatchW $1e03e Script1d41e
+  PatchW $1e042 Script1d428
+  PatchW $1e046 Script1d42e
+  PatchW $1e04a Script1d439
+  PatchW $1e04e Script1d491
+  PatchW $1e052 Script1d4f0
+  PatchW $1e056 Script1d4fe
+  PatchW $1e05a Script1d50f
+  PatchW $1e05e Script1d51a
+  PatchW $5e55 Script1d668
+  PatchW $5ea1 Script1d671
+  PatchW $5fa2 Script5fdf
+  PatchW $5cc1 Script5c0c

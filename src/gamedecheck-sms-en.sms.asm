@@ -24,6 +24,37 @@ banks BankCount-2
 .background "Game De Check! Koutsuu Anzen [Proto] (JP).sms"
 .emptyfill $ff
 
+; Define helper macros for patches
+
+; Sets the assembler to the given output address
+.macro ROMPosition args _address
+.if _address < $8000
+  .bank 0 slot 0                  ; Slot 0 for <$8000
+.else
+  .bank (_address / $4000) slot 2 ; Slot 2 otherwise
+.endif
+.org _address # $4000 ; modulo
+.endm
+
+; Patches a byte at the given ROM address
+.macro PatchB args _address, _value
+  ROMPosition _address
+.section "Auto patch @ \1" overwrite
+PatchAt\1:
+  .db _value
+.ends
+.endm
+
+; Patches a word at the given ROM address
+.macro PatchW args _address, _value
+  ROMPosition _address
+.section "Auto patch @ \1" overwrite
+PatchAt\1:
+  .dw _value
+.ends
+.endm
+
+
 ; Let's mark unused areas as free
 .unbackground $079d0 $07fff
 ; lots of bank ends are free...
