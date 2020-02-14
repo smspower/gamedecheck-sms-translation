@@ -945,7 +945,7 @@ _LABEL_16B_:
 	ld a, $02
 	call _LABEL_36A_Load1bppTiles
   
-  ; Draw text to screen - a is what here?
+  ; Draw text to screen
 	ld a, $04
 	call _LABEL_2CE0_DrawScriptLine
   
@@ -13082,9 +13082,10 @@ _LABEL_6293_NewLine:
 	pop hl
 	jp _LABEL_6228_NextScriptCharacter
 
+; $62b0
 ++: ; Tile data loader
 	call _LABEL_6308_SetVRAMAddressToDE
-	ld c, 4 ; Bitplanes
+	ld c, 4 ; Tiles
 --:
 	ld e, (hl)  ; Read word at (h) to de
 	inc hl

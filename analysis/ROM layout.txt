@@ -37,7 +37,9 @@ $18000  $189ac  122         Logo text
 
 $18b6d  $19650  140         Logo text
 
-
+$19811  $198a6              Title screen logo tilemap (part 1)
+$198a7  $198ee              Title screen logo tilemap (part 1)
+$198ef  $1a0de              Title screen logo tiles
 
 $1b1af  $1b418  32          ?
 $1b419  $1b564  12          ?

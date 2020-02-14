@@ -75,8 +75,7 @@ Font:
 .incbin "font.1bpp"
 .ends
 
-; TODO: hack the font engine for 8x16
-; No need for lookup though - just index by character
+; Hack the font engine for 8x16
 .unbackground $0626e $06288
 .bank 0 slot 0
 .orga $626e
@@ -164,6 +163,44 @@ DrawTilemapEntry:
 
 ; Generated script insertion
 .include "text.inc"
+
+; Title screen logo data
+.unbackground $19811 $1a0de
+; Title screen logo loader code (part 1)
+.unbackground $17e $199
+  ROMPosition $17e
+.section "Title screen loader" force
+  ; We replace with a big ZX7 effort :)
+  ld a, :TitleScreenTiles
+  ld ($ffff),a
+  ld hl, TitleScreenTiles
+  ld de, $6200
+  call zx7_decompress
+  ld hl, TitleScreenTilemap
+  ld de, $7800
+  call zx7_decompress
+  jp $19a
+.ends
+; Title screen logo loader code (part 2)
+.unbackground $1fc $218
+  ROMPosition $1fc
+.section "Title screen tilemap loader removal" force
+  jp $219
+.ends
+
+.bank 6 slot 2
+.section "Title screen logo data" superfree
+TitleScreenTiles:
+.incbin "titlescreen.tiles.zx7"
+TitleScreenTilemap:
+.incbin "titlescreen.tilemap.zx7"
+.ends
+
+.bank 0 slot 0
+.section "ZX7" free
+.define ZX7ToVRAM
+.include "ZX7 decompressor.asm"
+.ends
 
 ; TODO: burnt-in text
 ; TODO: popup-window text using alternate font

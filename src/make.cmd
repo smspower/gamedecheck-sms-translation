@@ -5,6 +5,7 @@ set wlaz80="C:\Users\Maxim 2\Documents\Code\C\wla-dx\binaries\wla-z80.exe"
 set wlalink="C:\Users\Maxim 2\Documents\Code\C\wla-dx\binaries\wlalink.exe"
 
 %bmp2tile% assets\font.png -noremovedupes -nomirroring -8x16 -savetiles font.1bpp || exit /b
+%bmp2tile% assets\titlescreen.png -tileoffset 272 -savetiles titlescreen.tiles.zx7 -savetilemap titlescreen.tilemap.zx7 || exit /b
 
 rem This is needed to make it emit UTF-8 into the pipe
 set PYTHONIOENCODING=UTF8
