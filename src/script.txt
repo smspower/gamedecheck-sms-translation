@@ -1,57 +1,271 @@
-$2ca4: Please choose.[LF][LF][LF+]    Car[LF][LF][LF]    Motorcycle[EOS]
+えらんでください。[LF][LF][LF+]
+　　　　じどうしゃ[LF][LF][LF]
+　　　　オートバイ[EOS]
+$2ca4: Please choose.[LF][LF][LF+]        Car[LF][LF][LF]        Motorcycle[EOS]
+
+これでゲームをおわります。[EOS]
 $2d50: This is the end of the game.[EOS]
+
+アドバイス[EOS]
 $1dde2: Advice[EOS]
+
+これでテストをおわります。[EOS]
 $1dde8: This is the end of the test.[EOS]
+
+ゲームをえらんでください。[LF+]
+[LF]
+　　ドライビングセンステスト[LF+]
+　　きみはべストドライバー[LF+]
+　　ピョンきちアドべンチャー[EOS]
 $1ddf6: Please choose a game.[LF+][LF]    Driving Sense Test[LF+]    You Are The Best Driver[LF+]    Pyongkichi Adventure[EOS]
-$1de3b: You are a very good driver.[LF+]Let's try at all times.[EOS]
+
+あなたは、とてもゆうしゆうな[LF+]
+ドライバーです。[LF+]
+　このちょうしであんぜんうん[LF+]
+てんをこころがけましょう。[EOS]
+$1de3b: You are a very good driver.[LF+]  Let's put our hearts on[LF+]this one.[EOS]
+
+あなたは、ゆうしゆうなドライ[LF+]
+バーです。これからも、いまま[LF+]
+でのうんてんを、こころがけま[LF+]
+しょう。[EOS]
 $1de70: You are a Yuushi Yuuna driver.[LF+]From now on, let's keep your[LF+]heart going.[EOS]
+
+あなたはあんぜんなドライバー[LF+]
+です。これからも、スピードと[LF+]
+しゃかんきょりにちゆういして[LF+]
+あんぜんうんてんをこころがけ[LF+]
+ましょう。[EOS]
 $1dea2: You are a real driver.[LF+]From now on, let's keep in[LF+]mind the speed and safety.[EOS]
+
+あなたはへいきんてきなドライ[LF+]
+バーです。でも、つかれている[LF+]
+ときのうんてんには、じゆうぶ[LF+]
+んちゆういしましょう。[EOS]
 $1dee4: You are the average driver.[LF+]But, the operation of when[LF+]you're tired, let's reason[LF+]Bunchi significance.[EOS]
+
+あなたはあせったり、あわてや[LF+]
+すいけいこうがあるので、ひご[LF+]
+ろからこころをおちつけて、き[LF+]
+もちをうんてんにしゆうちゆう[LF+]
+するようにつとめましょう。[EOS]
 $1db16: You may have a problem that is[LF+]easy to get hot or hurry, so[LF+]let your heart settle down[LF+]from the bottom of your heart,[LF+]and try to keep your feelings[LF+]in good shape.[EOS]
+
+あなたのドライビングセンスは[LF+]
+たいへんゆうしゆうです。この[LF+]
+ちょうしであんぜんうんてんに[LF+]
+こころがけましょう。[EOS]
 $1da5e: Your driving sense is very[LF+]good.[LF+]Let's get to the heart of this[LF+]work.[EOS]
+
+あなたのドライビングセンスは[LF+]
+ゆうしゆうです。これからも、[LF+]
+あせらず、あんぜんうんてんに[LF+]
+こころがけましょう。[EOS]
 $1da96: Your driving sense is good.[LF+]From now on, let's keep trying[LF+]to keep up.[EOS]
+
+あなたのドライビングセンスは[LF+]
+りょうこうです。これからも、[LF+]
+スピードとしゃかんきょりに、[LF+]
+ちゆういし、あんぜんうんてん[LF+]
+にこころがけましょう。[EOS]
 $1dace: This is your driving sense.[LF+]From now on, let's keep on[LF+]going for speed and energy.[EOS]
+
+こうそくどうろをうんてんする[LF+]
+ときや、つかれているときには[LF+]
+しりょくがていかするので、２[LF+]
+じかんに１かいはきゆうけいを[LF+]
+とるようにしましょう。[EOS]
 $1db60: You will need to take one out[LF+]of every two hours, as you[LF+]will be able to take care of[LF+]your stomach when you are[LF+]getting used to it.[EOS]
+
+　あなたは、あせりやすいけい[LF+]
+こうがあるので、くるまのかげ[LF+]
+からのこどものとびだしなどに[LF+]
+ちゆういし、しんちょうなうん[LF+]
+てんにこころがけましょう。[EOS]
 $1dbed: Because you have an easy-going[LF+]sickness, let's take a look at[LF+]the children's pop-ups from[LF+]the shade of the car, and try[LF+]to focus on the shincho.[EOS]
+
+しんごうやひょうしきをはやめ[LF+]
+にみるとともに、うせつやしん[LF+]
+ろへんこうのさいには、けっし[LF+]
+てむりをしないようにきをつけ[LF+]
+ましょう。[EOS]
 $1dc37: Don't look at the swords or[LF+]hail, and make sure you don't[LF+]sacrifice any sedation or[LF+]sickness.[EOS]
+
+せまいどうろやみとおしのわる[LF+]
+いところではむりをせず、また[LF+]
+とっさのばあいにもあわてずに[LF+]
+たいおうできるように、ひごろ[LF+]
+からこころがけましょう。[EOS]
 $1dcc0: Let's start from the heart so[LF+]that you can fight in the[LF+]worst places where it is[LF+]small, and you can fight[LF+]without rushing.[EOS]
+
+うしろのくるまからせかされて[LF+]
+もあせったりあわてたりしない[LF+]
+で、じぶんのテンポをまもって[LF+]
+おちついてうんてんするように[LF+]
+つとめましょう。[EOS]
 $1dd52: Don't panic or panic if you're[LF+]behind a car, try to keep your[LF+]tempo and settle down.[EOS]
+
+　こうそくどうろやよるのドラ[LF+]
+イブは、しりょくがていかしや[LF+]
+すいので、とくにちゆういし、[LF+]
+つかれているときのドライブは[LF+]
+ひかえましょう。[EOS]
 $1dba8: The drive of the sloppy is[LF+]easy to get rid of, so let's[LF+]take a look at the drive when[LF+]it is used.[EOS]
+
+しゃかんきよりをじゆうぶんに[LF+]
+とって、スピードはひかえめに[LF+]
+し、つねに、こころによゆうを[LF+]
+もって、あんぜんうんてんに、[LF+]
+こころがけましょう。[EOS]
 $1dc79: For more than just shaking,[LF+]let's keep the speed down, and[LF+]always keep your heart in mind[LF+]and keep your heart in mind.[EOS]
+
+　あなたはちょっとしたことで[LF+]
+きぶんがどうようしやすいので[LF+]
+、つねにこころをおちつけて、[LF+]
+うんてんにしゆうちゆうするよ[LF+]
+うにこころがけましょう。[EOS]
 $1dd09: Since you can do a little bit[LF+]of things, always try to[LF+]settle down and make sure to[LF+]do what you want.[EOS]
+
+あせったりあわてたり、かんじ[LF+]
+ょうてきにカーッとならないよ[LF+]
+うに、つねにれいせいなうんて[LF+]
+んをこころがけ、スピードのだ[LF+]
+しすぎにちゆういしましょう。[EOS]
 $1dd97: Always keep your heart on the[LF+]fast track, so that you don't[LF+]get frustrated or panicked,[LF+]let's get too fast.[EOS]
+
+そうごうせいせき[EOS]
 $1da14: Sose Seki[EOS]
+
+ドライビングアイ[EOS]
 $1da1d: Driving Eye[EOS]
+
+スピードセンス[EOS]
 $1da26: Speed ​​sense[EOS]
+
+ドライビングテクニック[EOS]
 $1da2e: Driving technique[EOS]
+
+リスクコントロール[EOS]
 $1da3a: Risk control[EOS]
+
+ドライビングアイ[EOS]
 $1d398: Driving Eye[EOS]
+
+うごいているものをみわけるし[LF+]
+りょくと、ひろうしやすいかど[LF+]
+うかをみるためのテストです。[LF+]
+　まどのそとをよこぎるものが[LF+]
+なにかをあててください。[EOS]
 $1d522: It is a test to see if it is[LF+]easy to find out what is[LF+]moving. Please tell us what[LF+]is going through the[LF+]umbrella.[EOS]
+
+スピードセンス[EOS]
 $1d3a1: Speed sense[EOS]
+
+ただしいスピードかんかくを[LF+]
+もっているか、あせりやすい[LF+]
+けいこうがないかをみるため[LF+]
+のテストです。[LF+]
+　はしってくるどうぶつを、[LF+]
+つかまえてください。[EOS]
 $1d56b: However, it is a test to[LF+]see if you have a speed[LF+]problem or if there is any[LF+]problem that can be easily[LF+]deterred. Please catch the[LF+]animal that comes.[EOS]
+
+ドライビングテクニック[EOS]
 $1d3a9: Driving technique[EOS]
+
+ちゆういりょくをてきせいには[LF+]
+いぶんできるか、またそのちゆ[LF+]
+ういりょくをじぞくできるかを[LF+]
+みるためのテストです。まえを[LF+]
+はしっているオートバイのあと[LF+]
+を、ついていってください。[EOS]
 $1d5b6: This is a test to see if you[LF+]can do a lot of work and see[LF+]if you can get through the[LF+]work. Follow the motorcycle[LF+]you are wearing.[EOS]
+
+リスクコントロール[EOS]
 $1d3b5: Risk Control[EOS]
+
+ふくざつなじょうきょうのもと[LF+]
+で、てきせつなはんだんと、き[LF+]
+びんなしょちができるかをみる[LF+]
+ためのテストです。オゥムがさ[LF+]
+しだす、はたのいろにしたがっ[LF+]
+てボタンをおしてください。[EOS]
 $1d60f: It is a test to see if you[LF+]can make a good solder and a[LF+]bottle under an unusual[LF+]condition. Press the button[LF+]according to the color of[LF+]the rhythm.[EOS]
+
+せんたくボタン。[EOS]
 $1d3d8: A button to pick up.[EOS]
+
+つかわない。[EOS]
 $1d3ea: Not used.[EOS]
+
+けっていボタン。[EOS]
 $1d3e1: Ke button.[EOS]
+
+そうさほうほうがわかったら[LF]
+　をおしてください。[EOS]
 $1d3bf: If you know how to do[LF]that, please do it.[EOS]
+
+あみをふりおろす。[EOS]
 $1d3f1: Shake the net.[EOS]
+
+さゆうのいどう。[EOS]
 $1d3fb: How about Sayu?[EOS]
+
+オゥムが　をだしたらおす。[EOS]
 $1d404: I'll let you know if the worm is out.[EOS]
+
+ブレーキ。[EOS]
 $1d412: Brake.[EOS]
+
+アクセル。[EOS]
 $1d418: Axel.[EOS]
+
+をおしてください。[EOS]
 $1d41e: Please press[EOS]
+
+れんしゆう[EOS]
 $1d428: Renshi Yu[EOS]
+
+テストをはじめます。[EOS]
 $1d42e: Start the test.[EOS]
+
+ピョンきちくんは、ピョンこ[LF+]
+ちゃんのおうちへ、あそびに[LF+]
+いきます。とちゆうで、いろ[LF+]
+いろなことをします。[LF+]
+そのとき、ピョンきちくんが[LF+]
+とったこうどうは、ただしい[LF+]
+でしょうか。[EOS]
 $1d439: Pyon Kichi-kun goes to[LF+]Pyonko's house to play. In[LF+]Tochiyu, I do various[LF+]things. At that time, what[LF+]did Pyeong Kichi-kun take?[EOS]
+
+あなたのもちてんは１００てん[LF+]
+です。こうつうじこやこうつう[LF+]
+いはんをおこすと、げんてんさ[LF+]
+れ、もちてんがなくなるとゲー[LF+]
+ムオーバーです。[LF+]
+　こうつうきそくをまもって、[LF+]
+ゴールしてください。[EOS]
 $1d491: Your money is 100. If you[LF+]wake up, you will be[LF+]overwhelmed, and the game[LF+]will be over if you lose[LF+]the garbage. Please keep[LF+]your goal and protect your[LF+]goal.[EOS]
+
+あなたは、　　をしました。[EOS]
 $1d4f0: You have done.[EOS]
+
+あなたは、　　をおこしまし[LF+]た。[EOS]
 $1d4fe: You have caused.[EOS]
+
+ゲームをはじめます。[EOS]
 $1d50f: Start the game.[EOS]
+
+ゲームオーバー[EOS]
 $1d51a: Game over[EOS]
+
+よくできました。[EOS]
 $1d668: Well done.[EOS]
+
+もうすこし、がんばってね。[EOS]
 $1d671: Good luck.[EOS]
+
+せいせき[EOS]
 $5fdf: Cause[EOS]
+
+げんてん　　　　てん　　　もちてん　　　　てん
 $5c0c: Genten    points  Mochiten   points

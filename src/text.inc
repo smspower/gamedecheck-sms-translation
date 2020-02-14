@@ -57,7 +57,7 @@
 .unbackground $1dee4 $1df1c
 .bank 0 slot 0
 .section "Script2ca4" free
-Script2ca4: .db "Please choose.", $ff, $ff, $fd, "    Car", $ff, $ff, $ff, "    Motorcycle", $fe
+Script2ca4: .db "Please choose.", $ff, $ff, $fd, "        Car", $ff, $ff, $ff, "        Motorcycle", $fe
 .ends
 .bank 0 slot 0
 .section "Script2d50" free
@@ -193,7 +193,7 @@ Script1da1d: .db "Driving Eye", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da26" free
-Script1da26: .db "Speed â€‹â€‹sense", $fe
+Script1da26: .db "Speed ​​sense", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da2e" free
@@ -269,7 +269,7 @@ Script1ddf6: .db "Please choose a game.", $fd, $ff, "    Driving Sense Test", $f
 .ends
 .bank 7 slot 2
 .section "Script1de3b" free
-Script1de3b: .db "You are a very good driver.", $fd, "Let's try at all times.", $fe
+Script1de3b: .db "You are a very good driver.", $fd, "  Let's put our hearts on", $fd, "this one.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1de70" free

@@ -130,7 +130,7 @@ def generate(rom, translation):
   # Read in the script
   script = {}
 
-  with open(translation) as f:
+  with open(translation, encoding='utf-8') as f:
     for line in f:
       m = re.search('\$([0-9a-fA-F]+): ?(.+)', line)
       if m:
