@@ -57,231 +57,231 @@
 .unbackground $1dee4 $1df1c
 .bank 0 slot 0
 .section "Script2ca4" free
-Script2ca4: .db "Hello world!", $ff, $ff, $fd, "!", $fe
+Script2ca4: .db "Please choose.", $ff, $ff, $fd, "    Car", $ff, $ff, $ff, "    Motorcycle", $fe
 .ends
 .bank 0 slot 0
 .section "Script2d50" free
-Script2d50: .db "Hello world!", $fe
+Script2d50: .db "This is the end of the game.", $fe
 .ends
 .bank 0 slot 0
 .section "Script5c0c" free
-Script5c0c: .db "Hello world!"
+Script5c0c: .db "Genten    points  Mochiten   points"
 .ends
 .bank 0 slot 0
 .section "Script5fdf" free
-Script5fdf: .db "Hello world!", $fe
+Script5fdf: .db "Cause", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d398" free
-Script1d398: .db "Hello world!", $fe
+Script1d398: .db "Driving Eye", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3a1" free
-Script1d3a1: .db "Hello world!", $fe
+Script1d3a1: .db "Speed sense", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3a9" free
-Script1d3a9: .db "Hello world!", $fe
+Script1d3a9: .db "Driving technique", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3b5" free
-Script1d3b5: .db "Hello world!", $fe
+Script1d3b5: .db "Risk Control", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3bf" free
-Script1d3bf: .db "Hello world!", $fe
+Script1d3bf: .db "If you know how to do", $ff, "that, please do it.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3d8" free
-Script1d3d8: .db "Hello world!", $fe
+Script1d3d8: .db "A button to pick up.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3e1" free
-Script1d3e1: .db "Hello world!", $fe
+Script1d3e1: .db "Ke button.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3ea" free
-Script1d3ea: .db "Hello world!", $fe
+Script1d3ea: .db "Not used.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3f1" free
-Script1d3f1: .db "Hello world!", $fe
+Script1d3f1: .db "Shake the net.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3fb" free
-Script1d3fb: .db "Hello world!", $fe
+Script1d3fb: .db "How about Sayu?", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d404" free
-Script1d404: .db "Hello world!", $fe
+Script1d404: .db "I'll let you know if the worm is out.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d412" free
-Script1d412: .db "Hello world!", $fe
+Script1d412: .db "Brake.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d418" free
-Script1d418: .db "Hello world!", $fe
+Script1d418: .db "Axel.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d41e" free
-Script1d41e: .db "Hello world!", $fe
+Script1d41e: .db "Please press", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d428" free
-Script1d428: .db "Hello world!", $fe
+Script1d428: .db "Renshi Yu", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d42e" free
-Script1d42e: .db "Hello world!", $fe
+Script1d42e: .db "Start the test.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d439" free
-Script1d439: .db "Hello world!", $fe
+Script1d439: .db "Pyon Kichi-kun goes to", $fd, "Pyonko's house to play. In", $fd, "Tochiyu, I do various", $fd, "things. At that time, what", $fd, "did Pyeong Kichi-kun take?", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d491" free
-Script1d491: .db "Hello world!", $fe
+Script1d491: .db "Your money is 100. If you", $fd, "wake up, you will be", $fd, "overwhelmed, and the game", $fd, "will be over if you lose", $fd, "the garbage. Please keep", $fd, "your goal and protect your", $fd, "goal.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d4f0" free
-Script1d4f0: .db "Hello world!", $fe
+Script1d4f0: .db "You have done.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d4fe" free
-Script1d4fe: .db "Hello world!", $fe
+Script1d4fe: .db "You have caused.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d50f" free
-Script1d50f: .db "Hello world!", $fe
+Script1d50f: .db "Start the game.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d51a" free
-Script1d51a: .db "Hello world!", $fe
+Script1d51a: .db "Game over", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d522" free
-Script1d522: .db "Hello world!", $fe
+Script1d522: .db "It is a test to see if it is", $fd, "easy to find out what is", $fd, "moving. Please tell us what", $fd, "is going through the", $fd, "umbrella.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d56b" free
-Script1d56b: .db "Hello world!", $fe
+Script1d56b: .db "However, it is a test to", $fd, "see if you have a speed", $fd, "problem or if there is any", $fd, "problem that can be easily", $fd, "deterred. Please catch the", $fd, "animal that comes.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d5b6" free
-Script1d5b6: .db "Hello world!", $fe
+Script1d5b6: .db "This is a test to see if you", $fd, "can do a lot of work and see", $fd, "if you can get through the", $fd, "work. Follow the motorcycle", $fd, "you are wearing.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d60f" free
-Script1d60f: .db "Hello world!", $fe
+Script1d60f: .db "It is a test to see if you", $fd, "can make a good solder and a", $fd, "bottle under an unusual", $fd, "condition. Press the button", $fd, "according to the color of", $fd, "the rhythm.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d668" free
-Script1d668: .db "Hello world!", $fe
+Script1d668: .db "Well done.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d671" free
-Script1d671: .db "Hello world!", $fe
+Script1d671: .db "Good luck.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da14" free
-Script1da14: .db "Hello world!", $fe
+Script1da14: .db "Sose Seki", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da1d" free
-Script1da1d: .db "Hello world!", $fe
+Script1da1d: .db "Driving Eye", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da26" free
-Script1da26: .db "Hello world!", $fe
+Script1da26: .db "Speed â€‹â€‹sense", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da2e" free
-Script1da2e: .db "Hello world!", $fe
+Script1da2e: .db "Driving technique", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da3a" free
-Script1da3a: .db "Hello world!", $fe
+Script1da3a: .db "Risk control", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da5e" free
-Script1da5e: .db "Hello world!", $fe
+Script1da5e: .db "Your driving sense is very", $fd, "good.", $fd, "Let's get to the heart of this", $fd, "work.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da96" free
-Script1da96: .db "Hello world!", $fe
+Script1da96: .db "Your driving sense is good.", $fd, "From now on, let's keep trying", $fd, "to keep up.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dace" free
-Script1dace: .db "Hello world!", $fe
+Script1dace: .db "This is your driving sense.", $fd, "From now on, let's keep on", $fd, "going for speed and energy.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1db16" free
-Script1db16: .db "Hello world!", $fe
+Script1db16: .db "You may have a problem that is", $fd, "easy to get hot or hurry, so", $fd, "let your heart settle down", $fd, "from the bottom of your heart,", $fd, "and try to keep your feelings", $fd, "in good shape.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1db60" free
-Script1db60: .db "Hello world!", $fe
+Script1db60: .db "You will need to take one out", $fd, "of every two hours, as you", $fd, "will be able to take care of", $fd, "your stomach when you are", $fd, "getting used to it.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dba8" free
-Script1dba8: .db "Hello world!", $fe
+Script1dba8: .db "The drive of the sloppy is", $fd, "easy to get rid of, so let's", $fd, "take a look at the drive when", $fd, "it is used.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dbed" free
-Script1dbed: .db "Hello world!", $fe
+Script1dbed: .db "Because you have an easy-going", $fd, "sickness, let's take a look at", $fd, "the children's pop-ups from", $fd, "the shade of the car, and try", $fd, "to focus on the shincho.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dc37" free
-Script1dc37: .db "Hello world!", $fe
+Script1dc37: .db "Don't look at the swords or", $fd, "hail, and make sure you don't", $fd, "sacrifice any sedation or", $fd, "sickness.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dc79" free
-Script1dc79: .db "Hello world!", $fe
+Script1dc79: .db "For more than just shaking,", $fd, "let's keep the speed down, and", $fd, "always keep your heart in mind", $fd, "and keep your heart in mind.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dcc0" free
-Script1dcc0: .db "Hello world!", $fe
+Script1dcc0: .db "Let's start from the heart so", $fd, "that you can fight in the", $fd, "worst places where it is", $fd, "small, and you can fight", $fd, "without rushing.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dd09" free
-Script1dd09: .db "Hello world!", $fe
+Script1dd09: .db "Since you can do a little bit", $fd, "of things, always try to", $fd, "settle down and make sure to", $fd, "do what you want.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dd52" free
-Script1dd52: .db "Hello world!", $fe
+Script1dd52: .db "Don't panic or panic if you're", $fd, "behind a car, try to keep your", $fd, "tempo and settle down.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dd97" free
-Script1dd97: .db "Hello world!", $fe
+Script1dd97: .db "Always keep your heart on the", $fd, "fast track, so that you don't", $fd, "get frustrated or panicked,", $fd, "let's get too fast.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dde2" free
-Script1dde2: .db "Hello world!", $fe
+Script1dde2: .db "Advice", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dde8" free
-Script1dde8: .db "Hello world!", $fe
+Script1dde8: .db "This is the end of the test.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1ddf6" free
-Script1ddf6: .db "Hello world!", $fe
+Script1ddf6: .db "Please choose a game.", $fd, $ff, "    Driving Sense Test", $fd, "    You Are The Best Driver", $fd, "    Pyongkichi Adventure", $fe
 .ends
 .bank 7 slot 2
 .section "Script1de3b" free
-Script1de3b: .db "Hello world!", $fe
+Script1de3b: .db "You are a very good driver.", $fd, "Let's try at all times.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1de70" free
-Script1de70: .db "Hello world!", $fe
+Script1de70: .db "You are a Yuushi Yuuna driver.", $fd, "From now on, let's keep your", $fd, "heart going.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dea2" free
-Script1dea2: .db "Hello world!", $fe
+Script1dea2: .db "You are a real driver.", $fd, "From now on, let's keep in", $fd, "mind the speed and safety.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dee4" free
-Script1dee4: .db "Hello world!", $fe
+Script1dee4: .db "You are the average driver.", $fd, "But, the operation of when", $fd, "you're tired, let's reason", $fd, "Bunchi significance.", $fe
 .ends
   PatchW $2d2e Script2ca4
   PatchW $2d36 Script2d50
