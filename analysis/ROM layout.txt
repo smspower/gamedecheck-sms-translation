@@ -23,6 +23,7 @@ $0ee7a  $0f0f8  99          Tokio Marine logo (with text)
 
 $0f10c  $0f183  15          1bpp "(c)TOKIMARNE1987"
 $0f184  $0f8e3  111         Logo text
+$0f8e4  $0fa93              Tilemap for above
 
 $10000  $100ff  32          1bpp numbers
 
@@ -34,8 +35,9 @@ $1070f  $108ec  36          Text
 $108ed  $10966  8           Text
 
 $18000  $189ac  122         Logo text
-
+$189ad  $18b6c              Tilemap for above
 $18b6d  $19650  140         Logo text
+$19651  $19810              Tilemap for above
 
 $19811  $198a6              Title screen logo tilemap (part 1)
 $198a7  $198ee              Title screen logo tilemap (part 1)

@@ -196,9 +196,87 @@ TitleScreenTilemap:
 .incbin "titlescreen.tilemap.zx7"
 .ends
 
+; In-game title screen loaders
+; These share common code.
+; The graphics data is in this table:
+.unbackground $00ac3 $00add
+; And the code is here:
+.unbackground $00a54 $00a87
+; The actual data is here:
+.unbackground $0f184 $0fa93 ; Title 1 tiles, tilemap
+.unbackground $18000 $18b6c ; Title 2 tiles, tilemap
+.unbackground $18b6d $19810 ; Title 3 tiles, tilemap
+
+  ROMPosition $00a54
+.section "Per-game title screen loader" force
+GameTitleLoader:
+  ld a, ($c082) ; Get game number
+  and 3
+  ; Look up in table
+  ld b, a
+  add a, a
+  add a, a
+  add a, b
+  ld c, a
+  ld b, 0
+  ld hl, TitleScreenData
+  add hl, bc
+
+  ld a, (hl) ; Page
+  ld ($ffff), a
+  inc hl
+  ld a, (hl)
+  inc hl
+  push hl
+    ld h, (hl)
+    ld l,a
+    ld de, $4600 ; Tile 48
+    call zx7_decompress
+  pop hl
+  inc hl
+  ld a, (hl)
+  inc hl
+  ld h, (hl)
+  ld l,a
+  ld de, $7800
+  call zx7_decompress
+  jp $0a88
+.ends
+
+.section "Title screen data" free
+TitleScreenData:
+.db :TitleScreen1Tiles
+.dw TitleScreen1Tiles, TitleScreen1Tilemap
+.db :TitleScreen2Tiles
+.dw TitleScreen2Tiles, TitleScreen2Tilemap
+.db :TitleScreen3Tiles
+.dw TitleScreen3Tiles, TitleScreen3Tilemap
+.ends
+
+.bank 2 slot 2
+.section "Title screen 1 data" superfree
+TitleScreen1Tiles:
+.incbin "title-drivingsensetest.tiles.zx7"
+TitleScreen1Tilemap:
+.incbin "title-drivingsensetest.tilemap.zx7"
+.ends
+.section "Title screen 2 data" superfree
+TitleScreen2Tiles:
+.incbin "title-bestdriver.tiles.zx7" ; TODO these
+TitleScreen2Tilemap:
+.incbin "title-bestdriver.tilemap.zx7"
+.ends
+.section "Title screen 3 data" superfree
+TitleScreen3Tiles:
+.incbin "title-pyongkichi.tiles.zx7"
+TitleScreen3Tilemap:
+.incbin "title-pyongkichi.tilemap.zx7"
+.ends
+
 .bank 0 slot 0
 .section "ZX7" free
 .define ZX7ToVRAM
+.define ZX7ToVRAMScreenOn ; Game seems to do screen-on loading? Some side effects from this
 .include "ZX7 decompressor.asm"
 .ends
 

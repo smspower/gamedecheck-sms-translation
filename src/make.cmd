@@ -6,6 +6,9 @@ set wlalink="C:\Users\Maxim 2\Documents\Code\C\wla-dx\binaries\wlalink.exe"
 
 %bmp2tile% assets\font.png -noremovedupes -nomirroring -8x16 -savetiles font.1bpp || exit /b
 %bmp2tile% assets\titlescreen.png -tileoffset 272 -savetiles titlescreen.tiles.zx7 -savetilemap titlescreen.tilemap.zx7 || exit /b
+%bmp2tile% assets\title-drivingsensetest.png -tileoffset 48 -spritepalette -savetiles title-drivingsensetest.tiles.zx7 -savetilemap title-drivingsensetest.tilemap.zx7 || exit /b
+%bmp2tile% assets\title-bestdriver.png       -tileoffset 48 -spritepalette -savetiles title-bestdriver.tiles.zx7       -savetilemap title-bestdriver.tilemap.zx7 || exit /b
+%bmp2tile% assets\title-pyongkichi.png       -tileoffset 48 -spritepalette -savetiles title-pyongkichi.tiles.zx7       -savetilemap title-pyongkichi.tilemap.zx7 || exit /b
 
 rem This is needed to make it emit UTF-8 into the pipe
 set PYTHONIOENCODING=UTF8

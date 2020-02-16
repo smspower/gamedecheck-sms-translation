@@ -19,7 +19,7 @@ _RAM_C080_ db
 .ende
 
 .enum $C082 export
-_RAM_C082_ db
+_RAM_C082_GameNumber db
 .ende
 
 .enum $C0A0 export
@@ -878,9 +878,9 @@ _LABEL_FB_:
 	inc sp
 	ld a, $01
 	ld (_RAM_C101_), a
-	ld a, (_RAM_C082_)
+	ld a, (_RAM_C082_GameNumber)
 	add a, $04
-	ld (_RAM_C082_), a
+	ld (_RAM_C082_GameNumber), a
 	xor a
 	call _LABEL_4EE_
 	jp _LABEL_29B_
@@ -891,22 +891,22 @@ _LABEL_130_:
 	jp -
 
 +:
-	ld a, (_RAM_C082_)
+	ld a, (_RAM_C082_GameNumber)
 	dec a
-	ld (_RAM_C082_), a
+	ld (_RAM_C082_GameNumber), a
 	jp p, +++
 	ld a, $02
-	ld (_RAM_C082_), a
+	ld (_RAM_C082_GameNumber), a
 	jr +++
 
 ++:
-	ld a, (_RAM_C082_)
+	ld a, (_RAM_C082_GameNumber)
 	inc a
-	ld (_RAM_C082_), a
+	ld (_RAM_C082_GameNumber), a
 	cp $03
 	jr c, +++
 	xor a
-	ld (_RAM_C082_), a
+	ld (_RAM_C082_GameNumber), a
 +++:
 	ld e, a
 	ld d, $00
@@ -1268,6 +1268,9 @@ _LABEL_36D_:
 	ret
 
 _LABEL_38A_LoadRLE:
+  ; de = dest in VRAM
+  ; hl = src
+  ; b = bitplane count
 	ld b, a
 	ex af, af'
 -:
@@ -1877,7 +1880,7 @@ _LABEL_9F7_:
 	ld a, (_RAM_C109_)
 	and $20
 	jr nz, +
-	ld a, (_RAM_C082_)
+	ld a, (_RAM_C082_GameNumber)
 	and $7F
 	sub $04
 	ld hl, _DATA_A25_
@@ -1890,16 +1893,16 @@ _LABEL_9F7_:
 	ret nz
 	ld a, $01
 	ld (_RAM_C101_), a
-; 1st entry of Jump Table from A25 (indexed by _RAM_C082_)
+; 1st entry of Jump Table from A25 (indexed by _RAM_C082_GameNumber)
 _LABEL_A24_:
 	ret
 
-; Jump Table from A25 to A2A (3 entries, indexed by _RAM_C082_)
+; Jump Table from A25 to A2A (3 entries, indexed by _RAM_C082_GameNumber)
 _DATA_A25_:
 .dw _LABEL_A24_ _LABEL_B11_ _LABEL_ADE_
 
 +:
-	ld a, (_RAM_C082_)
+	ld a, (_RAM_C082_GameNumber)
 	ld (_RAM_C101_), a
 	xor a
 	ld (_RAM_C10A_), a
@@ -1919,46 +1922,48 @@ _DATA_A25_:
 	ld (_RAM_C120_), a
 	call _LABEL_595B_
 	di
-	ld a, (_RAM_C082_)
+  ; Look up title screen for this game
+	ld a, (_RAM_C082_GameNumber) ; 0-2
 	and $03
 	ld b, a
 	add a, a
 	add a, a
 	add a, a
-	add a, b
+	add a, b  ; 9 bytes per entry
 	ld c, a
 	ld b, $00
-	ld hl, _DATA_AC3_
+	ld hl, _DATA_AC3_TitleScreens ; Look up
 	add hl, bc
 	ld a, (hl)
-	ld (_RAM_FFFF_), a
+	ld (_RAM_FFFF_), a ; first byte is the page
 	inc hl
-	ld e, (hl)
+	ld e, (hl) ; Next is the tile data address, all load to the same place
 	inc hl
 	ld d, (hl)
 	inc hl
 	push hl
-	ex de, hl
-	ld de, $4600
-	ld a, $04
-	call _LABEL_38A_LoadRLE
+    ex de, hl
+    ld de, $4600 ; Tile $30
+    ld a, $04
+    call _LABEL_38A_LoadRLE
 	pop hl
-	ld e, (hl)
+	ld e, (hl) ; Next is the tilemap address to load to
 	inc hl
 	ld d, (hl)
 	inc hl
-	ld c, (hl)
+	ld c, (hl) ; And the width and height...
 	inc hl
 	ld b, (hl)
 	inc hl
-	ld a, (hl)
+	ld a, (hl) ; ...and the source pointer
 	inc hl
 	ld h, (hl)
 	ld l, a
 	call _LABEL_31C_LoadTilemap
+  ; Then we start loading common graphics...
 	ld a, $83
 	ld (_RAM_FFFF_), a
-	ld hl, _DATA_F10C_
+	ld hl, _DATA_F10C_ ; (c)TOKIMARNE1987
 	ld de, $5E00
 	ld bc, $0078
 	ld a, $02
@@ -1980,11 +1985,21 @@ _DATA_A25_:
 	jp _LABEL_18_
 
 ; Data from AC3 to ADD (27 bytes)
-_DATA_AC3_:
-.db $83 $84 $B1 $04 $78 $36 $08 $E4 $B8 $86 $00 $80 $04 $78 $38 $08
-.db $AD $89 $86 $6D $8B $04 $78 $38 $08 $51 $96
+_DATA_AC3_TitleScreens:
+.struct TitleScreen
+  Slot          db
+  TileData      dw
+  TilemapDest   dw
+  TilemapWidth  db ; stored x2
+  TilemapHeight db
+  TilemapData   dw
+.endst
 
-; 3rd entry of Jump Table from A25 (indexed by _RAM_C082_)
+.struct Title1 instanceof TitleScreen data $83, $B184, $7804, $36, $08, $B8E4 
+.struct Title2 instanceof TitleScreen data $86, $8000, $7804, $38, $08, $89AD 
+.struct Title3 instanceof TitleScreen data $86, $8B6D, $7804, $38, $08, $9651
+
+; 3rd entry of Jump Table from A25 (indexed by _RAM_C082_GameNumber)
 _LABEL_ADE_:
 	ld a, (_RAM_C109_)
 	and $03
@@ -2015,7 +2030,7 @@ _LABEL_ADE_:
 	out (Port_VDPData), a
 	ret
 
-; 2nd entry of Jump Table from A25 (indexed by _RAM_C082_)
+; 2nd entry of Jump Table from A25 (indexed by _RAM_C082_GameNumber)
 _LABEL_B11_:
 	ld a, (_RAM_C109_)
 	and $03
