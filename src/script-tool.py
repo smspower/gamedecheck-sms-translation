@@ -111,8 +111,8 @@ def dump(rom):
   for line in lines:
     print(line)
     
-def to_db(line):
-  line = f'.db "{line}"'
+def to_asc(line):
+  line = f'.asc "{line}"'
   line = line.replace('[EOS]', '", $fe, "')
   line = line.replace('[LF]', '", $ff, "')
   line = line.replace('[LF+]', '", $fd, "')
@@ -144,7 +144,7 @@ def generate(rom, translation):
       print(f'.bank {line.offset // 0x4000} slot 2')
     # free sections so no need for an org
     print(f'.section "Script{line.offset:x}" free')
-    print(f'Script{line.offset:x}: {to_db(script[line.offset])}')
+    print(f'Script{line.offset:x}: {to_asc(script[line.offset])}')
     print('.ends')
     
   # Source pointers
