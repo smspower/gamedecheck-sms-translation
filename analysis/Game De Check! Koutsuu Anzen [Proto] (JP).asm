@@ -1694,7 +1694,7 @@ _DATA_628_:
 .dsb 13, $00
 
 ; Data from 68E to 705 (120 bytes)
-_DATA_68E_:
+_DATA_68E_RomanFont:
 .db $08 $00 $82 $3C $42 $04 $99 $B6 $42 $3C $3C $64 $44 $64 $24 $66
 .db $42 $7E $3C $42 $99 $99 $72 $CF $81 $FF $3C $42 $99 $72 $79 $99
 .db $42 $3C $0E $12 $22 $52 $B3 $81 $F3 $1E $FE $82 $9E $83 $F9 $99
@@ -1968,16 +1968,19 @@ _DATA_A25_:
 	ld bc, $0078
 	ld a, $02
 	call _LABEL_36A_Load1bppTiles
-	ld hl, _DATA_F0F9_
+
+	ld hl, _DATA_F0F9_ ; Tilemap for above
 	ld de, $7D8C
 	ld bc, $0113
 	xor a
 	call _LABEL_302_
+  
 	ld hl, _DATA_790E_
 	ld de, $C010
 	ld bc, $0010
 	call _LABEL_2BA_
-	ld hl, _DATA_68E_
+  
+	ld hl, _DATA_68E_RomanFont
 	ld de, $6800
 	ld a, $04
 	call _LABEL_38A_LoadRLE
@@ -5049,7 +5052,7 @@ _LABEL_24AF_:
 	ld bc, $0020
 	ld a, $02
 	call _LABEL_36A_Load1bppTiles
-	ld hl, _DATA_68E_
+	ld hl, _DATA_68E_RomanFont
 	ld de, $6000
 	ld a, $04
 	call _LABEL_38A_LoadRLE
@@ -5599,7 +5602,7 @@ _LABEL_288E_:
 	ld (_RAM_FFFF_), a
 	ld de, $4800
 	ld hl, _DATA_3C010_
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	ld a, $02
 	ld (_RAM_C340_), a
 	ld a, $C6
@@ -5647,12 +5650,12 @@ _LABEL_288E_:
 	ei
 	ld de, $4800
 	ld hl, _DATA_3C010_
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	ld a, $86
 	ld (_RAM_FFFF_), a
 	ld de, $6000
 	ld hl, _DATA_1B87A_
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	ld a, (_RAM_C300_)
 	and $7F
 	ld (_RAM_C300_), a
@@ -6037,7 +6040,7 @@ _LABEL_2C2D_:
 	ld (_RAM_FFFF_), a
 	ld de, $6000
 	ld hl, _DATA_10550_
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	ld de, $8828
 	ld bc, $042C
 	ld hl, _DATA_10370_
@@ -9672,14 +9675,14 @@ _LABEL_48B2_:
 	ld (_RAM_FFFF_), a
 	ld de, $6800
 	ld hl, _DATA_1B565_
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	ld de, $6380
 	ld hl, _DATA_1B1AF_
 	ld a, (_RAM_C349_)
 	or a
-	jp z, _LABEL_633D_
+	jp z, _LABEL_633D_LoadTilesRLE
 	ld hl, _DATA_1B419_
-	jp _LABEL_633D_
+	jp _LABEL_633D_LoadTilesRLE
 
 _LABEL_48D3_:
 	di
@@ -9912,7 +9915,7 @@ _LABEL_4A50_:
 	inc hl
 	ld h, (hl)
 	ld l, a
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 +:
 	ld a, (_RAM_C7AE_)
 	add a, a
@@ -10074,14 +10077,14 @@ _DATA_4BAE_:
 _LABEL_4C06_:
 	ld hl, _DATA_34000_
 	ld de, $4000
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	ld hl, _DATA_3418F_
 	ld de, $4400
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	ld hl, _DATA_346EE_
 	ld de, $7000
 	ld a, $04
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	ld hl, _DATA_347C8_
 	ld de, $7340
 	ld bc, $02C0
@@ -11911,7 +11914,7 @@ _DATA_599B_:
 
 ; 1st entry of Jump Table from 599B (indexed by _RAM_C120_)
 _LABEL_59B5_:
-	call _LABEL_5AB3_
+	call _LABEL_5AB3_DrawBox
 	ld a, $87
 	ld (_RAM_FFFF_), a
 	xor a
@@ -11955,11 +11958,11 @@ _LABEL_59E6_:
 	call _LABEL_5AE4_
 	ld a, $8B
 	ld (_RAM_FFFF_), a
-	call _LABEL_5A9C_
+	call _LABEL_5A9C_LoadControlPadAndNumberTiles
 	ld hl, _DATA_2FA22_
 	ld de, $7814
 	ld bc, $0616
-	call _LABEL_6327_
+	call _LABEL_6327_LaodTilemap
 	ld a, (_RAM_C120_)
 	sub $81
 	ld hl, _DATA_2FAC6_
@@ -11981,17 +11984,18 @@ _LABEL_59E6_:
 	add a, h
 	ld h, a
 	ex de, hl
-	call _LABEL_5A96_
+	call _LABEL_5A96_LoadNumber3Tilemap
 	pop hl
 	pop bc
 	djnz -
 	ld hl, _DATA_2FA1A_
 	ld de, $7CC6
-	call _LABEL_5A96_
+	call _LABEL_5A96_LoadNumber3Tilemap
 	jp _LABEL_18_
 
 _LABEL_5A53_:
-	call _LABEL_5AB3_
+	call _LABEL_5AB3_DrawBox
+  
 	ld a, $87
 	ld (_RAM_FFFF_), a
 	xor a
@@ -11999,40 +12003,40 @@ _LABEL_5A53_:
 	ld hl, _RAM_C804_StartTileIndex
 	ld (hl), $01
 	inc hl
-	ld (hl), $00
+	ld (hl), $00 ; _RAM_C805_DrawnTilemapBytes
 	ld hl, $4020
 	ld (_RAM_C800_CharacterDrawingVRAMAddress), hl
 	ld a, (_RAM_C120_)
 	sub $04
-	ld hl, _DATA_1E02A_ - 2
+	ld hl, _DATA_1E02A_ - 2 ; Look up text to draw
 	call _LABEL_5B14_DrawIndexedScriptEntry
 	ld a, (_RAM_C120_)
 	cp $05
 	ret nz
-	call _LABEL_5A9C_
-	ld hl, _DATA_2FA22_
+	call _LABEL_5A9C_LoadControlPadAndNumberTiles
+	ld hl, _DATA_2FA22_ ; Control apd tilemap?
 	ld de, $7AD4
 	ld bc, $0616
-	call _LABEL_6327_
+	call _LABEL_6327_LaodTilemap
 	ld hl, _DATA_2FA1A_
 	ld de, $7C8C
-	jp _LABEL_5A96_
+	jp _LABEL_5A96_LoadNumber3Tilemap
 
-_LABEL_5A96_:
+_LABEL_5A96_LoadNumber3Tilemap:
 	ld bc, $0204
-	jp _LABEL_6327_
+	jp _LABEL_6327_LaodTilemap
 
-_LABEL_5A9C_:
+_LABEL_5A9C_LoadControlPadAndNumberTiles:
 	ld a, $8B
 	ld (_RAM_FFFF_), a
-	ld hl, _DATA_2FC25_
-	ld de, $61C0
-	call _LABEL_633D_
+	ld hl, _DATA_2FC25_ControlPad
+	ld de, $61C0 
+	call _LABEL_633D_LoadTilesRLE
 	ld hl, _DATA_2FB18_Tiles123
 	ld de, $6080
-	jp _LABEL_633D_
+	jp _LABEL_633D_LoadTilesRLE ; and ret
 
-_LABEL_5AB3_:
+_LABEL_5AB3_DrawBox:
 	call _LABEL_5ACE_
 	ld a, $87
 	ld (_RAM_FFFF_), a
@@ -12272,7 +12276,7 @@ _LABEL_5C23_:
 	ld (_RAM_FFFF_), a
 	ld hl, _DATA_23CEE_
 	ld de, $6080
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	ld a, $87
 	ld (_RAM_FFFF_), a
 	ld a, $01
@@ -12293,7 +12297,7 @@ _LABEL_5C23_:
 	ld (_RAM_FFFF_), a
 	ld hl, _DATA_2BF04_
 	ld de, $6600
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	ld a, $87
 	ld (_RAM_FFFF_), a
 	ld a, (_RAM_C120_)
@@ -12497,7 +12501,7 @@ _LABEL_5DD6_:
 	ei
 	ld a, $0D
 	ld (_RAM_C120_), a
-	call _LABEL_5AB3_
+	call _LABEL_5AB3_DrawBox
 	xor a
 	ld (_RAM_C104_ScriptRendererTilemapHighByte), a
 	ld hl, _RAM_C804_StartTileIndex
@@ -12526,11 +12530,11 @@ _LABEL_5E06_:
 	ld (_RAM_DE04_), a
 	ld hl, _DATA_20ADC_
 	ld de, $4020
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	ld hl, _DATA_20922_
 	ld de, $78CE
 	ld bc, $0D22
-	call _LABEL_6327_
+	call _LABEL_6327_LaodTilemap
 	ld hl, _DATA_6383_
 	ld de, $C000
 	ld bc, $0011
@@ -12554,11 +12558,11 @@ _LABEL_5E6C_:
 	ld (_RAM_DE04_), a
 	ld hl, _DATA_21973_
 	ld de, $4020
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	ld hl, _DATA_217F3_
 	ld de, $78CE
 	ld bc, $0C20
-	call _LABEL_6327_
+	call _LABEL_6327_LaodTilemap
 	ld hl, _DATA_6394_
 	ld de, $C000
 	ld bc, $0011
@@ -12614,19 +12618,19 @@ _LABEL_5EEB_:
 	ld (_RAM_FFFF_), a
 	ld hl, _DATA_20000_
 	ld de, $4020
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	ld hl, _DATA_205D8_
 	ld de, $7A06
 	ld bc, $0D18
-	call _LABEL_6327_
+	call _LABEL_6327_LaodTilemap
 	ld hl, _DATA_20710_
 	ld de, $7A1E
 	ld bc, $0D1A
-	call _LABEL_6327_
+	call _LABEL_6327_LaodTilemap
 	ld hl, _DATA_20862_
 	ld de, $7D40
 	ld bc, $0340
-	call _LABEL_6327_
+	call _LABEL_6327_LaodTilemap
 	ld hl, _DATA_6372_
 	ld de, $C000
 	ld bc, $0011
@@ -12647,18 +12651,18 @@ _LABEL_5F35_:
 	ld (_RAM_FFFF_), a
 	ld hl, _DATA_22E6D_
 	ld de, $4400
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	ld hl, _DATA_23168_
 	ld de, $6000
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	ld hl, _DATA_22C6D_
 	ld de, $7C40
 	ld bc, $0720
-	call _LABEL_6327_
+	call _LABEL_6327_LaodTilemap
 	ld hl, _DATA_22D4D_
 	ld de, $7BE0
 	ld bc, $0920
-	call _LABEL_6327_
+	call _LABEL_6327_LaodTilemap
 	ld hl, _DATA_63B6_
 	ld de, $C000
 	ld bc, $0020
@@ -13188,7 +13192,7 @@ _LABEL_630C_:
 	djnz _LABEL_630C_
 	ret
 
-_LABEL_6327_:
+_LABEL_6327_LaodTilemap:
 	push bc
 	call _LABEL_6308_SetVRAMAddressToDE
 	ld b, c
@@ -13201,22 +13205,22 @@ _LABEL_6327_:
 	add hl, bc
 	ex de, hl
 	pop bc
-	djnz _LABEL_6327_
+	djnz _LABEL_6327_LaodTilemap
 	ret
 
-_LABEL_633D_:
+_LABEL_633D_LoadTilesRLE:
 	ld b, $04
 -:
 	push bc
 	push de
-	call _LABEL_634A_
+	call _LABEL_634A_LoadTilesBitplane
 	pop de
 	inc de
 	pop bc
 	djnz -
 	ret
 
-_LABEL_634A_:
+_LABEL_634A_LoadTilesBitplane:
 	ld a, (hl)
 	inc hl
 	or a
@@ -13244,9 +13248,9 @@ _LABEL_634A_:
 	inc de
 	inc de
 	djnz -
-	jp nz, _LABEL_634A_
+	jp nz, _LABEL_634A_LoadTilesBitplane
 	inc hl
-	jp _LABEL_634A_
+	jp _LABEL_634A_LoadTilesBitplane
 
 ; Data from 6372 to 6382 (17 bytes)
 _DATA_6372_:
@@ -15740,7 +15744,7 @@ _LABEL_782D_:
 	ex de, hl
 	ld de, $58E0
 	ld a, $04
-	call _LABEL_633D_
+	call _LABEL_633D_LoadTilesRLE
 	pop hl
 	ld c, (hl)
 	inc hl
@@ -24646,7 +24650,7 @@ _DATA_2FBD2_TilesHand:
 .db $20 $00 $00
 
 ; Data from 2FC25 to 2FC7F (91 bytes)
-_DATA_2FC25_:
+_DATA_2FC25_ControlPad:
 .db $85 $7F $80 $81 $83 $87 $03 $81 $82 $FE $01 $06 $C1 $A0 $7F $80
 .db $8F $9F $9C $98 $98 $80 $FE $01 $E1 $F1 $79 $39 $79 $F1 $7F $80
 .db $8F $9F $9C $98 $80 $83 $FE $01 $F1 $F9 $39 $19 $39 $F1 $08 $07

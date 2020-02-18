@@ -44,10 +44,6 @@ banks BankCount-2
 ; Original game functions we call
 .define SetVRAMAddressToDEScreenOn   $6308
 
-; Load in the ROM to patch
-.background "Game De Check! Koutsuu Anzen [Proto] (JP).sms"
-.emptyfill $ff
-
 ; Define helper macros for patches
 
 ; Sets the assembler to the given output address
@@ -96,9 +92,15 @@ PatchAt\1:
 .endm
 
 
+; Load in the ROM to patch
+.background "Game De Check! Koutsuu Anzen [Proto] (JP).sms"
+.emptyfill $ff
+
 ; Let's mark unused areas as free
 .unbackground $079d0 $07fff
-; lots of bank ends are free...
+; lots of bank ends are free, also some later banks seem to duplicate data from 
+; earlier banks and thus may actually have loads of free space. However - so far 
+; no need for that, we have loads of space.
 
 ; Add SDSC header. This also fixes the checksum.
 .sdsctag 0.01, "Game de Check English translation", "https://smspower.org/Translations/GameDeCheck-SMS-EN", "SMS Power!"
@@ -338,7 +340,12 @@ TitleScreen3Tilemap:
 .incbin "title-pyongkichi.tilemap.zx7"
 .ends
 
+; Title screens show [3]Please press
+; We need to patch the text and number drawing locations...
+  PatchW $1e03c, $7c90 - 2 * 2
+  PatchW $05a91, $7c8c + 13 * 2
 
 ; TODO: burnt-in text
 ; TODO: popup-window text using alternate font
 ; TODO: police screen is custom
+
