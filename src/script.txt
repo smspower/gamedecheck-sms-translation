@@ -149,14 +149,14 @@ $1da2e: Driving technique[EOS]
 $1da3a: Risk control[EOS]
 
 ドライビングアイ[EOS]
-$1d398: Driving Eye[EOS]
+$1d398:  Driving Eye [EOS]
 
 うごいているものをみわけるし[LF+]
 りょくと、ひろうしやすいかど[LF+]
 うかをみるためのテストです。[LF+]
 　まどのそとをよこぎるものが[LF+]
 なにかをあててください。[EOS]
-$1d522: It is a test to see if it is[LF+]easy to find out what is[LF+]moving. Please tell us what[LF+]is going through the[LF+]umbrella.[EOS]
+$1d522: This is a test to see how[LF+]well you can identify[LF+]fast-moving objects.[LF+]Please tell us what is going[LF+]past the window.[EOS]
 
 スピードセンス[EOS]
 $1d3a1: Speed sense[EOS]
@@ -192,17 +192,17 @@ $1d3b5: Risk Control[EOS]
 $1d60f: It is a test to see if you[LF+]can make a good solder and a[LF+]bottle under an unusual[LF+]condition. Press the button[LF+]according to the color of[LF+]the rhythm.[EOS]
 
 せんたくボタン。[EOS]
-$1d3d8: A button to pick up.[EOS]
+$1d3d8: Selection button[EOS]
 
 つかわない。[EOS]
-$1d3ea: Not used.[EOS]
+$1d3ea: Not used[EOS]
 
 けっていボタン。[EOS]
-$1d3e1: Ke button.[EOS]
+$1d3e1: Submit button[EOS]
 
 そうさほうほうがわかったら[LF]
 　をおしてください。[EOS]
-$1d3bf: If you know how to do[LF]that, please do it.[EOS]
+$1d3bf: When you are ready to[LF]start, press[EOS]
 
 あみをふりおろす。[EOS]
 $1d3f1: Shake the net.[EOS]

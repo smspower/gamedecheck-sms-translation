@@ -73,7 +73,7 @@ Script5fdf: .asc "Cause", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d398" free
-Script1d398: .asc "Driving Eye", $fe
+Script1d398: .asc " Driving Eye ", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3a1" free
@@ -89,19 +89,19 @@ Script1d3b5: .asc "Risk Control", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3bf" free
-Script1d3bf: .asc "If you know how to do", $ff, "that, please do it.", $fe
+Script1d3bf: .asc "When you are ready to", $ff, "start, press", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3d8" free
-Script1d3d8: .asc "A button to pick up.", $fe
+Script1d3d8: .asc "Selection button", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3e1" free
-Script1d3e1: .asc "Ke button.", $fe
+Script1d3e1: .asc "Submit button", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3ea" free
-Script1d3ea: .asc "Not used.", $fe
+Script1d3ea: .asc "Not used", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3f1" free
@@ -161,7 +161,7 @@ Script1d51a: .asc "Game over", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d522" free
-Script1d522: .asc "It is a test to see if it is", $fd, "easy to find out what is", $fd, "moving. Please tell us what", $fd, "is going through the", $fd, "umbrella.", $fe
+Script1d522: .asc "This is a test to see how", $fd, "well you can identify", $fd, "fast-moving objects.", $fd, "Please tell us what is going", $fd, "past the window.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d56b" free
