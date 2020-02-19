@@ -344,6 +344,11 @@ TitleScreen3Tilemap:
 ; We need to patch the text and number drawing locations...
   PatchW $1e03c, $7c90 - 2 * 2
   PatchW $05a91, $7c8c + 13 * 2
+  
+  
+; Driving Eye
+; [3] location
+  PatchW $5a4b $7cc6 + 13 * 2
 
 ; TODO: burnt-in text
 ; TODO: popup-window text using alternate font

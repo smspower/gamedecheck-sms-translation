@@ -11926,7 +11926,7 @@ _LABEL_59B5_:
 	ld hl, $4020
 	ld (_RAM_C800_CharacterDrawingVRAMAddress), hl
 	ld a, (_RAM_C120_)
-	ld hl, _DATA_1DFAB_ - 2
+	ld hl, _DATA_1DFAB_DrivingSenseTextTable - 2
 	call _LABEL_6191_ReadAthPointerFromHL
 	ld b, $02
 	call _LABEL_5AF5_DrawMultipleStrings
@@ -11959,7 +11959,7 @@ _LABEL_59E6_:
 	ld a, $8B
 	ld (_RAM_FFFF_), a
 	call _LABEL_5A9C_LoadControlPadAndNumberTiles
-	ld hl, _DATA_2FA22_
+	ld hl, _DATA_2FA22_ControlPadTilemap
 	ld de, $7814
 	ld bc, $0616
 	call _LABEL_6327_LaodTilemap
@@ -12014,7 +12014,7 @@ _LABEL_5A53_:
 	cp $05
 	ret nz
 	call _LABEL_5A9C_LoadControlPadAndNumberTiles
-	ld hl, _DATA_2FA22_ ; Control apd tilemap?
+	ld hl, _DATA_2FA22_ControlPadTilemap
 	ld de, $7AD4
 	ld bc, $0616
 	call _LABEL_6327_LaodTilemap
@@ -21716,7 +21716,7 @@ _DATA_1CE78_Characters:
 
 ; 1st entry of Pointer Table from 1DFB5 (indexed by unknown)
 ; Data from 1D398 to 1D3A0 (9 bytes)
-_DATA_1D398_:
+_DATA_1D398_DrivingEyeTitle:
 .db $6F $8E $4E $7B $95 $59 $4D $4E $FE
 
 ; 1st entry of Pointer Table from 1DFBD (indexed by unknown)
@@ -21838,7 +21838,7 @@ _DATA_1D51A_:
 
 ; 3rd entry of Pointer Table from 1DFB5 (indexed by unknown)
 ; Data from 1D522 to 1D56A (73 bytes)
-_DATA_1D522_:
+_DATA_1D522_DrivingEyeText:
 .db $02 $0E $01 $1C $01 $41 $3B $27 $45 $38 $44 $08 $41 $10 $FD $40
 .db $4C $07 $1D $47 $29 $43 $02 $10 $3C $11 $01 $05 $22 $FD $02 $05
 .db $45 $38 $41 $19 $3A $27 $69 $5E $6A $21 $11 $48 $FD $99 $37 $22
@@ -22456,12 +22456,12 @@ _DATA_1DFA7_:
 .db $50 $70 $0E $02
 
 ; Pointer Table from 1DFAB to 1DFB2 (4 entries, indexed by _RAM_C120_)
-_DATA_1DFAB_:
+_DATA_1DFAB_DrivingSenseTextTable:
 .dw + ++ +++ ++++
 
 +:
-.dw $78d0 _DATA_1D398_
-.dw $7984 _DATA_1D522_
+.dw $78d0 _DATA_1D398_DrivingEyeTitle
+.dw $7984 _DATA_1D522_DrivingEyeText
 
 ++:
 .dw $7892 _DATA_1D3A1_
@@ -24534,7 +24534,7 @@ _DATA_2FA1A_:
 .db $0C $01 $0D $01 $0C $05 $0D $05
 
 ; Data from 2FA22 to 2FAC5 (164 bytes)
-_DATA_2FA22_:
+_DATA_2FA22_ControlPadTilemap:
 .db $00 $01 $00 $01 $0E $01 $0F $01 $00 $01 $00 $01 $10 $01 $11 $01
 .db $12 $01 $13 $01 $00 $01 $14 $01 $15 $01 $16 $01 $17 $01 $18 $01
 .db $19 $01 $1A $01 $1B $01 $1C $01 $1D $01 $1E $01 $1F $01 $20 $01
