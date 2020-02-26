@@ -41,16 +41,15 @@ $19651  $19810              Tilemap for above
 
 $19811  $198a6              Title screen logo tilemap (part 1)
 $198a7  $198ee              Title screen logo tilemap (part 1)
-$198ef  $1a0de              Title screen logo tiles
+$198ef  $19bae              Title screen logo tiles
 
+$19baf  $1b1ae  352         4bpp uncompressed: car, bike
 $1b1af  $1b418  32          ?
 $1b419  $1b564  12          ?
 $1b565  $1b879  49          ?
 $1b87a  $1be24  76          Driving HUD sprites
 
 $1c000  $1ce77  927         Japanese font tiles
-
-$19baf  $1b1ae  352         4bpp uncompressed: car, bike
 
 $20000  $205d7  71          ? Background
 

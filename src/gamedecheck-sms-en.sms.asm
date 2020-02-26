@@ -91,6 +91,12 @@ PatchAt\1:
   .undefine CODE_PATCH_END
 .endm
 
+; Ends the previously started section with no attempt at padding
+.macro END_CODE_PATCH_HARD
+  .ends
+  .undefine CODE_PATCH_END
+.endm
+
 
 ; Load in the ROM to patch
 .background "Game De Check! Koutsuu Anzen [Proto] (JP).sms"
@@ -235,8 +241,9 @@ DrawTilemapEntry:
 ; and decompress directly into VRAM. This means we are storing a lot of zeroes -
 ; but the compression masks that.
 
-; Title screen logo data
-.unbackground $19811 $1a0de
+; Title screen logo data (tilemaps, tiles)
+.unbackground $19811 $19bae
+
 ; Title screen logo loader code (part 1)
   START_CODE_PATCH $17e $199
 
@@ -345,10 +352,263 @@ TitleScreen3Tilemap:
   PatchW $1e03c, $7c90 - 2 * 2
   PatchW $05a91, $7c8c + 13 * 2
   
-  
 ; Driving Eye
 ; [3] location
   PatchW $5a4b $7cc6 + 13 * 2
+
+; Prompt at start
+; Tiles at 10158 to 102ef. The first four are box borders and we leave them alone.
+; Tilemap at 10420 to 1046f, ..?
+; This consists of a bunch of message boxes with borders.
+; Sometimes the game just loads a subset of the data (bc parameter),
+; and sometimes it loads later parts separately.
+; スタート         SuTa-To         Start
+; せいせき  <n>てん  SeISeKi <n>TeN  Score <n> points
+; O せいかい       SeIKaI          Right
+; X まちがい       MaTiGaI         Wrong
+; ゴール          Go-Ru           Goal
+.unbackground $10158+8*4 $1032f ; Tiles, after box borders
+.unbackground $10420 $1046f ; Tilemap for Start
+
+.section "Replacement text for popups" free
+StartText:     .asc "Start", $fe
+ScoreText:     .asc "Score       points", $fe
+CorrectText:   .asc "Correct", $fe
+IncorrectText: .asc "Incorrect", $fe
+GoalText:      .asc "Goal", $fe
+.ends
+
+; THe original code loads the tiles it needs early on and then loads tilemaps
+; when it wants to display some text. We replace that with some use of the
+; script engine. That means we need to patch out places that load more than
+; just the tiles...
+
+; Patches to replace the loaders
+  
+  ; Driving Eye
+  
+  START_CODE_PATCH $1bf8 $1c17
+  ld de, $4000 ; load address
+  ld a, 1 ; palette index
+  call LoadBorders
+  END_CODE_PATCH
+  
+; Patches to replace the tilemap drawing
+
+  ; Driving Eye
+
+  ; "Start"
+  START_CODE_PATCH $19e3 $19f5
+  ld hl,4
+  call TextWithBorderInit
+  ld bc, $0208 ; dimensions
+  TilemapWriteAddressToDE 11, 12
+	ld hl, StartText
+  call TextWithBorder
+  END_CODE_PATCH_HARD
+  
+  ; "Correct" and "Incorrect"
+  PatchW $1aa0 $020c ; dimensions
+  PatchW $1abb CorrectText
+  PatchW $1ac6 IncorrectText
+  
+  START_CODE_PATCH $1acd $1ad6
+  call CorrectIncorrect
+  END_CODE_PATCH
+  
+.section "Show text" free
+; This is because out work is too large to fit in the patch space...
+CorrectIncorrect:
+  push hl
+    ld hl,4
+    call TextWithBorderInit
+  pop hl
+  jp TextWithBorder ; and ret
+.ends
+  
+  ; Score
+  START_CODE_PATCH $1b52 $1b86
+  ld hl,4
+  call TextWithBorderInit
+  ld bc, $0214 ; dimensions
+  TilemapWriteAddressToDE 5, 18
+	ld hl, ScoreText
+  call TextWithBorder
+  ; Draw in score
+  ld hl,$c0a2 ; score
+  call NumberToString
+  TilemapWriteAddressToDE 15, 19
+  ld (RAM_ScriptRendererTilemapVRAMAddress),de
+  ld hl,$c177 ; string is here
+  call Text
+  END_CODE_PATCH
+  
+  ; Speed ​​sense
+  
+  START_CODE_PATCH $1e55 $1e75
+foo:
+  TileWriteAddressToDE $100
+  ld a, 1 ; palette index
+  call LoadBorders
+  ld hl,$104
+  call TextWithBorderInit
+  ld bc, $0208 ; dimensions
+  ld de,$7296 ; tilemap address - unusual tilemap location
+	ld hl, StartText
+  call TextWithBorder
+  END_CODE_PATCH
+  
+; No longer need the digits (I hope)
+.unbackground $10000 $100ff ; Tiles for digits
+.unbackground $10100 $10157 ; Tilemaps for digits
+  
+  START_CODE_PATCH $51a3 $51fb
+NumberToString:
+  ; hl points at the hundreds digit
+  ld de,$c177 ; buffer
+  ld a,(hl)
+  call _emit
+  dec hl
+  ld a,(hl)
+  rrca
+  rrca
+  rrca
+  rrca
+  and $f
+  call _emit
+  ld a,(hl)
+  and $f
+  call _emit
+  ld a,$fe
+  ld (de),a
+  ; then blank leading zeroes
+  ld hl,$c177
+  ld b,2
+-:ld a,(hl)
+  cp '0'-' '
+  ret nz
+  xor a ; ' '
+  ld (hl),a
+  inc hl
+  djnz -
+  ret
+  
+_emit:
+  add '0'-' '
+  ld (de),a
+  inc de
+  ret
+  END_CODE_PATCH
+  
+.bank 0 slot "FixedROM"
+.section "Load borders" free
+LoadBorders:
+  ld hl,PAGING
+  ld (hl),4
+  ld hl,$8158 ; data
+  ld bc,$20 ; byte count
+  jp $36a ; load and return
+.ends
+
+.section "Draw text with border" free
+TextWithBorder:
+  ; hl = text
+  ; de = write address
+  ; bc = box dimensions
+  push hl
+    push bc
+      push de
+        ; Draw the box
+        call $0948 ; draw box
+      pop de
+    pop bc
+    ; offset for drawing text
+    ld hl, (32*1+2)*2
+    add hl,de
+    ld (RAM_ScriptRendererTilemapVRAMAddress), hl
+    ; Next we want to draw some blanks in the space
+    
+  
+  pop hl
+  ; fall through
+Text:
+  ; hl = text
+  ; $C802 = tilemap address
+  ; Draw the text
+-:ld a,(hl)
+  cp $fe
+  ret z
+  ; Load font to tiles
+  push hl
+    ; look up font
+    ld h,0
+    ld l,a
+    add hl,hl
+    add hl,hl
+    add hl,hl
+    add hl,hl
+    ld de,Font
+    add hl,de
+    ld de,(RAM_ScriptRendererVRAMAddress) ; VRAM location for tiles
+    ld a,1 ; palette index
+    ld bc,8*2 ; 2 tiles
+    di
+      call $36A ; Load1bppTiles
+    ei
+    ; increment pointer
+    ld de,(RAM_ScriptRendererVRAMAddress)
+    ld hl,32*2
+    add hl,de
+    ld (RAM_ScriptRendererVRAMAddress),hl
+    ; then to the tilemap
+    ld de,(RAM_ScriptRendererTilemapVRAMAddress)
+    di
+      rst $8
+      ld a,($c804)
+      out (Port_VDPData),a
+      inc a
+      push af
+        ld a, (RAM_ScriptRendererTilemapHighByte)
+        out (Port_VDPData),a
+        ld hl,32*2 ; add a row
+        ld de,(RAM_ScriptRendererTilemapVRAMAddress)
+        add hl,de
+        ex de,hl
+        rst $8
+      pop af
+      out (Port_VDPData),a
+      inc a
+      ld ($c804),a
+      ld a, (RAM_ScriptRendererTilemapHighByte)
+      out (Port_VDPData),a
+    ei
+    ld hl,RAM_ScriptRendererTilemapVRAMAddress
+    inc (hl)
+    inc (hl)
+  pop hl
+  inc hl
+  jr -
+  
+TextWithBorderInit:
+; hl = tile index to start at
+  ld a,l
+  ld ($C804),a ; tile start index
+  ld a,h
+  or 8 ; sprite palette (?)
+  ld (RAM_ScriptRendererTilemapHighByte),a ; high byte
+  push hl
+    add hl,hl
+    add hl,hl
+    add hl,hl
+    add hl,hl
+    add hl,hl
+    set 6,h ; make it a write address
+    ld (RAM_ScriptRendererVRAMAddress), hl
+  pop hl
+  ld a, :Font
+  ld (PAGING), a
+  ret
+.ends
 
 ; TODO: burnt-in text
 ; TODO: popup-window text using alternate font
