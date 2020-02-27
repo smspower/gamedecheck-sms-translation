@@ -1,5 +1,5 @@
 えらんでください。[LF][LF][LF+]　　　　じどうしゃ[LF][LF][LF]　　　　オートバイ[EOS]
-$2ca4: Select Mode[LF][LF][LF+]  Manual[LF][LF][LF]  Autopilot[EOS]
+$2ca4: Select Mode[LF][LF][LF+]  Car[LF][LF][LF]  Motorcycle[EOS]
 
 これでゲームをおわります。[EOS]
 $2d50: The game is over.[EOS]
