@@ -1,3 +1,12 @@
+The script format is as follows:
+* Lines starting with addresses like "$1dfe8: " are script entries; everything else 
+  (including this) is ignored.
+* [LF] acts like a line break, moving the drawing location to the next row down
+  and to the left.
+* [LF+] acts like a 1.5x line break, leaving an 8px gap between rows of text.
+* [EOS] is the end of the text; almost all lines require this.
+* Script entries must be al on one line.
+
 えらんでください。[LF][LF][LF+]　　　　じどうしゃ[LF][LF][LF]　　　　オートバイ[EOS]
 $2ca4: Select Mode[LF][LF][LF+]  Car[LF][LF][LF]  Motorcycle[EOS]
 

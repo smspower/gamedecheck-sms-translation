@@ -77,19 +77,19 @@ Script1d398: .asc " Driving Eye ", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3a1" free
-Script1d3a1: .asc "Speed sense", $fe
+Script1d3a1: .asc " Speed sense ", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3a9" free
-Script1d3a9: .asc "Driving technique", $fe
+Script1d3a9: .asc " Driving technique ", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3b5" free
-Script1d3b5: .asc "Risk Control", $fe
+Script1d3b5: .asc " Risk Control ", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3bf" free
-Script1d3bf: .asc "When you are ready to", $ff, "start, press", $fe
+Script1d3bf: .asc "When you are ready to", $ff, "start, press   .", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3d8" free
@@ -105,7 +105,7 @@ Script1d3ea: .asc "Not used", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3f1" free
-Script1d3f1: .asc "Shake the net.", $fe
+Script1d3f1: .asc "Use the net", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3fb" free
@@ -125,15 +125,15 @@ Script1d418: .asc "Axel.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d41e" free
-Script1d41e: .asc "Please press", $fe
+Script1d41e: .asc "Please press   .", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d428" free
-Script1d428: .asc "Renshi Yu", $fe
+Script1d428: .asc "Practice", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d42e" free
-Script1d42e: .asc "Start the test.", $fe
+Script1d42e: .asc "Start the test", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d439" free
@@ -165,15 +165,15 @@ Script1d522: .asc "This is a test to see how", $fd, "well you can identify", $fd
 .ends
 .bank 7 slot 2
 .section "Script1d56b" free
-Script1d56b: .asc "However, it is a test to", $fd, "see if you have a speed", $fd, "problem or if there is any", $fd, "problem that can be easily", $fd, "deterred. Please catch the", $fd, "animal that comes.", $fe
+Script1d56b: .asc "This is a test of your", $fd, "ability to judge speed.", $fd, "Please catch the animals.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d5b6" free
-Script1d5b6: .asc "This is a test to see if you", $fd, "can do a lot of work and see", $fd, "if you can get through the", $fd, "work. Follow the motorcycle", $fd, "you are wearing.", $fe
+Script1d5b6: .asc "This is a test of your", $fd, "ability to navigate", $fd, "through traffic.", $fd, "Follow the motorcycle.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d60f" free
-Script1d60f: .asc "It is a test to see if you", $fd, "can make a good solder and a", $fd, "bottle under an unusual", $fd, "condition. Press the button", $fd, "according to the color of", $fd, "the rhythm.", $fe
+Script1d60f: .asc "This is a test of your", $fd, "ability to identify and", $fd, "react.", $fd, "Press the buttons", $fd, "according to the colors of", $fd, "the flags.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d668" free
