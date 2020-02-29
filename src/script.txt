@@ -20,7 +20,7 @@ $1dde2: Advice[EOS]
 $1dde8: The test is over.[EOS]
 
 ゲームをえらんでください。[LF+][LF]　　ドライビングセンステスト[LF+]　　きみはべストドライバー[LF+]　　ピョンきちアドべンチャー[EOS]
-$1ddf6: Select Game[LF+][LF]  Driving Sense Test[LF+]  You are the Best Driver[LF+]  Pyonkichi's Adventure[EOS]
+$1ddf6: Select Game[LF+][LF]    Driving Sense Test[LF+]    You are the Best Driver[LF+]    Pyonkichi's Adventure[EOS]
 
 あなたは、とてもゆうしゅうな[LF+]ドライバーです。[LF+]　このちょうしであんぜんうん[LF+]てんをこころがけましょう。[EOS]
 $1de3b: You are a flawless[LF+]driver.[LF+]This is how[LF+]you should safely drive.[EOS]
@@ -107,7 +107,7 @@ $1d3ea: Unused[EOS]
 $1d3e1: Select Button[EOS]
 
 そうさほうほうがわかったら[LF]　をおしてください。[EOS]
-$1d3bf: Push a button when[LF]you're ready.[EOS]
+$1d3bf: Push button __ when[LF]you're ready.[EOS]
 
 あみをふりおろす。[EOS]
 $1d3f1: Swing the net[EOS]
@@ -125,7 +125,7 @@ $1d412: Brake[EOS]
 $1d418: Accelerator[EOS]
 
 をおしてください。[EOS]
-$1d41e: Push (the)[EOS]
+$1d41e: Press button[EOS]
 
 れんしゅう[EOS]
 $1d428: Practice[EOS]
