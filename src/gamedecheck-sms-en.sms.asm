@@ -35,13 +35,16 @@ banks BankCount-2
 .endm
 
 ; Original game RAM we use
-.define RAM_ScriptRendererTilemapHighByte         $c104 ; db High byte for tilemap writes
+.define RAM_TilemapHighByte                       $c104 ; db High byte for tilemap writes
 .define RAM_ScriptRendererVRAMAddress             $c800 ; dw Where in VRAM we are dynamically loading font characters
 .define RAM_ScriptRendererTilemapVRAMAddress      $c802 ; dw Where in VRAM we draw to the tilemap
 .define RAM_ScriptRendererCharacterCount          $c805 ; db How many characters we have loaded so far
 .define RAM_ScriptRendererDrawnCharsBufferPointer $c807 ; dw Points to a buffer holding the indices of characters drawn so far
+.define RAM_NumberToTextBuffer                    $c177 ; dsb 4 Buffer for rendering scores to text
 
 ; Original game functions we call
+.define Load1bppTiles                $036A
+.define DrawBox                      $0948
 .define SetVRAMAddressToDEScreenOn   $6308
 
 ; Define helper macros for patches
@@ -78,7 +81,7 @@ PatchAt\1:
 ; Clears an area of ROM and starts a new section there
 .macro START_CODE_PATCH args begin, end ; end is inclusive
   .define CODE_PATCH_END end
-  .unbackground begin, end-1
+  .unbackground begin, end
   ROMPosition begin
   .section "Code patch \1-\2" force
 .endm
@@ -215,7 +218,7 @@ DrawTilemapEntry:
   call SetVRAMAddressToDEScreenOn
   out (c), l ; Tile itself
   inc l
-  ld a, (RAM_ScriptRendererTilemapHighByte)
+  ld a, (RAM_TilemapHighByte)
   out (Port_VDPData), a ; High byte
   ld a, 32*2 ; Then add 64 to de to get to the next row
   add a, e
@@ -439,14 +442,13 @@ CorrectIncorrect:
   call NumberToString
   TilemapWriteAddressToDE 15, 19
   ld (RAM_ScriptRendererTilemapVRAMAddress),de
-  ld hl,$c177 ; string is here
+  ld hl,RAM_NumberToTextBuffer ; string is here
   call Text
   END_CODE_PATCH
   
   ; Speed ​​sense
   
   START_CODE_PATCH $1e55 $1e75
-foo:
   TileWriteAddressToDE $100
   ld a, 1 ; palette index
   call LoadBorders
@@ -456,7 +458,59 @@ foo:
   ld de,$7296 ; tilemap address - unusual tilemap location
 	ld hl, StartText
   call TextWithBorder
+  call SpeechBubblePatch
   END_CODE_PATCH
+  
+  ; Speech bubbles for the pig
+  ; はやい  hayai  too early
+  ; おそい  osoi   too late
+  ; Rather than recompress all the graphics, we load extra over the top
+.section "Speech bubble patch" free
+SpeechBubblePatch:
+  ; Load replacement tiles
+  ld a,:TooEarlyTooLateTiles
+  ld (PAGING),a
+  ld hl, TooEarlyTooLateTiles
+  TileWriteAddressToDE 228
+  jp zx7_decompress ; and ret
+.ends
+
+  START_CODE_PATCH $1450a $1452e
+; replace with "too early" for now
+; syntax is:
+; db count
+; db y, x, tile index <- count times
+.db 12
+.db 0, 0, 228, 0, 8, 229, 0, 16, 240, 0, 24, 241, 0, 32, 242, 0, 40, 243
+.db 8, 0, 234, 8, 8, 235, 8, 16, 244, 8, 24, 245, 8, 32, 246, 8, 40, 247
+  END_CODE_PATCH_HARD
+
+  ; Score
+  START_CODE_PATCH $1d88 $1dbb
+  TileWriteAddressToDE $100
+  ld a, 1 ; palette index
+  call LoadBorders
+  ld hl,$104
+  call TextWithBorderInit
+  ld bc, $0214 ; dimensions
+  TilemapWriteAddressToDE 5, 6
+	ld hl, ScoreText
+  call TextWithBorder
+  ; Draw in score
+  ld hl,$c0a2 ; score
+  call NumberToString
+  TilemapWriteAddressToDE 15, 7
+  ld (RAM_ScriptRendererTilemapVRAMAddress),de
+  ld hl,RAM_NumberToTextBuffer ; string is here
+  call Text
+  END_CODE_PATCH
+
+.bank 4 slot 2
+.section "Speech bubble data" superfree ; needs to be in this bank
+TooEarlyTooLateTiles:
+.incbin "too-early-too-late.tiles.zx7"
+.ends
+  
   
 ; No longer need the digits (I hope)
 .unbackground $10000 $100ff ; Tiles for digits
@@ -465,7 +519,7 @@ foo:
   START_CODE_PATCH $51a3 $51fb
 NumberToString:
   ; hl points at the hundreds digit
-  ld de,$c177 ; buffer
+  ld de,RAM_NumberToTextBuffer ; buffer
   ld a,(hl)
   call _emit
   dec hl
@@ -482,7 +536,7 @@ NumberToString:
   ld a,$fe
   ld (de),a
   ; then blank leading zeroes
-  ld hl,$c177
+  ld hl,RAM_NumberToTextBuffer
   ld b,2
 -:ld a,(hl)
   cp '0'-' '
@@ -518,17 +572,33 @@ TextWithBorder:
   push hl
     push bc
       push de
-        ; Draw the box
-        call $0948 ; draw box
+        ; Draw the box edges
+        call DrawBox
       pop de
     pop bc
-    ; offset for drawing text
-    ld hl, (32*1+2)*2
+    ; offset for blanking
+    ld hl, (32*1+1)*2
     add hl,de
     ld (RAM_ScriptRendererTilemapVRAMAddress), hl
     ; Next we want to draw some blanks in the space
-    
-  
+    foo:
+--: ex de,hl
+    rst $8
+    push bc
+-:    xor a
+      out (Port_VDPData),a
+      ld a, (RAM_TilemapHighByte)
+      out (Port_VDPData),a
+      dec c
+      jr nz,-
+      ld hl,32*2
+      add hl,de
+    pop bc
+    djnz --
+    ; offset for text
+    ld hl,RAM_ScriptRendererTilemapVRAMAddress
+    inc (hl)
+    inc (hl)
   pop hl
   ; fall through
 Text:
@@ -553,7 +623,7 @@ Text:
     ld a,1 ; palette index
     ld bc,8*2 ; 2 tiles
     di
-      call $36A ; Load1bppTiles
+      call Load1bppTiles
     ei
     ; increment pointer
     ld de,(RAM_ScriptRendererVRAMAddress)
@@ -568,7 +638,7 @@ Text:
       out (Port_VDPData),a
       inc a
       push af
-        ld a, (RAM_ScriptRendererTilemapHighByte)
+        ld a, (RAM_TilemapHighByte)
         out (Port_VDPData),a
         ld hl,32*2 ; add a row
         ld de,(RAM_ScriptRendererTilemapVRAMAddress)
@@ -579,7 +649,7 @@ Text:
       out (Port_VDPData),a
       inc a
       ld ($c804),a
-      ld a, (RAM_ScriptRendererTilemapHighByte)
+      ld a, (RAM_TilemapHighByte)
       out (Port_VDPData),a
     ei
     ld hl,RAM_ScriptRendererTilemapVRAMAddress
@@ -595,7 +665,7 @@ TextWithBorderInit:
   ld ($C804),a ; tile start index
   ld a,h
   or 8 ; sprite palette (?)
-  ld (RAM_ScriptRendererTilemapHighByte),a ; high byte
+  ld (RAM_TilemapHighByte),a ; high byte
   push hl
     add hl,hl
     add hl,hl
