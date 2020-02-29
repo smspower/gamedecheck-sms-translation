@@ -57,7 +57,7 @@
 .unbackground $1dee4 $1df1c
 .bank 0 slot 0
 .section "Script2ca4" free
-Script2ca4: .asc "Select Mode", $ff, $ff, $fd, "  Car", $ff, $ff, $ff, "  Motorcycle", $fe
+Script2ca4: .asc "Select Mode", $ff, $ff, $fd, "        Car", $ff, $ff, $ff, "        Motorcycle", $fe
 .ends
 .bank 0 slot 0
 .section "Script2d50" free
@@ -137,11 +137,11 @@ Script1d42e: .asc "The test has begun.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d439" free
-Script1d439: .asc "Pyonkichi-kun is going", $fd, "to visit Pyonko's house.", $fd, "On the way, various", $fd, "things will happen.", $fd, "Will Pyonkichi-kun", $fd, "make the correct", $fd, "choices?", $fe
+Script1d439: .asc "Pyonkichi-kun is going to", $ff, "visit Pyonko's house.", $fd, "On the way, various things", $ff, "will happen.", $fd, "Will Pyonkichi-kun make", $ff, "the correct choices?", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d491" free
-Script1d491: .asc "You will start with 100", $fd, "points. If there are any accidents or", $fd, "traffic violtions, points will", $fd, "be subtracted. If you reach zero points,", $fd, "it's game over.", $fd, "Your goal is to obey", $fd, "traffic laws.", $fe
+Script1d491: .asc "You will start with 100", $ff, "points. If there are any", $ff, "accidents or traffic", $ff, "violations, points will be", $ff, "deducted.", $fd, "If you reach zero points,", $ff, "it's game over.", $fd, "Your goal is to obey traffic", $ff, "laws.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d4f0" free
@@ -153,7 +153,7 @@ Script1d4fe: .asc "You caused 　　", $fd, $fe
 .ends
 .bank 7 slot 2
 .section "Script1d50f" free
-Script1d50f: .asc "The game is starting.EOS]"
+Script1d50f: .asc "The game is starting", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d51a" free

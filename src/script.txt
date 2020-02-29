@@ -8,7 +8,7 @@ The script format is as follows:
 * Script entries must be al on one line.
 
 えらんでください。[LF][LF][LF+]　　　　じどうしゃ[LF][LF][LF]　　　　オートバイ[EOS]
-$2ca4: Select Mode[LF][LF][LF+]  Car[LF][LF][LF]  Motorcycle[EOS]
+$2ca4: Select Mode[LF][LF][LF+]        Car[LF][LF][LF]        Motorcycle[EOS]
 
 これでゲームをおわります。[EOS]
 $2d50: The game is over.[EOS]
@@ -134,10 +134,10 @@ $1d428: Practice[EOS]
 $1d42e: The test has begun.[EOS]
 
 ピョンきちくんは、ピョンこ[LF+]ちゃんのおうちへ、あそびに[LF+]いきます。とちゅうで、いろ[LF+]いろなことをします。[LF+]そのとき、ピョンきちくんが[LF+]とったこうどうは、ただしい[LF+]でしょうか。[EOS]
-$1d439: Pyonkichi-kun is going[LF+]to visit Pyonko's house.[LF+]On the way, various[LF+]things will happen.[LF+]Will Pyonkichi-kun[LF+]make the correct[LF+]choices?[EOS]
+$1d439: Pyonkichi-kun is going to[LF]visit Pyonko's house.[LF+]On the way, various things[LF]will happen.[LF+]Will Pyonkichi-kun make[LF]the correct choices?[EOS]
 
 あなたのもちてんは１００てん[LF+]です。こうつうじこやこうつう[LF+]いはんをおこすと、げんてんさ[LF+]れ、もちてんがなくなるとゲー[LF+]ムオーバーです。[LF+]　こうつうきそくをまもって、[LF+]ゴールしてください。[EOS]
-$1d491: You will start with 100[LF+]points. If there are any accidents or[LF+]traffic violtions, points will[LF+]be subtracted. If you reach zero points,[LF+]it's game over.[LF+]Your goal is to obey[LF+]traffic laws.[EOS]
+$1d491: You will start with 100[LF]points. If there are any[LF]accidents or traffic[LF]violations, points will be[LF]deducted.[LF+]If you reach zero points,[LF]it's game over.[LF+]Your goal is to obey traffic[LF]laws.[EOS]
 
 あなたは、　　をしました。[EOS]
 $1d4f0: You did    [EOS]
@@ -146,7 +146,7 @@ $1d4f0: You did    [EOS]
 $1d4fe: You caused 　　[LF+][EOS]
 
 ゲームをはじめます。[EOS]
-$1d50f: The game is starting.EOS]
+$1d50f: The game is starting[EOS]
 
 ゲームオーバー[EOS]
 $1d51a: Game Over[EOS]
