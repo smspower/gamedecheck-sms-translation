@@ -357,7 +357,7 @@ TitleScreen3Tilemap:
   
 ; Driving Eye
 ; [3] location
-  PatchW $5a4b $7cc6 + 13 * 2
+  PatchW $5a4b $7cc6 + 12 * 2 - 32 * 2 * 2
 
 ; Prompt at start
 ; Tiles at 10158 to 102ef. The first four are box borders and we leave them alone.
