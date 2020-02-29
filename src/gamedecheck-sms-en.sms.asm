@@ -42,6 +42,9 @@ banks BankCount-2
 .define RAM_ScriptRendererDrawnCharsBufferPointer $c807 ; dw Points to a buffer holding the indices of characters drawn so far
 .define RAM_NumberToTextBuffer                    $c177 ; dsb 4 Buffer for rendering scores to text
 
+; My own invention
+.define RAM_1bppIndex $c806
+
 ; Original game functions we call
 .define Load1bppTiles                $036A
 .define DrawBox                      $0948
@@ -475,8 +478,14 @@ SpeechBubblePatch:
   jp zx7_decompress ; and ret
 .ends
 
+.bank 4 slot 2
+.section "Speech bubble data" superfree
+TooEarlyTooLateTiles:
+.incbin "too-early-too-late.tiles.zx7"
+.ends
+
   START_CODE_PATCH $1450a $1452e
-; replace with "too early" for now
+; Sprite data for "Too late"
 ; syntax is:
 ; db count
 ; db y, x, tile index <- count times
@@ -505,13 +514,22 @@ SpeechBubblePatch:
   call Text
   END_CODE_PATCH
 
-.bank 4 slot 2
-.section "Speech bubble data" superfree ; needs to be in this bank
-TooEarlyTooLateTiles:
-.incbin "too-early-too-late.tiles.zx7"
-.ends
+
+  ; Driving technique
   
-  
+  ; "Goal"
+  START_CODE_PATCH $202b $203d
+  foo:
+  ld hl,$104
+  call TextWithBorderInit
+  ld bc, $0208 ; dimensions
+  TilemapWriteAddressToDE 12, 17
+	ld hl, GoalText
+  call TextWithBorder
+  nop
+  END_CODE_PATCH_HARD
+
+
 ; No longer need the digits (I hope)
 .unbackground $10000 $100ff ; Tiles for digits
 .unbackground $10100 $10157 ; Tilemaps for digits
@@ -581,7 +599,6 @@ TextWithBorder:
     add hl,de
     ld (RAM_ScriptRendererTilemapVRAMAddress), hl
     ; Next we want to draw some blanks in the space
-    foo:
 --: ex de,hl
     rst $8
     push bc
