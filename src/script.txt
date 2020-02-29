@@ -162,4 +162,3 @@ $5fdf: Results[EOS]
 
 げんてん　　　　てん　　　もちてん　　　　てん
 $5c0c: Lost    Points     Remaining    Points
-

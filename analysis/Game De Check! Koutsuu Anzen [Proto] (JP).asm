@@ -927,6 +927,7 @@ _LABEL_16B_:
 	call _LABEL_2DC_
 	call _LABEL_269_
 	call _LABEL_2BA7_
+  ; patch start @ 17e
 	nop
 	nop
 	nop
@@ -944,6 +945,7 @@ _LABEL_16B_:
 	ld bc, $02C0
 	ld a, $02
 	call _LABEL_36A_Load1bppTiles
+  ; patch end @ 199
   
   ; Draw text to screen
 	ld a, $04
@@ -1759,18 +1761,18 @@ _LABEL_948_DrawBoc:
 	ld ix, _RAM_C104_TilemapHighByte
 	push bc
     ld b, c
-    call +
+    call _topRow
 	pop bc
 	ld hl, $0040
 	add hl, de
 	ex de, hl
 	push de
     push bc
-      call _LABEL_9CD_
+      call _leftSide
     pop bc
     push bc
       ld b, c
-      call ++
+      call _bottomRow
     pop bc
 	pop de
 	ld l, c
@@ -1780,9 +1782,9 @@ _LABEL_948_DrawBoc:
 	inc hl
 	add hl, de
 	ex de, hl
-	jp _LABEL_9E2_
+	jp _rightSide
 
-+:
+_topRow:
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	nop
 	ld a, $01
@@ -1812,7 +1814,7 @@ _LABEL_948_DrawBoc:
 	out (Port_VDPData), a
 	ret
 
-++:
+_bottomRow:
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	nop
 	ld a, $01
@@ -1842,7 +1844,7 @@ _LABEL_948_DrawBoc:
 	out (Port_VDPData), a
 	ret
 
-_LABEL_9CD_:
+_leftSide:
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	nop
 	ld a, $03
@@ -1853,10 +1855,10 @@ _LABEL_9CD_:
 	ld hl, $0040
 	add hl, de
 	ex de, hl
-	djnz _LABEL_9CD_
+	djnz _leftSide
 	ret
 
-_LABEL_9E2_:
+_rightSide:
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	nop
 	ld a, $03
@@ -1867,7 +1869,7 @@ _LABEL_9E2_:
 	ld hl, $0040
 	add hl, de
 	ex de, hl
-	djnz _LABEL_9E2_
+	djnz _rightSide
 	ret
 
 ; 3rd entry of Jump Table from B5 (indexed by _RAM_C101_)
@@ -3825,7 +3827,7 @@ _LABEL_1B2B_:
 	ld a, $84
 	ld (Paging_Slot2), a
 	ld de, $6000
-	ld hl, _DATA_10000_
+	ld hl, _DATA_10000_Numbers
 	ld a, $01
 	ld bc, $0100
 	call _LABEL_36A_Load1bppTiles
@@ -3834,7 +3836,6 @@ _LABEL_1B2B_:
 	ld hl, _DATA_10370_TilemapScore
 	ld a, $08
 	call _LABEL_330_DrawTilemapBoxBytes
-  ; patch end @ 1b72
 	ld hl, _RAM_C0A2_ ; Score 
 	call _LABEL_51A3_NumberToTilemap
 	ld hl, _RAM_C177_NumberTilemap
@@ -3842,6 +3843,7 @@ _LABEL_1B2B_:
 	ld a, $09 ; high byte
 	ld bc, $0206 ; dimensions
 	call _LABEL_330_DrawTilemapBoxBytes
+  ; patch end @ 1b86
 	ld de, (_RAM_C0A1_)
 	call _LABEL_515B_
 	ld a, l
@@ -4129,10 +4131,11 @@ _LABEL_1D60_:
 	di
 	call _LABEL_29B_
 	call _LABEL_269_
+  ; patch start @ 1d88
 	ld a, $84
 	ld (Paging_Slot2), a
 	ld de, $4000
-	ld hl, _DATA_10000_
+	ld hl, _DATA_10000_Numbers
 	ld bc, $0100
 	ld a, $01
 	call _LABEL_36A_Load1bppTiles
@@ -4141,6 +4144,7 @@ _LABEL_1D60_:
 	ld hl, _DATA_10370_TilemapScore
 	ld a, $01
 	call _LABEL_330_DrawTilemapBoxBytes
+  ; patch end @ 1da8
 	ld hl, _RAM_C0A2_
 	call _LABEL_51A3_NumberToTilemap
 	ld de, $79DE
@@ -4549,7 +4553,7 @@ _LABEL_208C_:
 	ld a, $84
 	ld (Paging_Slot2), a
 	ld de, $4000
-	ld hl, _DATA_10000_
+	ld hl, _DATA_10000_Numbers
 	ld bc, $0100
 	ld a, $02
 	call _LABEL_36A_Load1bppTiles
@@ -4832,7 +4836,7 @@ _LABEL_22D3_:
 	ld a, $84
 	ld (Paging_Slot2), a
 	ld de, $6000
-	ld hl, _DATA_10000_
+	ld hl, _DATA_10000_Numbers
 	ld bc, $0100
 	ld a, $02
 	call _LABEL_36A_Load1bppTiles
@@ -16315,7 +16319,7 @@ _DATA_FC5E_:
 .ORG $0000
 
 ; Data from 10000 to 100FF (256 bytes)
-_DATA_10000_:
+_DATA_10000_Numbers:
 .dsb 9, $00
 .db $07 $08 $10 $10 $10 $10 $10 $00 $C0 $20 $10 $10 $10 $10 $10 $00
 .db $01 $03 $05
@@ -19401,13 +19405,14 @@ _DATA_144DE_:
 .db $02 $1E $F5 $DC $1E $1B $DC
 
 ; Data from 144E5 to 14509 (37 bytes)
-_DATA_144E5_:
+_DATA_144E5_: ; Sprites for "too early"
 .db $0C $00 $00 $E4 $00 $08 $E5 $00 $10 $E6 $00 $18 $E7 $00 $20 $E8
 .db $00 $28 $E9 $08 $00 $EA $08 $08 $EB $08 $10 $EC $08 $18 $ED $08
 .db $20 $EE $08 $28 $EF
 
 ; Data from 1450A to 1452E (37 bytes)
-_DATA_1450A_:
+_DATA_1450A_: ; Sprites for "too late"
+; n, followed by n times (y, x, index)
 .db $0C $00 $00 $F0 $00 $08 $F1 $00 $10 $F2 $00 $18 $F3 $00 $20 $E8
 .db $00 $28 $E9 $08 $00 $F4 $08 $08 $F5 $08 $10 $F6 $08 $18 $F7 $08
 .db $20 $F8 $08 $28 $EF

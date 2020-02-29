@@ -109,7 +109,7 @@ Script1d3f1: .asc "Use the net", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3fb" free
-Script1d3fb: .asc "How about Sayu?", $fe
+Script1d3fb: .asc "Steering", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d404" free
@@ -117,11 +117,11 @@ Script1d404: .asc "I'll let you know if the worm is out.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d412" free
-Script1d412: .asc "Brake.", $fe
+Script1d412: .asc "Brake", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d418" free
-Script1d418: .asc "Axel.", $fe
+Script1d418: .asc "Accelerate", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d41e" free
@@ -161,19 +161,19 @@ Script1d51a: .asc "Game over", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d522" free
-Script1d522: .asc "This is a test to see how", $fd, "well you can identify", $fd, "fast-moving objects.", $fd, "Please tell us what is going", $fd, "past the window.", $fe
+Script1d522: .asc "This is a test to see how", $ff, "well you can identify", $ff, "fast-moving objects.", $fd, "Please tell us what is going", $ff, "past the window.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d56b" free
-Script1d56b: .asc "This is a test of your", $fd, "ability to judge speed.", $fd, "Please catch the animals.", $fe
+Script1d56b: .asc "This is a test of your", $ff, "ability to judge speed.", $fd, "Please catch the animals.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d5b6" free
-Script1d5b6: .asc "This is a test of your", $fd, "ability to navigate", $fd, "through traffic.", $fd, "Follow the motorcycle.", $fe
+Script1d5b6: .asc "This is a test of your", $ff, "ability to navigate through", $ff, "traffic.", $fd, "Please follow the", $ff, "motorcycle.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d60f" free
-Script1d60f: .asc "This is a test of your", $fd, "ability to identify and", $fd, "react.", $fd, "Press the buttons", $fd, "according to the colors of", $fd, "the flags.", $fe
+Script1d60f: .asc "This is a test of your", $ff, "ability to identify and", $ff, "react.", $fd, "Please press the buttons", $ff, "according to the colors of", $ff, "the flags.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d668" free

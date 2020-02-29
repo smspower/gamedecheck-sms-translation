@@ -11,7 +11,7 @@ set wlalink="C:\Users\Maxim 2\Documents\Code\C\wla-dx\binaries\wlalink.exe"
 %bmp2tile% assets\title-bestdriver.png       -tileoffset 48 -spritepalette -savetiles title-bestdriver.tiles.zx7       -savetilemap title-bestdriver.tilemap.zx7 || exit /b
 %bmp2tile% assets\title-pyongkichi.png       -tileoffset 48 -spritepalette -savetiles title-pyongkichi.tiles.zx7       -savetilemap title-pyongkichi.tilemap.zx7 || exit /b
 
-%bmp2tile% assets\chars1.png -savetiles chars1.tiles.zx7 || exit /b
+%bmp2tile% assets\too-early-too-late.png     -tileoffset 228 -savetiles too-early-too-late.tiles.zx7 || exit /b
 
 rem This is needed to make it emit UTF-8 into the pipe
 set PYTHONIOENCODING=UTF8
