@@ -81,11 +81,11 @@ Script1d3a1: .asc "Sense of Speed", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3a9" free
-Script1d3a9: .asc "Driving Technique", $fe
+Script1d3a9: .asc " Driving Technique ", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3b5" free
-Script1d3b5: .asc "Risk Control", $fe
+Script1d3b5: .asc " Risk Control ", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3bf" free
@@ -113,7 +113,7 @@ Script1d3fb: .asc "Move left or right", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d404" free
-Script1d404: .asc "オゥムが　をだしたらおす。", $fe
+Script1d404: .asc "Press when you see", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d412" free
@@ -133,7 +133,7 @@ Script1d428: .asc "Practice", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d42e" free
-Script1d42e: .asc "The test has begun.", $fe
+Script1d42e: .asc "Starting the test", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d439" free
@@ -173,7 +173,7 @@ Script1d5b6: .asc "ちゅういりょくをてきせいには", $fd, "いぶん�
 .ends
 .bank 7 slot 2
 .section "Script1d60f" free
-Script1d60f: .asc "ふくざつなじょうきょうのもと", $fd, "で、てきせつなはんだんと、き", $fd, "びんなしょちができるかをみる", $fd, "ためのテストです。オゥムがさ", $fd, "しだす、はたのいろにしたがっ", $fd, "てボタンをおしてください。", $fe
+Script1d60f: .asc "[Awaiting translation]", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d668" free
@@ -193,15 +193,15 @@ Script1da1d: .asc "ドライビングアイ", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da26" free
-Script1da26: .asc "Sense of Speed", $fe
+Script1da26: .asc "[Sense of Speed]", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da2e" free
-Script1da2e: .asc "Driving Technique", $fe
+Script1da2e: .asc "~Driving Technique~", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da3a" free
-Script1da3a: .asc "Risk Control", $fe
+Script1da3a: .asc "~Risk Control~", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da5e" free

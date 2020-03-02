@@ -968,17 +968,17 @@ _LABEL_16B_:
   
   ; Draw 1, 2, 3 to tilemap
 	ld de, $7BC8
-	ld hl, _DATA_2FA0A_
+	ld hl, _DATA_2FA0A_1BoxTilemap
 	ld bc, $0204
 	call _LABEL_31C_LoadTilemap
   
 	ld de, $7C88
-	ld hl, _DATA_2FA12_
+	ld hl, _DATA_2FA12_2BoxTilemap
 	ld bc, $0204
 	call _LABEL_31C_LoadTilemap
   
 	ld de, $7D48
-	ld hl, _DATA_2FA1A_
+	ld hl, _DATA_2FA1A_3BoxTilemap
 	ld bc, $0204
 	call _LABEL_31C_LoadTilemap
   
@@ -4144,7 +4144,6 @@ _LABEL_1D60_:
 	ld hl, _DATA_10370_TilemapScore
 	ld a, $01
 	call _LABEL_330_DrawTilemapBoxBytes
-  ; patch end @ 1da8
 	ld hl, _RAM_C0A2_
 	call _LABEL_51A3_NumberToTilemap
 	ld de, $79DE
@@ -4152,6 +4151,7 @@ _LABEL_1D60_:
 	xor a
 	ld bc, $0206
 	call _LABEL_330_DrawTilemapBoxBytes
+  ; patch end @ 1da8
 	ld de, (_RAM_C0A1_)
 	call _LABEL_515B_
 	ld a, l
@@ -4391,7 +4391,8 @@ _LABEL_1F39_:
 	ld a, $02
 	call _LABEL_36A_Load1bppTiles
 	ld de, $6480
-	ld hl, _DATA_102F0_TilesGoal1bpp
+  ; patch start @ 1fc0
+	ld hl, _DATA_102F0_TilesStartGoal1bpp
 	ld bc, $0040
 	call _LABEL_36D_
 	ld de, $7956
@@ -4399,6 +4400,7 @@ _LABEL_1F39_:
 	ld bc, $040A
 	ld a, $01
 	call _LABEL_330_DrawTilemapBoxBytes
+  ; patch end @ 1fd6
 	ld a, $5A
 	ld (_RAM_C118_), a
 	ld hl, $FE80
@@ -4448,13 +4450,15 @@ _LABEL_200D_:
 +:
 	di
 	set 7, (hl)
+  ; patch start @ 202b
 	ld a, $84
 	ld (Paging_Slot2), a
 	ld de, $7C58
-	ld hl, _DATA_10330_Tilemap1
+	ld hl, _DATA_10330_TilemapGoal
 	ld bc, $0408
 	ld a, $01
 	call _LABEL_330_DrawTilemapBoxBytes
+  ; patch end @ 203d
 	ld hl, $012C
 	ld (_RAM_C118_), hl
 	ld a, $DB
@@ -4550,6 +4554,7 @@ _LABEL_208C_:
 	ld (_RAM_C12A_), a
 	ld a, (_RAM_C0A4_)
 	ld (_RAM_C12E_), a
+  ; patch @ 20f7
 	ld a, $84
 	ld (Paging_Slot2), a
 	ld de, $4000
@@ -4569,6 +4574,7 @@ _LABEL_208C_:
 	xor a
 	ld bc, $0206
 	call _LABEL_330_DrawTilemapBoxBytes
+  ; patch end @ 212a
 	ld hl, _RAM_C0A0_
 	ld de, _RAM_C0A0_ + 1
 	ld bc, $0010
@@ -4745,7 +4751,7 @@ _LABEL_2200_:
 	ld a, $02
 	call _LABEL_36A_Load1bppTiles
 	ld de, $4480
-	ld hl, _DATA_102F0_TilesGoal1bpp
+	ld hl, _DATA_102F0_TilesStartGoal1bpp
 	ld bc, $0040
 	ld a, $02
 	call _LABEL_36A_Load1bppTiles
@@ -4894,7 +4900,7 @@ _LABEL_2399_:
 	ld bc, $00E0
 	call _LABEL_2E5_
 	ld de, $7858
-	ld hl, _DATA_10330_Tilemap1
+	ld hl, _DATA_10330_TilemapGoal
 	ld bc, $0408
 	xor a
 	call _LABEL_330_DrawTilemapBoxBytes
@@ -5904,11 +5910,11 @@ _LABEL_2AB7_:
 	ld a, $04
 	call _LABEL_38A_LoadRLE
 	ld de, $7ACC
-	ld hl, _DATA_2FA0A_
+	ld hl, _DATA_2FA0A_1BoxTilemap
 	ld bc, $0204
 	call _LABEL_31C_LoadTilemap
 	ld de, $7C4C
-	ld hl, _DATA_2FA12_
+	ld hl, _DATA_2FA12_2BoxTilemap
 	ld bc, $0204
 	call _LABEL_31C_LoadTilemap
 	ld a, $84
@@ -6026,7 +6032,7 @@ _LABEL_2BFA_:
 	ld (_RAM_C118_), a
 	ld de, $3060
 	ld bc, $0410
-	ld hl, _DATA_10330_Tilemap1
+	ld hl, _DATA_10330_TilemapGoal
 	ld a, $10
 	jp _LABEL_3027_
 
@@ -11978,34 +11984,36 @@ _LABEL_59E6_:
 	ld de, $7814
 	ld bc, $0616
 	call _LABEL_6327_LoadTilemap
-	ld a, (_RAM_C120_)
+  
+  ; Flags?
+	ld a, (_RAM_C120_) ; ???
 	sub $81
-	ld hl, _DATA_2FAC6_
+	ld hl, _DATA_2FAC6_TitleScreenAmendments
 	call _LABEL_6191_ReadAthPointerFromHL
-	ld b, (hl)
+	ld b, (hl) ; First byte is the entry count, e.g. 3 for flags
 -:
 	push bc
-	inc hl
-	ld e, (hl)
-	inc hl
-	ld d, (hl)
-	inc hl
-	ld a, (hl)
-	inc hl
-	push hl
-	ld h, (hl)
-	ld l, a
-	ld a, $78
-	add a, h
-	ld h, a
-	ex de, hl
-	call _LABEL_5A96_LoadNumber3Tilemap
-	pop hl
+    inc hl
+    ld e, (hl) ; first byte is data address?
+    inc hl
+    ld d, (hl)
+    inc hl
+    ld a, (hl) ; second the is the tilemap relative address
+    inc hl
+    push hl
+      ld h, (hl)
+      ld l, a
+      ld a, $78 ; COnvert to absolute address
+      add a, h
+      ld h, a
+      ex de, hl
+      call _LABEL_5A96_Load2x2Tilemap
+    pop hl
 	pop bc
 	djnz -
-	ld hl, _DATA_2FA1A_
+	ld hl, _DATA_2FA1A_3BoxTilemap
 	ld de, $7CC6
-	call _LABEL_5A96_LoadNumber3Tilemap
+	call _LABEL_5A96_Load2x2Tilemap
 	jp _LABEL_18_
 
 _LABEL_5A53_:
@@ -12033,11 +12041,11 @@ _LABEL_5A53_:
 	ld de, $7AD4
 	ld bc, $0616
 	call _LABEL_6327_LoadTilemap
-	ld hl, _DATA_2FA1A_
+	ld hl, _DATA_2FA1A_3BoxTilemap
 	ld de, $7C8C
-	jp _LABEL_5A96_LoadNumber3Tilemap
+	jp _LABEL_5A96_Load2x2Tilemap
 
-_LABEL_5A96_LoadNumber3Tilemap:
+_LABEL_5A96_Load2x2Tilemap:
 	ld bc, $0204
 	jp _LABEL_6327_LoadTilemap
 
@@ -16389,14 +16397,14 @@ _DATA_10278_CorrectIncorrectTiles1bpp:
 .db $10 $08 $08 $08 $10 $20 $C0 $00
 
 ; Data from 102F0 to 1032F (64 bytes)
-_DATA_102F0_TilesGoal1bpp:
+_DATA_102F0_TilesStartGoal1bpp:
 .db $00 $00 $00 $00 $00 $11 $0E $00 $00 $04 $12 $0A $08 $F0 $10 $10
 .db $00 $00 $01 $00 $08 $04 $04 $04 $00 $00 $80 $80 $80 $80 $80 $80
 .db $00 $00 $00 $00 $11 $0E $00 $00 $10 $10 $10 $10 $F0 $00 $00 $00
 .db $04 $08 $08 $10 $10 $20 $00 $00 $80 $82 $84 $88 $90 $60 $00 $00
 
 ; Data from 10330 to 1036F (64 bytes)
-_DATA_10330_Tilemap1:
+_DATA_10330_TilemapGoal:
 .db $01 $00 $02 $00 $02 $00 $02 $00 $02 $00 $02 $00 $02 $00 $01 $02
 .db $03 $00 $24 $00 $25 $00 $00 $00 $08 $00 $26 $00 $27 $00 $03 $02
 .db $03 $00 $28 $00 $29 $00 $08 $06 $00 $00 $2A $00 $2B $00 $03 $02
@@ -24541,17 +24549,17 @@ _DATA_2F97C_:
 
 ; 1st entry of Pointer Table from 2FAD1 (indexed by unknown)
 ; Data from 2FA0A to 2FA11 (8 bytes)
-_DATA_2FA0A_:
+_DATA_2FA0A_1BoxTilemap:
 .db $04 $01 $05 $01 $06 $01 $07 $01
 
 ; 1st entry of Pointer Table from 2FAE2 (indexed by unknown)
 ; Data from 2FA12 to 2FA19 (8 bytes)
-_DATA_2FA12_:
+_DATA_2FA12_2BoxTilemap:
 .db $08 $01 $09 $01 $0A $01 $0B $01
 
 ; 3rd entry of Pointer Table from 2FAD5 (indexed by unknown)
 ; Data from 2FA1A to 2FA21 (8 bytes)
-_DATA_2FA1A_:
+_DATA_2FA1A_3BoxTilemap:
 .db $0C $01 $0D $01 $0C $05 $0D $05
 
 ; Data from 2FA22 to 2FAC5 (164 bytes)
@@ -24569,82 +24577,39 @@ _DATA_2FA22_ControlPadTilemap:
 .db $3E $05 $3E $03
 
 ; Pointer Table from 2FAC6 to 2FACF (5 entries, indexed by _RAM_C120_)
-_DATA_2FAC6_:
-.dw _DATA_2FAD0_ _DATA_2FADD_ _DATA_2FAEE_ _DATA_2FAFF_ _DATA_2FAD0_
+_DATA_2FAC6_TitleScreenAmendments:
+.dw + ++ +++ ++++ +
 
 ; 1st entry of Pointer Table from 2FAC6 (indexed by _RAM_C120_)
 ; Data from 2FAD0 to 2FAD0 (1 bytes)
-_DATA_2FAD0_:
-.db $03
++:
+.db 3
+.dw _DATA_2FA0A_1BoxTilemap, $01ca
+.dw _DATA_2FA12_2BoxTilemap, $028a
+.dw _DATA_2FA1A_3BoxTilemap, $034A
 
-; Pointer Table from 2FAD1 to 2FAD2 (1 entries, indexed by unknown)
-.dw _DATA_2FA0A_
+++:
+.db 4
+.dw _DATA_2FA0A_1BoxTilemap, $01ca
+.dw _DATA_2FA12_2BoxTilemap, $024A
+.dw _DATA_2FA1A_3BoxTilemap, $030A
+.dw _DATA_2FABE_, $0210
 
-; Data from 2FAD3 to 2FAD4 (2 bytes)
-.db $CA $01
++++:
+.db 4
+.dw _DATA_2FA0A_1BoxTilemap, $01CA
+.dw _DATA_2FA12_2BoxTilemap, $028A
+.dw _DATA_2FA1A_3BoxTilemap, $030A
+.dw _DATA_2FABE_, $02d0
 
-; Pointer Table from 2FAD5 to 2FADA (3 entries, indexed by unknown)
-.dw _DATA_2FA12_ _DATA_28A_ _DATA_2FA1A_
-
-; Data from 2FADB to 2FADC (2 bytes)
-.db $4A $03
-
-; 2nd entry of Pointer Table from 2FAC6 (indexed by _RAM_C120_)
-; Data from 2FADD to 2FADD (1 bytes)
-_DATA_2FADD_:
-.db $04
-
-; Pointer Table from 2FADE to 2FADF (1 entries, indexed by unknown)
-.dw _DATA_2FA0A_
-
-; Data from 2FAE0 to 2FAE1 (2 bytes)
-.db $CA $01
-
-; Pointer Table from 2FAE2 to 2FAE3 (1 entries, indexed by unknown)
-.dw _DATA_2FA12_
-
-; Data from 2FAE4 to 2FAED (10 bytes)
-.db $4A $02 $1A $BA $0A $03 $BE $BA $10 $02
-
-; 3rd entry of Pointer Table from 2FAC6 (indexed by _RAM_C120_)
-; Data from 2FAEE to 2FAEE (1 bytes)
-_DATA_2FAEE_:
-.db $04
-
-; Pointer Table from 2FAEF to 2FAF0 (1 entries, indexed by unknown)
-.dw _DATA_2FA0A_
-
-; Data from 2FAF1 to 2FAF2 (2 bytes)
-.db $CA $01
-
-; Pointer Table from 2FAF3 to 2FAF8 (3 entries, indexed by unknown)
-.dw _DATA_2FA12_ _DATA_28A_ _DATA_2FA1A_
-
-; Data from 2FAF9 to 2FAFD (5 bytes)
-.db $0A $03 $BE $BA $D0
-
-; 90th entry of Pointer Table from 76FE (indexed by unknown)
-; Data from 2FAFE to 2FAFE (1 bytes)
-_DATA_2FAFE_:
-.db $02
-
-; 4th entry of Pointer Table from 2FAC6 (indexed by _RAM_C120_)
-; Data from 2FAFF to 2FAFF (1 bytes)
-_DATA_2FAFF_:
-.db $06
-
-; Pointer Table from 2FB00 to 2FB01 (1 entries, indexed by unknown)
-.dw _DATA_2FA0A_
-
-; Data from 2FB02 to 2FB03 (2 bytes)
-.db $C4 $01
-
-; Pointer Table from 2FB04 to 2FB05 (1 entries, indexed by unknown)
-.dw _DATA_2FA12_
-
-; Data from 2FB06 to 2FB17 (18 bytes)
-.db $84 $02 $1A $BA $44 $03 $A6 $BA $DA $01 $AE $BA $9A $02 $B6 $BA
-.db $5A $03
+++++:
+.db 6
+.dw _DATA_2FA0A_1BoxTilemap $01C4
+.dw _DATA_2FA12_2BoxTilemap $0284 
+.dw _DATA_2FA1A_3BoxTilemap $0344
+.dw _DATA_2FAA6_Flag1Tilemap $01DA
+.dw _DATA_2FAAE_Flag2Tilemap $029A
+.dw _DATA_2FAB6_Flag3Tilemap $035A
 
 ; Data from 2FB18 to 2FBD1 (186 bytes)
 _DATA_2FB18_Tiles123:

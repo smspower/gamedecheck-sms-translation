@@ -35,9 +35,11 @@ banks BankCount-2
 .endm
 
 ; Original game RAM we use
+.define RAM_Score                                 $c0a1 ; dw Score in BCD
 .define RAM_TilemapHighByte                       $c104 ; db High byte for tilemap writes
 .define RAM_ScriptRendererVRAMAddress             $c800 ; dw Where in VRAM we are dynamically loading font characters
 .define RAM_ScriptRendererTilemapVRAMAddress      $c802 ; dw Where in VRAM we draw to the tilemap
+.define RAM_ScriptRendererStartTileIndex          $c804 ; db Tile index of RAM_ScriptRendererVRAMAddress
 .define RAM_ScriptRendererCharacterCount          $c805 ; db How many characters we have loaded so far
 .define RAM_ScriptRendererDrawnCharsBufferPointer $c807 ; dw Points to a buffer holding the indices of characters drawn so far
 .define RAM_NumberToTextBuffer                    $c177 ; dsb 4 Buffer for rendering scores to text
@@ -405,13 +407,19 @@ GoalText:      .asc "Goal", $fe
 
   ; "Start"
   START_CODE_PATCH $19e3 $19f5
-  ld hl,4
+  call Start1
+  END_CODE_PATCH
+  
+.section "Start in Driving Eye" free
+Start1:
+  ld hl, 4 ; tile index
+  ld a, 1 ; palette index
   call TextWithBorderInit
   ld bc, $0208 ; dimensions
   TilemapWriteAddressToDE 11, 12
 	ld hl, StartText
-  call TextWithBorder
-  END_CODE_PATCH_HARD
+  jp TextWithBorder ; and ret
+.ends
   
   ; "Correct" and "Incorrect"
   PatchW $1aa0 $020c ; dimensions
@@ -426,7 +434,8 @@ GoalText:      .asc "Goal", $fe
 ; This is because out work is too large to fit in the patch space...
 CorrectIncorrect:
   push hl
-    ld hl,4
+    ld hl, 4 ; tile index
+    ld a, 1 ; palette index
     call TextWithBorderInit
   pop hl
   jp TextWithBorder ; and ret
@@ -434,14 +443,15 @@ CorrectIncorrect:
   
   ; Score
   START_CODE_PATCH $1b52 $1b86
-  ld hl,4
+  ld hl, 4 ; tile index
+  ld a, 1 ; palette index
   call TextWithBorderInit
   ld bc, $0214 ; dimensions
   TilemapWriteAddressToDE 5, 18
 	ld hl, ScoreText
   call TextWithBorder
   ; Draw in score
-  ld hl,$c0a2 ; score
+  ld hl,RAM_Score + 1
   call NumberToString
   TilemapWriteAddressToDE 15, 19
   ld (RAM_ScriptRendererTilemapVRAMAddress),de
@@ -451,11 +461,13 @@ CorrectIncorrect:
   
   ; Speed ​​sense
   
+  ; "Start"
   START_CODE_PATCH $1e55 $1e75
   TileWriteAddressToDE $100
   ld a, 1 ; palette index
   call LoadBorders
-  ld hl,$104
+  ld hl, $104 ; tile index
+  ld a, 1 ; palette index
   call TextWithBorderInit
   ld bc, $0208 ; dimensions
   ld de,$7296 ; tilemap address - unusual tilemap location
@@ -499,14 +511,15 @@ TooEarlyTooLateTiles:
   TileWriteAddressToDE $100
   ld a, 1 ; palette index
   call LoadBorders
-  ld hl,$104
+  ld hl, $104 ; tile index
+  ld a, 1 ; palette index
   call TextWithBorderInit
   ld bc, $0214 ; dimensions
   TilemapWriteAddressToDE 5, 6
 	ld hl, ScoreText
   call TextWithBorder
   ; Draw in score
-  ld hl,$c0a2 ; score
+  ld hl,RAM_Score + 1
   call NumberToString
   TilemapWriteAddressToDE 15, 7
   ld (RAM_ScriptRendererTilemapVRAMAddress),de
@@ -519,16 +532,63 @@ TooEarlyTooLateTiles:
   
   ; "Goal"
   START_CODE_PATCH $202b $203d
-  foo:
-  ld hl,$104
-  call TextWithBorderInit
+  call DrivingTechniqueInit
   ld bc, $0208 ; dimensions
   TilemapWriteAddressToDE 12, 17
 	ld hl, GoalText
   call TextWithBorder
-  nop
-  END_CODE_PATCH_HARD
+  END_CODE_PATCH
+  
+  ; "Start"
+  START_CODE_PATCH $1fc0 $1fd6
+  call DrivingTechniqueInit
+  ld bc, $020a ; dimensions
+  TilemapWriteAddressToDE 11, 5
+	ld hl, StartText
+  call TextWithBorder    
+  END_CODE_PATCH
+  
+  ; Score
+  START_CODE_PATCH $20f7 $212a
+  ; We load the borders at index 0 (sprites) as we need more VRAM space...
+  TileWriteAddressToDE 0
+  ld a, 2 ; palette index
+  call LoadBorders
+  
+  ld hl, 4 ; tile index
+  ld a, 2 ; palette index
+  call TextWithBorderInit
+  ld a, 0
+  ld (RAM_TilemapHighByte),a ; don't use sprite palette TODO make this an option?
 
+  ld bc, $0214 ; dimensions
+  TilemapWriteAddressToDE 5, 0
+	ld hl, ScoreText
+  call TextWithBorder
+  ; Draw in score
+  ld hl,RAM_Score + 1
+  call NumberToString
+  TilemapWriteAddressToDE 15, 1
+  ld (RAM_ScriptRendererTilemapVRAMAddress),de
+  ld hl,RAM_NumberToTextBuffer ; string is here
+  call Text
+  END_CODE_PATCH_HARD
+  
+.section "Driving Technique message box init" free
+DrivingTechniqueInit:
+  ld hl, $104 ; tile index
+  ld a, 2 ; palette index
+  call TextWithBorderInit
+  ld a, 1
+  ld (RAM_TilemapHighByte),a ; don't use sprite palette TODO make this an option?
+  ret
+.ends
+
+  ; Risk Control
+  ; Flags location on instruction screen
+  PatchB $2fb0e $da + 2 * 11
+  PatchB $2fb12 $9a + 2 * 11
+  PatchB $2fb16 $5a + 2 * 11
 
 ; No longer need the digits (I hope)
 .unbackground $10000 $100ff ; Tiles for digits
@@ -637,7 +697,7 @@ Text:
     ld de,Font
     add hl,de
     ld de,(RAM_ScriptRendererVRAMAddress) ; VRAM location for tiles
-    ld a,1 ; palette index
+    ld a,(RAM_1bppIndex) ; palette index
     ld bc,8*2 ; 2 tiles
     di
       call Load1bppTiles
@@ -651,7 +711,7 @@ Text:
     ld de,(RAM_ScriptRendererTilemapVRAMAddress)
     di
       rst $8
-      ld a,($c804)
+      ld a,(RAM_ScriptRendererStartTileIndex)
       out (Port_VDPData),a
       inc a
       push af
@@ -665,7 +725,7 @@ Text:
       pop af
       out (Port_VDPData),a
       inc a
-      ld ($c804),a
+      ld (RAM_ScriptRendererStartTileIndex),a
       ld a, (RAM_TilemapHighByte)
       out (Port_VDPData),a
     ei
@@ -678,8 +738,10 @@ Text:
   
 TextWithBorderInit:
 ; hl = tile index to start at
+; a = palette index for 1bpp tiles
+  ld (RAM_1bppIndex),a
   ld a,l
-  ld ($C804),a ; tile start index
+  ld (RAM_ScriptRendererStartTileIndex),a ; tile start index
   ld a,h
   or 8 ; sprite palette (?)
   ld (RAM_TilemapHighByte),a ; high byte

@@ -28,7 +28,7 @@ $0f8e4  $0fa93              Tilemap for above
 $10000  $100ff  32          1bpp numbers
 
 $10158  $10177  4           1bpp box
-$10178  $1032f  55          1bpp text
+$10178  $1032f  55          1bpp text - Goal, Start, ...
 
 $10550  $1070e  32          Text: numbers
 $1070f  $108ec  36          Text

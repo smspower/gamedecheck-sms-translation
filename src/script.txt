@@ -65,13 +65,13 @@ $1da14: Combined Results[EOS]
 $1da1d: ドライビングアイ[EOS]
 
 スピードセンス[EOS]
-$1da26: Sense of Speed[EOS]
+$1da26: [Sense of Speed][EOS]
 
 ドライビングテクニック[EOS]
-$1da2e: Driving Technique[EOS]
+$1da2e: ~Driving Technique~[EOS]
 
 リスクコントロール[EOS]
-$1da3a: Risk Control[EOS]
+$1da3a: ~Risk Control~[EOS]
 
 ドライビングアイ[EOS]
 $1d398: ドライビングアイ[EOS]
@@ -85,17 +85,19 @@ $1d3a1: Sense of Speed[EOS]
 ただしいスピードかんかくを[LF+]もっているか、あせりやすい[LF+]けいこうがないかをみるため[LF+]のテストです。[LF+]　はしってくるどうぶつを、[LF+]つかまえてください。[EOS]
 $1d56b: ただしいスピードかんかくを[LF+]もっているか、あせりやすい[LF+]けいこうがないかをみるため[LF+]のテストです。[LF+]　はしってくるどうぶつを、[LF+]つかまえてください。[EOS]
 
+; Description screen title, space padding
 ドライビングテクニック[EOS]
-$1d3a9: Driving Technique[EOS]
+$1d3a9:  Driving Technique [EOS]
 
 ちゅういりょくをてきせいには[LF+]いぶんできるか、またそのちゅ[LF+]ういりょくをじぞくできるかを[LF+]みるためのテストです。まえを[LF+]はしっているオートバイのあと[LF+]を、ついていってください。[EOS]
 $1d5b6: ちゅういりょくをてきせいには[LF+]いぶんできるか、またそのちゅ[LF+]ういりょくをじぞくできるかを[LF+]みるためのテストです。まえを[LF+]はしっているオートバイのあと[LF+]を、ついていってください。[EOS]
 
+; Description screen title, space padding
 リスクコントロール[EOS]
-$1d3b5: Risk Control[EOS]
+$1d3b5:  Risk Control [EOS]
 
 ふくざつなじょうきょうのもと[LF+]で、てきせつなはんだんと、き[LF+]びんなしょちができるかをみる[LF+]ためのテストです。オゥムがさ[LF+]しだす、はたのいろにしたがっ[LF+]てボタンをおしてください。[EOS]
-$1d60f: ふくざつなじょうきょうのもと[LF+]で、てきせつなはんだんと、き[LF+]びんなしょちができるかをみる[LF+]ためのテストです。オゥムがさ[LF+]しだす、はたのいろにしたがっ[LF+]てボタンをおしてください。[EOS]
+$1d60f: [Awaiting translation][EOS]
 
 せんたくボタン。[EOS]
 $1d3d8: Move Cursor[EOS]
@@ -116,7 +118,7 @@ $1d3f1: Swing the net[EOS]
 $1d3fb: Move left or right[EOS]
 
 オゥムが　をだしたらおす。[EOS]
-$1d404: オゥムが　をだしたらおす。[EOS]
+$1d404: Press when you see[EOS]
 
 ブレーキ。[EOS]
 $1d412: Brake[EOS]
@@ -127,11 +129,13 @@ $1d418: Accelerator[EOS]
 をおしてください。[EOS]
 $1d41e: Press button[EOS]
 
+; Driving Sense Test games always have a "practice" phase before the "real test"
 れんしゅう[EOS]
 $1d428: Practice[EOS]
 
+; End of practice phase
 テストをはじめます。[EOS]
-$1d42e: The test has begun.[EOS]
+$1d42e: Starting the test[EOS]
 
 ピョンきちくんは、ピョンこ[LF+]ちゃんのおうちへ、あそびに[LF+]いきます。とちゅうで、いろ[LF+]いろなことをします。[LF+]そのとき、ピョンきちくんが[LF+]とったこうどうは、ただしい[LF+]でしょうか。[EOS]
 $1d439: Pyonkichi-kun is going to[LF]visit Pyonko's house.[LF+]On the way, various things[LF]will happen.[LF+]Will Pyonkichi-kun make[LF]the correct choices?[EOS]
