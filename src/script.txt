@@ -13,14 +13,18 @@ $2ca4: Select Mode[LF][LF][LF+]        Car[LF][LF][LF]        Motorcycle[EOS]
 これでゲームをおわります。[EOS]
 $2d50: The game is over.[EOS]
 
+; End of Driving Sense Test
+; Needs spaces to pad to 10
 アドバイス[EOS]
-$1dde2: Advice[EOS]
+$1dde2: Advice    [EOS]
 
+; Really the end of Driving Sense Test
 これでテストをおわります。[EOS]
 $1dde8: The test is over.[EOS]
 
+; Title screen
 ゲームをえらんでください。[LF+][LF]　　ドライビングセンステスト[LF+]　　きみはべストドライバー[LF+]　　ピョンきちアドべンチャー[EOS]
-$1ddf6: Select Game[LF+][LF]    Driving Sense Test[LF+]    You are the Best Driver[LF+]    Pyonkichi's Adventure[EOS]
+$1ddf6: Please choose a game.[LF+][LF]    Driving Sense Test[LF+]    You are the Best Driver[LF+]    Pyonkichi's Adventure[EOS]
 
 あなたは、とてもゆうしゅうな[LF+]ドライバーです。[LF+]　このちょうしであんぜんうん[LF+]てんをこころがけましょう。[EOS]
 $1de3b: You are a flawless[LF+]driver.[LF+]This is how[LF+]you should safely drive.[EOS]
@@ -36,12 +40,15 @@ $1dee4: You are an average[LF+]driver. Be sure to be[LF+]extra cautious when[LF+
 
 あなたはあせったり、あわてや[LF+]すいけいこうがあるので、ひご[LF+]ろからこころをおちつけて、き[LF+]もちをうんてんにしゅうちゅう[LF+]するようにつとめましょう。[EOS]
 $1db16: You have a tendency[LF+]to be impatient and easily panic. Calm[LF+]yourself and concentrate on driving.[EOS]
+; End of Driving Sense Test - "advice"
+; Width = 28
+; TODO: seems buggy? I get "better" advice when I do worse...
 
 あなたのドライビングセンスは[LF+]たいへんゆうしゅうです。この[LF+]ちょうしであんぜんうんてんに[LF+]こころがけましょう。[EOS]
-$1da5e: Your driving sense is[LF+]very high level. This is[LF+]how you should safely[LF+]drive.[EOS]
+$1da5e: Your driving sense is very[LF]high level.[LF+]This is how you should[LF]safely drive.[EOS]
 
 あなたのドライビングセンスは[LF+]ゆうしゅうです。これからも、[LF+]あせらず、あんぜんうんてんに[LF+]こころがけましょう。[EOS]
-$1da96: Your driving sense is[LF+]high level. Keep up[LF+]your patience and[LF+]your safe driving.[EOS]
+$1da96: Your driving sense is high[LF]level.[LF+]Keep up your patience and[LF]your safe driving.[EOS]
 
 あなたのドライビングセンスは[LF+]りょうこうです。これからも、[LF+]スピードとしゃかんきょりに、[LF+]ちゅういし、あんぜんうんてん[LF+]にこころがけましょう。[EOS]
 $1dace: You are a fine driver.[LF+]Keep an eye on your speed[LF+]and the distance between[LF+]cars when [LF+]driving.[EOS]
@@ -73,11 +80,13 @@ $1dd09: You become agitated easily,[LF+]so remember to always keep yourself calm
 あせったりあわてたり、かんじ[LF+]ょうてきにカーッとならないよ[LF+]うに、つねにれいせいなうんて[LF+]んをこころがけ、スピードのだ[LF+]しすぎにちゅういしましょう。[EOS]
 $1dd97: Be sure to always keep your cool[LF+]when driving and not become panicked[LF+]or emotional and upset. Make[LF+]sure you don’t drive at an unsafe speed.[EOS]
 
+; End of Driving Sense Test - results screen - begin
+
 そうごうせいせき[EOS]
 $1da14: Combined Results[EOS]
 
 ドライビングアイ[EOS]
-$1da1d: ドライビングアイ[EOS]
+$1da1d: Driving Eye[EOS]
 
 ; Changing this back to Speed Sense after playing through the
 ; game further. "Sense of Speed" sounds more natural,
@@ -86,27 +95,34 @@ $1da1d: ドライビングアイ[EOS]
 $1da26: Speed Sense[EOS]
 
 ドライビングテクニック[EOS]
-$1da2e: ~Driving Technique~[EOS]
+$1da2e: Driving Technique[EOS]
 
 リスクコントロール[EOS]
-$1da3a: ~Risk Control~[EOS]
+$1da3a: Risk Control[EOS]
+
+; End of Driving Sense Test - results screen - end
+
+; Instruction screens for Driving Sense Test
+; Notes:
+; - we add spaces for padding the titles
+; - we use [LF] for breaks and [LF+] for paragraphs
+; - max width = 28
 
 ; Literally Driving Eye, which is how I will leave it since it's a name
 ; but you could use something like "Eyesight Test" or "Sight Reaction" or
 ; something like that to reflect what the actual game is
 ドライビングアイ[EOS]
-$1d398: Driving Eye[EOS]
+$1d398:  Driving Eye [EOS]
 
 うごいているものをみわけるし[LF+]りょくと、ひろうしやすいかど[LF+]うかをみるためのテストです。[LF+]　まどのそとをよこぎるものが[LF+]なにかをあててください。[EOS]
 $1d522: This will test your ability to[LF+]recognize moving objects and whether[LF+]or not you become easily tired.[LF+]Please guess at which objects pass by[LF+]outside the window.[EOS]
 
 スピードセンス[EOS]
-$1d3a1: Speed Sense[EOS]
+$1d3a1:  Speed Sense [EOS]
 
 ただしいスピードかんかくを[LF+]もっているか、あせりやすい[LF+]けいこうがないかをみるため[LF+]のテストです。[LF+]　はしってくるどうぶつを、[LF+]つかまえてください。[EOS]
-$1d56b: ただしいスピードかんかくを[LF+]もっているか、あせりやすい[LF+]けいこうがないかをみるため[LF+]のテストです。[LF+]　はしってくるどうぶつを、[LF+]つかまえてください。[EOS]
+$1d56b: [Awaiting translation][EOS]
 
-; Description screen title, space padding
 ドライビングテクニック[EOS]
 $1d3a9:  Driving Technique [EOS]
 

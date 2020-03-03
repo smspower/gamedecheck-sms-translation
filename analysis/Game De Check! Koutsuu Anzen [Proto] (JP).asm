@@ -4753,6 +4753,7 @@ _LABEL_2200_:
 	ld hl, _DATA_10158_TilesBorders1bpp
 	ld a, $02
 	call _LABEL_36A_Load1bppTiles
+  ; patch start @ 227c TODO
 	ld de, $4480
 	ld hl, _DATA_102F0_TilesStartGoal1bpp
 	ld bc, $0040
@@ -4763,6 +4764,7 @@ _LABEL_2200_:
 	ld bc, $040A
 	xor a
 	call _LABEL_330_DrawTilemapBoxBytes
+  ; patch end @ 2296
 	ld a, $8F
 	ld (Paging_Slot2), a
 	call _LABEL_5087_
@@ -4842,6 +4844,7 @@ _LABEL_22D3_:
 +:
 	call _LABEL_5180_
 	ld (_RAM_C0A1_), bc
+  ; patch start @ 2329 TODO
 	ld a, $84
 	ld (Paging_Slot2), a
 	ld de, $6000
@@ -4861,6 +4864,7 @@ _LABEL_22D3_:
 	ld a, $01
 	ld bc, $0206
 	call _LABEL_330_DrawTilemapBoxBytes
+  ; patch end @ 235c
 	ld de, (_RAM_C0A1_)
 	call _LABEL_515B_
 	ld a, l
@@ -4901,12 +4905,14 @@ _LABEL_2399_:
 	ld de, $7800
 	ld hl, $0100
 	ld bc, $00E0
-	call _LABEL_2E5_
+	call _LABEL_2E5_ ; Blank tilemap?
+  ; patch @ 23b1 TODO
 	ld de, $7858
 	ld hl, _DATA_10330_TilemapGoal
 	ld bc, $0408
 	xor a
 	call _LABEL_330_DrawTilemapBoxBytes
+  ; patch end @ 23bd
 	ei
 	ret
 
@@ -5829,9 +5835,9 @@ _LABEL_2A3B_:
 	call _LABEL_29B_BlankSpriteTableAndMirror
 	call _LABEL_1903_
 	call _LABEL_1903_
-	ld de, $82FF
+	ld de, $82FF ; name table at $3800
 	rst $08	; _LABEL_8_VRAMAddressToDE
-	ld de, $8800
+	ld de, $8800 ; reset scroll registers
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	inc d
 	rst $08	; _LABEL_8_VRAMAddressToDE

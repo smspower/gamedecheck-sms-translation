@@ -73,11 +73,11 @@ Script5fdf: .asc "Results", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d398" free
-Script1d398: .asc "ドライビングアイ", $fe
+Script1d398: .asc " Driving Eye ", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3a1" free
-Script1d3a1: .asc "Sense of Speed", $fe
+Script1d3a1: .asc " Sense of Speed ", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3a9" free
@@ -161,15 +161,15 @@ Script1d51a: .asc "Game Over", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d522" free
-Script1d522: .asc "うごいているものをみわけるし", $fd, "りょくと、ひろうしやすいかど", $fd, "うかをみるためのテストです。", $fd, "　まどのそとをよこぎるものが", $fd, "なにかをあててください。", $fe
+Script1d522: .asc "[Awaiting translation]", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d56b" free
-Script1d56b: .asc "ただしいスピードかんかくを", $fd, "もっているか、あせりやすい", $fd, "けいこうがないかをみるため", $fd, "のテストです。", $fd, "　はしってくるどうぶつを、", $fd, "つかまえてください。", $fe
+Script1d56b: .asc "[Awaiting translation]", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d5b6" free
-Script1d5b6: .asc "ちゅういりょくをてきせいには", $fd, "いぶんできるか、またそのちゅ", $fd, "ういりょくをじぞくできるかを", $fd, "みるためのテストです。まえを", $fd, "はしっているオートバイのあと", $fd, "を、ついていってください。", $fe
+Script1d5b6: .asc "[Awaiting translation]", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d60f" free
@@ -189,27 +189,27 @@ Script1da14: .asc "Combined Results", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da1d" free
-Script1da1d: .asc "ドライビングアイ", $fe
+Script1da1d: .asc "Driving Eye", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da26" free
-Script1da26: .asc "[Sense of Speed]", $fe
+Script1da26: .asc "Sense of Speed", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da2e" free
-Script1da2e: .asc "~Driving Technique~", $fe
+Script1da2e: .asc "Driving Technique", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da3a" free
-Script1da3a: .asc "~Risk Control~", $fe
+Script1da3a: .asc "Risk Control", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da5e" free
-Script1da5e: .asc "Your driving sense is", $fd, "very high level. This is", $fd, "how you should safely", $fd, "drive.", $fe
+Script1da5e: .asc "Your driving sense is very", $ff, "high level.", $fd, "This is how you should", $ff, "safely drive.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da96" free
-Script1da96: .asc "Your driving sense is", $fd, "high level. Keep up", $fd, "your patience and", $fd, "your safe driving.", $fe
+Script1da96: .asc "Your driving sense is high", $ff, "level.", $fd, "Keep up your patience and", $ff, "your safe driving.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dace" free
@@ -257,7 +257,7 @@ Script1dd97: .asc "あせったりあわてたり、かんじ", $fd, "ょうて�
 .ends
 .bank 7 slot 2
 .section "Script1dde2" free
-Script1dde2: .asc "Advice", $fe
+Script1dde2: .asc "Advice    ", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dde8" free
@@ -265,7 +265,7 @@ Script1dde8: .asc "The test is over.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1ddf6" free
-Script1ddf6: .asc "Select Game", $fd, $ff, "    Driving Sense Test", $fd, "    You are the Best Driver", $fd, "    Pyonkichi's Adventure", $fe
+Script1ddf6: .asc "Please choose a game.", $fd, $ff, "    Driving Sense Test", $fd, "    You are the Best Driver", $fd, "    Pyonkichi's Adventure", $fe
 .ends
 .bank 7 slot 2
 .section "Script1de3b" free

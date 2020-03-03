@@ -8,7 +8,7 @@ slotsize $4000
 slot 2 $8000 "PagedROM"
 .endme
 
-.define BankCount 1024/16 ; Original rom is 256KB
+.define BankCount 256/16 ; Original rom is 256KB
 
 .rombankmap
 bankstotal BankCount
@@ -37,6 +37,7 @@ banks BankCount-2
 
 ; Original game RAM we use
 .define RAM_Score                                 $c0a1 ; dw Score in BCD
+.define RAM_VDPRegister1                          $c103 ; db Last value written to VDP register 1
 .define RAM_TilemapHighByte                       $c104 ; db High byte for tilemap writes
 .define RAM_DrivingSenseTestSubgame               $c10d ; db 0-3 - useful for hacking
 .define RAM_ScriptRendererVRAMAddress             $c800 ; dw Where in VRAM we are dynamically loading font characters
@@ -121,49 +122,29 @@ PatchAt\1:
 ; Add SDSC header. This also fixes the checksum.
 .sdsctag 0.1, "Game de Check English translation", "https://smspower.org/Translations/GameDeCheck-SMS-EN", "SMS Power!"
 
-; The original game has a bug in its "turn off/on" routines.
-; When turning the screen on or off it's important to not have an interrupt happen.
-  START_CODE_PATCH $0010 $0017
+; The original game has a bug in its "turn screen off/on" routines.
+; When turning the screen on or off it's important to not have an interrupt happen,
+; else the result can fail. This patch is a little ugly in order to fit in the space.
+
+  START_CODE_PATCH $0010 $002f
 ScreenOff: ; $10
-  jp ScreenOffFix
-  END_CODE_PATCH_HARD
+  ld a,(RAM_VDPRegister1)
+  and $bf
+  jp + ; not jr because we need to pad space for the next vector
   
-  START_CODE_PATCH $0018 $002f
 ScreenOn: ; $18
-  jp ScreenOnFix
-  END_CODE_PATCH_HARD
-  
-.section "Screen on handler" free
-ScreenOnFix:
-  ld a,($c103)
-  and $40
-  ret nz ; nothing to do
-  ld a,($c103)
+  ld a,(RAM_VDPRegister1)
   or $40
-  ld ($c103),a
-  di
-    out (Port_VDPControl), a
-    ld a,$81
-    out (Port_VDPControl), a
+  call + ; save and write
   ei
   ret
-.ends
 
-.section "Screen off handler" free
-ScreenOffFix:
-  ld a,($c103)
-  and $40
-  ret z ; nothing to do
-  ld a,($c103)
-  and $bf
-  ld ($c103),a
++:ld (RAM_VDPRegister1),a
   di
-  out (Port_VDPControl), a
-  ld a,$81
-  out (Port_VDPControl), a
-  ; do not ei
-  ret
-.ends
+  ld e,a
+  ld d,$81
+  jp $8 ; emit
+  END_CODE_PATCH_HARD
 
 ; We use ZX7 to compress replacement graphics.
 .slot "FixedROM"
@@ -437,8 +418,6 @@ GoalText:      .asc "Goal", $fe
 ; script engine. That means we need to patch out places that load more than
 ; just the tiles...
 
-; Patches to replace the loaders
-  
   ; Driving Eye
   
   START_CODE_PATCH $1bf8 $1c17
@@ -447,17 +426,13 @@ GoalText:      .asc "Goal", $fe
   call LoadBorders
   END_CODE_PATCH
   
-; Patches to replace the tilemap drawing
-
-  ; Driving Eye
-
   ; "Start"
   START_CODE_PATCH $19e3 $19f5
-  call Start1
+  call DrivingEyeStart
   END_CODE_PATCH
   
 .section "Start in Driving Eye" free
-Start1:
+DrivingEyeStart:
   ld hl, 4 ; tile index
   ld a, 1 ; palette index
   call TextWithBorderInit
@@ -477,7 +452,6 @@ Start1:
   END_CODE_PATCH
   
 .section "Show text" free
-; This is because out work is too large to fit in the patch space...
 CorrectIncorrect:
   push hl
     ld hl, 4 ; tile index
@@ -546,7 +520,7 @@ TooEarlyTooLateTiles:
 ; Sprite data for "Too late"
 ; syntax is:
 ; db count
-; db y, x, tile index <- count times
+; db y, x, tile index ; count times
 .db 12
 .db 0, 0, 228, 0, 8, 229, 0, 16, 240, 0, 24, 241, 0, 32, 242, 0, 40, 243
 .db 8, 0, 234, 8, 8, 235, 8, 16, 244, 8, 24, 245, 8, 32, 246, 8, 40, 247
@@ -572,7 +546,6 @@ TooEarlyTooLateTiles:
   ld hl,RAM_NumberToTextBuffer ; string is here
   call Text
   END_CODE_PATCH
-
 
   ; Driving technique
   
@@ -618,7 +591,7 @@ TooEarlyTooLateTiles:
   ld (RAM_ScriptRendererTilemapVRAMAddress),de
   ld hl,RAM_NumberToTextBuffer ; string is here
   call Text
-  END_CODE_PATCH_HARD
+  END_CODE_PATCH_HARD ; out of space
   
 .section "Driving Technique message box init" free
 DrivingTechniqueInit:
@@ -631,10 +604,63 @@ DrivingTechniqueInit:
 .ends
 
   ; Risk Control
+  
   ; Flags location on instruction screen
   PatchB $2fb0e $da + 2 * 11
   PatchB $2fb12 $9a + 2 * 11
   PatchB $2fb16 $5a + 2 * 11
+
+  ; "Start"
+  START_CODE_PATCH $227c $2296
+  ld hl, $4 ; tile index
+  ld a, 2 ; palette index
+  call TextWithBorderInit
+  ld a, 0
+  ld (RAM_TilemapHighByte),a ; don't use sprite palette TODO make this an option?
+  ld bc, $0208 ; dimensions
+  TilemapWriteAddressToDE 11,1
+	ld hl, StartText
+  call TextWithBorder
+  END_CODE_PATCH
+  
+  ; "Goal"
+  START_CODE_PATCH $23b1 $23bd
+  call RiskControlGoal
+  END_CODE_PATCH
+
+.section "Risk Control Goal text" free
+RiskControlGoal
+  ld hl, $4 ; tile index
+  ld a, 2 ; palette index
+  call TextWithBorderInit
+  ld a, 0
+  ld (RAM_TilemapHighByte),a ; don't use sprite palette TODO make this an option?
+  ld bc, $0208 ; dimensions
+  TilemapWriteAddressToDE 12,1
+	ld hl, GoalText
+  jp TextWithBorder ; and ret
+.ends
+
+  ; Score
+  START_CODE_PATCH $2329 $235c
+  ld hl, 4 ; tile index
+  ld a, 2 ; palette index
+  call TextWithBorderInit
+  ld a, 0
+  ld (RAM_TilemapHighByte),a ; don't use sprite palette TODO make this an option?
+
+  ld bc, $0216 ; dimensions
+  TilemapWriteAddressToDE 5, 1
+	ld hl, ScoreText
+  call TextWithBorder
+  ; Draw in score
+  ld hl,RAM_Score + 1
+  call NumberToString
+  TilemapWriteAddressToDE 15, 2
+  ld (RAM_ScriptRendererTilemapVRAMAddress),de
+  ld hl,RAM_NumberToTextBuffer ; string is here
+  call Text
+  END_CODE_PATCH_HARD
 
 ; No longer need the digits (I hope)
 .unbackground $10000 $100ff ; Tiles for digits
@@ -804,6 +830,25 @@ TextWithBorderInit:
   ld (PAGING), a
   ret
 .ends
+
+; 1MB expansion
+
+.if BankCount > 16
+
+.macro FillPage args page
+.bank page slot 2
+.org 0
+.dbrnd $4000 $00 $ff
+.endm
+
+; Fill the upper banks with stuff
+.seed 19970327
+.repeat 64-BankCount index n
+  FillPage n + 16
+.endr
+
+.endif
+
 
 ; TODO: burnt-in text
 ; TODO: popup-window text using alternate font
