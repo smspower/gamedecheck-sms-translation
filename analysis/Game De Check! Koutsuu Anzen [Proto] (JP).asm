@@ -48,8 +48,8 @@ _RAM_C0E0_ db
 .enum $C100 export
 _RAM_C100_ db
 _RAM_C101_ db
-_RAM_C102_ db
-_RAM_C103_ db
+_RAM_C102_VDPRegister0Value db
+_RAM_C103_VDPRegister1Value db
 _RAM_C104_TilemapHighByte db
 _RAM_C105_1bppPaletteIndex db
 _RAM_C106_ dw
@@ -71,7 +71,7 @@ _RAM_C11D_ dw
 .ende
 
 .enum $C120 export
-_RAM_C120_ db
+_RAM_C120_GameState db
 .ende
 
 .enum $C123 export
@@ -122,7 +122,7 @@ _RAM_C18B_ dsb $4
 .ende
 
 .enum $C200 export
-_RAM_C200_ dsb $40
+_RAM_C200_SpriteTableMirror dsb $40
 _RAM_C240_ db
 .ende
 
@@ -697,9 +697,8 @@ _LABEL_0_:
 	im 1
 	jp _LABEL_71_
 
-; Data from 6 to 7 (2 bytes)
-_DATA_6_:
-.db $00 $00
+  nop
+  nop
 
 _LABEL_8_VRAMAddressToDE:
 	ld a, e
@@ -708,18 +707,18 @@ _LABEL_8_VRAMAddressToDE:
 	out (Port_VDPAddress), a
 	ret
 
-_LABEL_F_:
-	nop
-_LABEL_10_:
-	ld a, (_RAM_C103_)
+  nop
+
+_LABEL_10_ScreenOff:
+	ld a, (_RAM_C103_VDPRegister1Value)
 	and $BF
 	jp +
 
-_LABEL_18_:
-	ld a, (_RAM_C103_)
+_LABEL_18_ScreenOn:
+	ld a, (_RAM_C103_VDPRegister1Value)
 	or $40
 +:
-	ld (_RAM_C103_), a
+	ld (_RAM_C103_VDPRegister1Value), a
 	ld e, a
 	ld d, $81
 	jr _LABEL_8_VRAMAddressToDE
@@ -812,7 +811,7 @@ _LABEL_71_:
 	call _LABEL_240_
 	call _LABEL_415_
 	call _LABEL_442_
-	rst $18	; _LABEL_18_
+	rst $18	; _LABEL_18_ScreenOn
 	ei
 -:
 	ld hl, _RAM_C101_
@@ -840,7 +839,7 @@ _DATA_CE_:
 ; 4th entry of Jump Table from B5 (indexed by _RAM_C101_)
 _LABEL_DC_:
 	di
-	ld a, (_RAM_C102_)
+	ld a, (_RAM_C102_VDPRegister0Value)
 	xor $20
 	out (Port_VDPAddress), a
 	ld a, $80
@@ -883,7 +882,7 @@ _LABEL_FB_:
 	ld (_RAM_C082_), a
 	xor a
 	call _LABEL_4EE_BufferPush
-	jp _LABEL_29B_
+	jp _LABEL_29B_BlankSpriteTableAndMirror
 
 _LABEL_130_:
 	ld a, $FF
@@ -921,12 +920,12 @@ _LABEL_130_:
 _LABEL_16B_:
 	di
 	set 7, (hl)
-	rst $10	; _LABEL_10_
-	call _LABEL_276_
-	call _LABEL_29B_
+	rst $10	; _LABEL_10_ScreenOff
+	call _LABEL_276_8x16SpritesOff
+	call _LABEL_29B_BlankSpriteTableAndMirror
 	call _LABEL_2DC_
-	call _LABEL_269_
-	call _LABEL_2BA7_
+	call _LABEL_269_SpriteTableAddress2f00
+	call _LABEL_2BA7_LoadPalette
   ; patch start @ 17e
 	nop
 	nop
@@ -1017,7 +1016,7 @@ _LABEL_16B_:
 	ld hl, _DATA_233_
 	ld (_RAM_C404_), hl
 	ei
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn ; bug! need to do this with interrupts off?
 
 ; Data from 230 to 232 (3 bytes)
 _DATA_230_:
@@ -1028,7 +1027,7 @@ _DATA_233_:
 .db $04 $FF $00 $04 $FF $08 $05 $07 $00 $06 $07 $08 $07
 
 _LABEL_240_:
-	ld hl, _DATA_285_
+	ld hl, _DATA_285_VDPRegisterInitialisation
 	ld b, $16
 	ld c, Port_VDPAddress
 	otir
@@ -1036,52 +1035,56 @@ _LABEL_240_:
 	ld h, $00
 	ld bc, $4000
 	call _LABEL_2B0_
-	ld a, (_DATA_285_)
-	ld (_RAM_C102_), a
-	ld a, (_DATA_285_ + 2)
-	ld (_RAM_C103_), a
-	jp _LABEL_2A8_
+	ld a, (_DATA_285_VDPRegisterInitialisation)
+	ld (_RAM_C102_VDPRegister0Value), a
+	ld a, (_DATA_285_VDPRegisterInitialisation + 2)
+	ld (_RAM_C103_VDPRegister1Value), a
+	jp _LABEL_2A8_BlankSpriteTable
 
-_LABEL_263_:
+_LABEL_263_SpriteTableAddress3f00:
 	ld de, $86FF
 	jp _LABEL_8_VRAMAddressToDE
 
-_LABEL_269_:
+_LABEL_269_SpriteTableAddress2f00:
 	ld de, $86FB
 	jp _LABEL_8_VRAMAddressToDE
 
-_LABEL_26F_:
-	ld a, (_RAM_C103_)
+_LABEL_26F_8x16SpritesOn:
+	ld a, (_RAM_C103_VDPRegister1Value)
 	or $02
 	jr +
 
-_LABEL_276_:
-	ld a, (_RAM_C103_)
+_LABEL_276_8x16SpritesOff:
+	ld a, (_RAM_C103_VDPRegister1Value)
 	and $FD
 +:
-	ld (_RAM_C103_), a
+	ld (_RAM_C103_VDPRegister1Value), a
 	out (Port_VDPAddress), a
 	ld a, $81
 	out (Port_VDPAddress), a
 	ret
 
 ; Data from 285 to 289 (5 bytes)
-_DATA_285_:
-.db $06 $80 $A0 $81 $FF
+_DATA_285_VDPRegisterInitialisation:
+.db $06 $80 
+.db $A0 $81
+.db $FF $82
+.db $FF $83
+.db $FF $84
+.db $FF $85
+.db $FB $86
+.db $00 $87
+.db $00 $88
+.db $00 $89
+.db $00 $8A
 
-; 2nd entry of Pointer Table from 2FAD5 (indexed by unknown)
-; Data from 28A to 29A (17 bytes)
-_DATA_28A_:
-.db $82 $FF $83 $FF $84 $FF $85 $FB $86 $00 $87 $00 $88 $00 $89 $00
-.db $8A
-
-_LABEL_29B_:
-	ld hl, _RAM_C200_
-	ld de, _RAM_C200_ + 1
+_LABEL_29B_BlankSpriteTableAndMirror:
+	ld hl, _RAM_C200_SpriteTableMirror
+	ld de, _RAM_C200_SpriteTableMirror + 1
 	ld bc, $003F
 	ld (hl), $E8
 	ldir
-_LABEL_2A8_:
+_LABEL_2A8_BlankSpriteTable:
 	ld de, $7F00
 	ld h, $E8
 	ld bc, $0040
@@ -1096,9 +1099,9 @@ _LABEL_2B0_:
 	jr nz, -
 	ret
 
-_LABEL_2BA_LoadPalette:
+_LABEL_2BA_LoadToVRAMAtDE:
 	rst $08	; _LABEL_8_VRAMAddressToDE
-_LABEL_2BB_:
+_LABEL_2BB_WritetoVRAM:
 	ld a, c
 	or a
 	jr z, +
@@ -1115,7 +1118,7 @@ _LABEL_2BB_:
 	jr nz, -
 	ret
 
-_LABEL_2CD_:
+_LABEL_2CD_Load1bppTilemap:
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	ld c, Port_VDPData
 -:
@@ -1335,7 +1338,7 @@ _LABEL_3F9_:
 	xor a
 	ld (_RAM_C10E_), a
 	ld de, $7F00
-	ld hl, _RAM_C200_
+	ld hl, _RAM_C200_SpriteTableMirror
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	ld c, Port_VDPData
 	call _LABEL_15CD_
@@ -1539,7 +1542,7 @@ _LABEL_54E_:
 	ld a, $85
 	ld (Paging_Slot2), a
 	ld hl, _RAM_C240_
-	ld de, _RAM_C200_
+	ld de, _RAM_C200_SpriteTableMirror
 	ld a, $40
 	ex af, af'
 	exx
@@ -1913,7 +1916,7 @@ _DATA_A25_:
 ++:
 	set 7, (hl)
 	di
-	rst $10	; _LABEL_10_
+	rst $10	; _LABEL_10_ScreenOff
 	call _LABEL_2DC_
 	call _LABEL_488_
 	ld hl, $0300
@@ -1921,7 +1924,7 @@ _DATA_A25_:
 	ld a, $87
 	ld (Paging_Slot2), a
 	ld a, $05
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	di
   ; Look up title screen for this game
@@ -1980,14 +1983,14 @@ _DATA_A25_:
 	ld hl, _DATA_790E_
 	ld de, $C010
 	ld bc, $0010
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
   
 	ld hl, _DATA_68E_RomanFont
 	ld de, $6800
 	ld a, $04
 	call _LABEL_38A_LoadRLE
 	ei
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 ; Data from AC3 to ADD (27 bytes)
 _DATA_AC3_TitleScreens:
@@ -2081,7 +2084,7 @@ _LABEL_B36_:
 	xor a
 	ld (_RAM_C118_), a
 	di
-	rst $10	; _LABEL_10_
+	rst $10	; _LABEL_10_ScreenOff
 	ld a, $83
 	ld (Paging_Slot2), a
 	ld de, $4000
@@ -2091,7 +2094,7 @@ _LABEL_B36_:
 	ld de, $C000
 	ld hl, _DATA_EE69_
 	ld bc, $0011
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	ld de, $6000
 	ld hl, _DATA_EE7A_
 	ld a, $04
@@ -2104,9 +2107,9 @@ _LABEL_B36_:
 	ld hl, _DATA_EDC9_
 	ld bc, $0520
 	call _LABEL_31C_LoadTilemap
-	call _LABEL_29B_
+	call _LABEL_29B_BlankSpriteTableAndMirror
 	ei
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 _LABEL_B9F_:
 	di
@@ -2175,7 +2178,7 @@ _LABEL_C05_:
 	out (Port_VDPAddress), a
 	ld a, $88
 	out (Port_VDPAddress), a
-	ld a, (_RAM_C102_)
+	ld a, (_RAM_C102_VDPRegister0Value)
 	xor $20
 	out (Port_VDPAddress), a
 	ld a, $80
@@ -3540,7 +3543,7 @@ _DATA_192F_:
 	set 7, (hl)
 	call _LABEL_18F2_
 	ld a, $01
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	ld a, $0C
 	ld (_RAM_C34A_), a
@@ -3582,7 +3585,7 @@ _LABEL_1968_:
 	set 7, (hl)
 	di
 	ld a, $81
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	ei
 	ret
@@ -3606,7 +3609,7 @@ _LABEL_199B_:
 +:
 	set 7, (hl)
 	di
-	rst $10	; _LABEL_10_
+	rst $10	; _LABEL_10_ScreenOff
 	ld a, (_RAM_C34A_)
 	bit 0, a
 	call z, _LABEL_1A2A_
@@ -3651,7 +3654,7 @@ _LABEL_199B_:
 	ld a, $78
 	ld (_RAM_C118_), a
 	ei
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 _LABEL_1A2A_:
 	ld e, a
@@ -3818,7 +3821,7 @@ _LABEL_1B2B_:
 +:
 	set 7, (hl)
 	di
-	call _LABEL_29B_
+	call _LABEL_29B_BlankSpriteTableAndMirror
 	call _LABEL_195C_
 	call _LABEL_1C42_
 	ld a, $01
@@ -3884,10 +3887,10 @@ _LABEL_1BC3_:
 	ex de, hl
 	ld (hl), $01
 	di
-	rst $10	; _LABEL_10_
-	call _LABEL_26F_
+	rst $10	; _LABEL_10_ScreenOff
+	call _LABEL_26F_8x16SpritesOn
 	call _LABEL_2DC_
-	call _LABEL_263_
+	call _LABEL_263_SpriteTableAddress3f00
 	ld a, $82
 	ld (Paging_Slot2), a
 	ld de, $5400
@@ -3915,16 +3918,16 @@ _LABEL_1BC3_:
 	ld de, $C000
 	ld hl, _DATA_793E_Palette
 	ld bc, $0020
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	ei
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 _LABEL_1C29_:
 	set 7, (hl)
 	di
 	ld a, (_RAM_C348_)
 	or $06
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	xor a
 	ld (_RAM_C118_), a
@@ -3986,7 +3989,7 @@ _DATA_1C79_:
 	res 4, a
 	ld (_RAM_C100_), a
 	ld a, $02
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	ld a, $C7
 	call _LABEL_4EE_BufferPush
@@ -4022,7 +4025,7 @@ _LABEL_1CA8_:
 	di
 	set 7, (hl)
 	ld a, $82
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	ei
 	ret
@@ -4129,8 +4132,8 @@ _LABEL_1D60_:
 	set 7, (hl)
 	call _LABEL_1911_
 	di
-	call _LABEL_29B_
-	call _LABEL_269_
+	call _LABEL_29B_BlankSpriteTableAndMirror
+	call _LABEL_269_SpriteTableAddress2f00
   ; patch start @ 1d88
 	ld a, $84
 	ld (Paging_Slot2), a
@@ -4202,8 +4205,8 @@ _LABEL_1E0B_:
 	ex de, hl
 	ld (hl), $01
 	di
-	rst $10	; _LABEL_10_
-	call _LABEL_269_
+	rst $10	; _LABEL_10_ScreenOff
+	call _LABEL_269_SpriteTableAddress2f00
 	ld a, $82
 	ld (Paging_Slot2), a
 	ld de, $4000
@@ -4241,11 +4244,11 @@ _LABEL_1E0B_:
 	ld de, $C000
 	ld hl, _DATA_795E_
 	ld bc, $0020
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	ld a, $C2
 	ld (_RAM_C34E_), a
 	ei
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 _LABEL_1E8B_:
 	set 7, (hl)
@@ -4253,7 +4256,7 @@ _LABEL_1E8B_:
 	di
 	ld a, (_RAM_C348_)
 	or $06
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	ei
 	xor a
@@ -4282,7 +4285,7 @@ _DATA_1EB9_:
 	di
 	call _LABEL_18F2_
 	ld a, $03
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	ld hl, $0384
 	ld (_RAM_C118_), hl
@@ -4322,9 +4325,9 @@ _LABEL_1EEF_:
 +:
 	set 7, (hl)
 	di
-	rst $10	; _LABEL_10_
+	rst $10	; _LABEL_10_ScreenOff
 	ld a, $83
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	ei
 	ret
@@ -4354,15 +4357,15 @@ _LABEL_1F39_:
 +:
 	set 7, (hl)
 	di
-	rst $10	; _LABEL_10_
-	call _LABEL_26F_
-	call _LABEL_269_
+	rst $10	; _LABEL_10_ScreenOff
+	call _LABEL_26F_8x16SpritesOn
+	call _LABEL_269_SpriteTableAddress2f00
 	ld a, (_RAM_C100_)
 	set 4, a
 	ld (_RAM_C100_), a
 	ld de, $8900
 	rst $08	; _LABEL_8_VRAMAddressToDE
-	call _LABEL_29B_
+	call _LABEL_29B_BlankSpriteTableAndMirror
 	call _LABEL_2DC_
 	ld a, $83
 	ld (Paging_Slot2), a
@@ -4377,7 +4380,7 @@ _LABEL_1F39_:
 	ld de, $C000
 	ld hl, _DATA_797E_
 	ld bc, $0020
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	call _LABEL_4E56_
 	ld hl, _RAM_CC00_
 	ld de, $7800
@@ -4414,7 +4417,7 @@ _LABEL_1F39_:
 	ld a, $8C
 	ld (_RAM_DE04_), a
 	ei
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 ; 4th entry of Jump Table from 1EB9 (indexed by _RAM_C123_)
 _LABEL_1FF8_:
@@ -4607,7 +4610,7 @@ _LABEL_2146_:
 	di
 	ld a, (_RAM_C348_)
 	or $06
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	xor a
 	ld (_RAM_C118_), a
@@ -4652,7 +4655,7 @@ _DATA_2195_:
 	set 4, a
 	ld (_RAM_C100_), a
 	ld a, $04
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	ld hl, $0384
 	ld (_RAM_C118_), hl
@@ -4687,7 +4690,7 @@ _LABEL_21D0_:
 	set 7, (hl)
 	di
 	ld a, $84
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	ei
 	ret
@@ -4719,10 +4722,10 @@ _LABEL_2200_:
 +:
 	set 7, (hl)
 	di
-	rst $10	; _LABEL_10_
+	rst $10	; _LABEL_10_ScreenOff
 	call _LABEL_2DC_
-	call _LABEL_26F_
-	call _LABEL_263_
+	call _LABEL_26F_8x16SpritesOn
+	call _LABEL_263_SpriteTableAddress3f00
 	call _LABEL_1903_
 	ld hl, _RAM_C300_
 	ld de, _RAM_C300_ + 1
@@ -4732,7 +4735,7 @@ _LABEL_2200_:
 	ld hl, _DATA_799E_
 	ld de, $C000
 	ld bc, $0020
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	ld a, $83
 	ld (Paging_Slot2), a
 	ld de, $6000
@@ -4773,7 +4776,7 @@ _LABEL_2200_:
 ; 2nd entry of Jump Table from 47EC (indexed by _RAM_C423_)
 	ld (_RAM_C420_), a
 	ei
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 ; 4th entry of Jump Table from 2195 (indexed by _RAM_C123_)
 _LABEL_22B7_:
@@ -4926,7 +4929,7 @@ _LABEL_23C0_:
 	di
 	ld a, (_RAM_C348_)
 	or $06
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	ei
 	xor a
@@ -4972,7 +4975,7 @@ _LABEL_240C_:
 +:
 	ld (hl), $03
 	ld a, $03
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	ret
 
 ++:
@@ -5039,12 +5042,12 @@ _LABEL_2436_:
 _LABEL_2485_:
 	set 7, (hl)
 	di
-	rst $10	; _LABEL_10_
+	rst $10	; _LABEL_10_ScreenOff
 	call _LABEL_578D_
 	ld a, $9C
 	call _LABEL_4EE_BufferPush
 	ei
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 ; Data from 2495 to 249F (11 bytes)
 .db $21 $23 $C1 $CB $FE $3E $78 $32 $18 $C1 $C9
@@ -5058,9 +5061,9 @@ _LABEL_24A0_:
 	ld a, c
 	ld hl, $9A44
 _LABEL_24AF_:
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	push hl
-	call _LABEL_10_
+	call _LABEL_10_ScreenOff
 	ld de, $81C0
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	call _LABEL_2DC_
@@ -5093,7 +5096,7 @@ _LABEL_24AF_:
 	xor a
 	ld (_RAM_C805_DrawnTilemapBytes), a
 	ld b, a
-	ld a, (_RAM_C120_)
+	ld a, (_RAM_C120_GameState)
 	add a, a
 	ld c, a
 	pop hl
@@ -5103,33 +5106,33 @@ _LABEL_24AF_:
 	ld h, (hl)
 	ld l, a
 	call _LABEL_6204_DrawString
-	ld a, (_RAM_C120_)
+	ld a, (_RAM_C120_GameState)
 	call _LABEL_26D1_
-	rst $18	; _LABEL_18_
+	rst $18	; _LABEL_18_ScreenOn
 	ei
 	ld a, $C7
 	jp _LABEL_4EE_BufferPush
 
 _LABEL_2521_:
 	set 7, (hl)
-	call _LABEL_10_
-	call _LABEL_29B_
+	call _LABEL_10_ScreenOff
+	call _LABEL_29B_BlankSpriteTableAndMirror
 	call _LABEL_2DC_
-	call _LABEL_269_
+	call _LABEL_269_SpriteTableAddress2f00
 	call _LABEL_18F2_
 	call _LABEL_1911_
 	ld de, $8800
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	inc d
 	rst $08	; _LABEL_8_VRAMAddressToDE
-	ld a, (_RAM_C102_)
+	ld a, (_RAM_C102_VDPRegister0Value)
 	out (Port_VDPAddress), a
 	ld a, $80
 	out (Port_VDPAddress), a
 	xor a
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	ei
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 ; 12th entry of Jump Table from 2730 (indexed by _RAM_C10D_)
 _LABEL_254C_:
@@ -5172,18 +5175,18 @@ _LABEL_254C_:
 _LABEL_2591_:
 	di
 	set 7, (hl)
-	rst $10	; _LABEL_10_
+	rst $10	; _LABEL_10_ScreenOff
 	call _LABEL_2DC_
 	ld de, $7A44
 	ld bc, $021A
 	xor a
 	call _LABEL_945_DrawBox
-	ld a, (_RAM_C120_)
+	ld a, (_RAM_C120_GameState)
 	call _LABEL_2CE0_DrawScriptLine
 	ld hl, $0200
 	ld (_RAM_C118_), hl
 	ei
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 ; 5th entry of Jump Table from 18E6 (indexed by _RAM_C10D_)
 _LABEL_25B2_:
@@ -5444,12 +5447,12 @@ _DATA_2730_:
 _LABEL_274A_:
 	set 7, (hl)
 	di
-	rst $10	; _LABEL_10_
+	rst $10	; _LABEL_10_ScreenOff
 	call _LABEL_2DC_
-	call _LABEL_29B_
+	call _LABEL_29B_BlankSpriteTableAndMirror
 	call _LABEL_1903_
-	call _LABEL_276_
-	call _LABEL_263_
+	call _LABEL_276_8x16SpritesOff
+	call _LABEL_263_SpriteTableAddress3f00
 	ei
 	ld a, $8F
 	ld (Paging_Slot2), a
@@ -5458,13 +5461,13 @@ _LABEL_274A_:
 	ld hl, $0384
 	ld (_RAM_C118_), hl
 	ld a, $09
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	xor a
 	ld (_RAM_C10D_), a
 	ld a, $C7
 	call _LABEL_4EE_BufferPush
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 ; 6th entry of Jump Table from CE (indexed by _RAM_C101_)
 _LABEL_2783_:
@@ -5509,7 +5512,7 @@ _LABEL_27AC_:
 +:
 	set 7, (hl)
 	ld a, $85
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	jp _LABEL_595B_
 
 ; 2nd entry of Jump Table from 2730 (indexed by _RAM_C10D_)
@@ -5521,12 +5524,12 @@ _LABEL_27D9_:
 	dec (hl)
 	ret nz
 	di
-	rst $10	; _LABEL_10_
+	rst $10	; _LABEL_10_ScreenOff
 	call _LABEL_2DC_
-	call _LABEL_29B_
+	call _LABEL_29B_BlankSpriteTableAndMirror
 	call _LABEL_1903_
-	call _LABEL_276_
-	call _LABEL_263_
+	call _LABEL_276_8x16SpritesOff
+	call _LABEL_263_SpriteTableAddress3f00
 	ld de, $4000
 	ld h, $00
 	ld bc, $3800
@@ -5565,7 +5568,7 @@ _LABEL_27D9_:
 	ld (_RAM_C32B_), hl
 	ld a, $02
 	ld (_RAM_C10D_), a
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 _LABEL_2852_:
 	set 7, (hl)
@@ -5577,7 +5580,7 @@ _LABEL_2852_:
 	ld h, $00
 	ld bc, $3800
 	call _LABEL_2F8_
-	call _LABEL_29B_
+	call _LABEL_29B_BlankSpriteTableAndMirror
 	call _LABEL_1903_
 	ld de, $82FF
 	rst $08	; _LABEL_8_VRAMAddressToDE
@@ -5589,7 +5592,7 @@ _LABEL_2852_:
 	ld b, $0C
 +:
 	ld a, b
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	ld hl, $0100
 	ld (_RAM_C872_), hl
@@ -5633,10 +5636,10 @@ _LABEL_288E_:
 	ld a, (_RAM_C100_)
 	set 4, a
 	ld (_RAM_C100_), a
-	rst $10	; _LABEL_10_
+	rst $10	; _LABEL_10_ScreenOff
 	ld de, $82FF
 	rst $08	; _LABEL_8_VRAMAddressToDE
-	ld a, (_RAM_C102_)
+	ld a, (_RAM_C102_VDPRegister0Value)
 	or $20
 	out (Port_VDPAddress), a
 	ld a, $80
@@ -5661,11 +5664,11 @@ _LABEL_288E_:
 	ld de, $C000
 	ld hl, _DATA_3C000_
 	ld bc, $0010
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	ld de, $C010
 	ld hl, _DATA_79BE_
 	ld bc, $0010
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	ei
 	ld de, $4800
 	ld hl, _DATA_3C010_
@@ -5685,15 +5688,15 @@ _LABEL_288E_:
 	ld a, (_RAM_C437_)
 	call _LABEL_45BA_
 	call _LABEL_4608_
-	ld a, (_RAM_C103_)
+	ld a, (_RAM_C103_VDPRegister1Value)
 	and $FD
-	ld (_RAM_C103_), a
+	ld (_RAM_C103_VDPRegister1Value), a
 	ld hl, _RAM_C300_
 	res 7, (hl)
 	ld a, (_RAM_C34F_)
 	rrca
 	call nc, +
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 +:
 	di
@@ -5770,7 +5773,7 @@ _LABEL_29DA_:
 	ld (_RAM_C460_), a
 	call _LABEL_4613_
 	call _LABEL_2D63_
-	call _LABEL_29B_
+	call _LABEL_29B_BlankSpriteTableAndMirror
 	ld de, $4000
 	ld h, $00
 	ld bc, $0020
@@ -5791,7 +5794,7 @@ _LABEL_29DA_:
 	set 7, (hl)
 	ld a, (_RAM_C34D_)
 	or $0A
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	ld a, $D6
 	call _LABEL_4EE_BufferPush
 	jp _LABEL_5C23_
@@ -5813,7 +5816,7 @@ _LABEL_2A3B_:
 +:
 	ld (hl), $0B
 	ld a, $01
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	ld a, (_RAM_C0E0_)
 	xor $01
 	and $01
@@ -5823,7 +5826,7 @@ _LABEL_2A3B_:
 ++:
 	set 7, (hl)
 	di
-	call _LABEL_29B_
+	call _LABEL_29B_BlankSpriteTableAndMirror
 	call _LABEL_1903_
 	call _LABEL_1903_
 	ld de, $82FF
@@ -5832,7 +5835,7 @@ _LABEL_2A3B_:
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	inc d
 	rst $08	; _LABEL_8_VRAMAddressToDE
-	call _LABEL_2BA7_
+	call _LABEL_2BA7_LoadPalette
 	ld hl, _RAM_C300_
 	ld de, _RAM_C300_ + 1
 	ld bc, $002F
@@ -5890,12 +5893,12 @@ _LABEL_2AB7_:
 ++:
 	set 7, (hl)
 	di
-	rst $10	; _LABEL_10_
-	call _LABEL_276_
-	call _LABEL_29B_
+	rst $10	; _LABEL_10_ScreenOff
+	call _LABEL_276_8x16SpritesOff
+	call _LABEL_29B_BlankSpriteTableAndMirror
 	call _LABEL_2DC_
-	call _LABEL_269_
-	call _LABEL_2BA7_
+	call _LABEL_269_SpriteTableAddress2f00
+	call _LABEL_2BA7_LoadPalette
 	xor a
 	call _LABEL_2CE0_DrawScriptLine
 	di
@@ -5939,11 +5942,11 @@ _LABEL_2AB7_:
 	ld hl, _DATA_1A06F_
 	ld de, $6200
 	ld bc, $0180
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	ld hl, _DATA_1AE4F_
 	ld de, $6400
 	ld bc, $0120
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	ld de, $7A94
 	ld hl, _DATA_2CC8_
 	ld bc, $0403
@@ -5957,17 +5960,17 @@ _LABEL_2AB7_:
 	ld de, $C001
 	ld hl, _DATA_79BE_ + 1
 	ld bc, $000F
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	ei
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
-_LABEL_2BA7_:
+_LABEL_2BA7_LoadPalette:
 	ld a, $87
 	ld (Paging_Slot2), a
-	ld hl, _DATA_63D6_
+	ld hl, _DATA_63D6_Palette
 	ld de, $C000
 	ld bc, $0020
-	jp _LABEL_2BA_LoadPalette
+	jp _LABEL_2BA_LoadToVRAMAtDE
 
 ; 9th entry of Jump Table from 2730 (indexed by _RAM_C10D_)
 _LABEL_2BB8_:
@@ -6540,7 +6543,7 @@ _LABEL_2FE8_:
 	exx
 	ld hl, _RAM_CA00_
 	ld bc, $0200
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	inc d
 	inc d
 	exx
@@ -6665,11 +6668,11 @@ _LABEL_30CE_:
 +:
 	set 7, (hl)
 	di
-	rst $10	; _LABEL_10_
+	rst $10	; _LABEL_10_ScreenOff
 	call _LABEL_2DC_
-	call _LABEL_29B_
-	call _LABEL_276_
-	call _LABEL_269_
+	call _LABEL_29B_BlankSpriteTableAndMirror
+	call _LABEL_276_8x16SpritesOff
+	call _LABEL_269_SpriteTableAddress2f00
 	ld hl, _RAM_C400_
 	ld de, _RAM_C400_ + 1
 	ld bc, $021F
@@ -9649,15 +9652,15 @@ _LABEL_4847_:
 	ld (_RAM_C7B0_), hl
 	ld bc, $0011
 	call _LABEL_2F8_
-	rst $10	; _LABEL_10_
+	rst $10	; _LABEL_10_ScreenOff
 	ld de, $7000
 	ld bc, $0700
 	ld h, $00
 	call _LABEL_2F8_
-	call _LABEL_263_
-	ld a, (_RAM_C102_)
+	call _LABEL_263_SpriteTableAddress3f00
+	ld a, (_RAM_C102_VDPRegister0Value)
 	and $06
-	ld (_RAM_C102_), a
+	ld (_RAM_C102_VDPRegister0Value), a
 	out (Port_VDPAddress), a
 	ld a, $80
 	out (Port_VDPAddress), a
@@ -9739,8 +9742,8 @@ _LABEL_48D3_:
 	ld de, $C000
 	ld hl, _DATA_4A10_
 	ld bc, $0010
-	call _LABEL_2BA_LoadPalette
-	jp _LABEL_18_
+	call _LABEL_2BA_LoadToVRAMAtDE
+	jp _LABEL_18_ScreenOn
 
 _LABEL_492E_:
 	ld a, (_RAM_C436_)
@@ -10108,7 +10111,7 @@ _LABEL_4C06_:
 	ld de, $7340
 	ld bc, $02C0
 	di
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	ld hl, _DATA_4C8C_
 	ld de, $709E
 	ld bc, $0303
@@ -10120,7 +10123,7 @@ _LABEL_4C06_:
 	ld de, $C000
 	ld bc, $0020
 	di
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	ei
 	ld a, $F6
 	ld (_RAM_C7AE_), a
@@ -10129,10 +10132,10 @@ _LABEL_4C06_:
 	call _LABEL_48B2_
 	ld a, $02
 	ld (_RAM_C340_), a
-	ld a, (_RAM_C103_)
+	ld a, (_RAM_C103_VDPRegister1Value)
 	or $02
-	ld (_RAM_C103_), a
-	jp _LABEL_18_
+	ld (_RAM_C103_VDPRegister1Value), a
+	jp _LABEL_18_ScreenOn
 
 ; Data from 4C6C to 4C8B (32 bytes)
 _DATA_4C6C_:
@@ -10496,7 +10499,7 @@ _LABEL_4EF7_:
 	ld b, $00
 	call _LABEL_4F15_
 	ld bc, $0040
-	jp _LABEL_2BA_LoadPalette
+	jp _LABEL_2BA_LoadToVRAMAtDE
 
 _LABEL_4F15_:
 	sub b
@@ -10573,7 +10576,7 @@ _LABEL_4FC9_:
 	jp _LABEL_4EE_BufferPush
 
 _LABEL_4FE5_:
-	ld a, (_RAM_C102_)
+	ld a, (_RAM_C102_VDPRegister0Value)
 	xor $10
 	out (Port_VDPAddress), a
 	ld a, $80
@@ -11647,11 +11650,11 @@ _LABEL_578D_:
 	ld de, $6000
 	ld hl, _DATA_23A70_
 	ld bc, $0180
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	ld de, $4000
 	ld hl, _DATA_23C6E_
 	ld bc, $0080
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	ld a, $00
 	out (Port_VDPAddress), a
 	ld a, $C0
@@ -11901,24 +11904,24 @@ _LABEL_58C7_:
 
 _LABEL_595B_:
 	di
-	rst $10	; _LABEL_10_
-	call _LABEL_29B_
-	ld de, $7800
-	ld bc, $0380
-	ld hl, $0000
-	call _LABEL_2E5_
-	call _LABEL_276_
-	call _LABEL_263_
+    rst $10	; _LABEL_10_ScreenOff
+    call _LABEL_29B_BlankSpriteTableAndMirror
+    ld de, $7800
+    ld bc, $0380
+    ld hl, $0000
+    call _LABEL_2E5_
+    call _LABEL_276_8x16SpritesOff
+    call _LABEL_263_SpriteTableAddress3f00
 	ei
 	call _LABEL_61B9_
 	call _LABEL_61D4_
 	ld a, $87
 	ld (Paging_Slot2), a
-	ld hl, _DATA_63D6_
+	ld hl, _DATA_63D6_Palette
 	ld de, $C000
 	ld bc, $0020
-	call _LABEL_77B6_
-	ld a, (_RAM_C120_)
+	call _LABEL_77B6_CopyToVRAM
+	ld a, (_RAM_C120_GameState)
 	or a
 	ret z
 	rlca
@@ -11928,12 +11931,12 @@ _LABEL_595B_:
 	call _LABEL_6191_ReadAthPointerFromHL
 	jp (hl)
 
-; Jump Table from 599B to 59B4 (13 entries, indexed by _RAM_C120_)
+; Jump Table from 599B to 59B4 (13 entries, indexed by _RAM_C120_GameState)
 _DATA_599B_:
 .dw _LABEL_59B5_ _LABEL_59B5_ _LABEL_59B5_ _LABEL_59B5_ _LABEL_59E0_ _LABEL_59E0_ _LABEL_59E0_ _LABEL_59E0_
 .dw _LABEL_59E0_ _LABEL_59E0_ _LABEL_59E0_ _LABEL_59E0_ _LABEL_59E0_
 
-; 1st entry of Jump Table from 599B (indexed by _RAM_C120_)
+; 1st entry of Jump Table from 599B (indexed by _RAM_C120_GameState)
 _LABEL_59B5_:
 	call _LABEL_5AB3_DrawBox
 	ld a, $87
@@ -11946,17 +11949,17 @@ _LABEL_59B5_:
 	ld (hl), $00
 	ld hl, $4020
 	ld (_RAM_C800_CharacterDrawingVRAMAddress), hl
-	ld a, (_RAM_C120_)
+	ld a, (_RAM_C120_GameState)
 	ld hl, _DATA_1DFAB_DrivingSenseTextTable - 2
 	call _LABEL_6191_ReadAthPointerFromHL
 	ld b, $02
 	call _LABEL_5AF5_DrawMultipleStrings
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
-; 5th entry of Jump Table from 599B (indexed by _RAM_C120_)
+; 5th entry of Jump Table from 599B (indexed by _RAM_C120_GameState)
 _LABEL_59E0_:
 	call _LABEL_5A53_
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 _LABEL_59E6_:
 	ld a, $87
@@ -11969,7 +11972,7 @@ _LABEL_59E6_:
 	ld (hl), $00
 	ld hl, $4020
 	ld (_RAM_C800_CharacterDrawingVRAMAddress), hl
-	ld a, (_RAM_C120_)
+	ld a, (_RAM_C120_GameState)
 	and $7F
 	ld hl, _DATA_1DFD3_ - 2
 	call _LABEL_6191_ReadAthPointerFromHL
@@ -11986,7 +11989,7 @@ _LABEL_59E6_:
 	call _LABEL_6327_LoadTilemap
   
   ; Flags?
-	ld a, (_RAM_C120_) ; ???
+	ld a, (_RAM_C120_GameState) ; ???
 	sub $81
 	ld hl, _DATA_2FAC6_TitleScreenAmendments
 	call _LABEL_6191_ReadAthPointerFromHL
@@ -12014,7 +12017,7 @@ _LABEL_59E6_:
 	ld hl, _DATA_2FA1A_3BoxTilemap
 	ld de, $7CC6
 	call _LABEL_5A96_Load2x2Tilemap
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 _LABEL_5A53_:
 	call _LABEL_5AB3_DrawBox
@@ -12029,11 +12032,11 @@ _LABEL_5A53_:
 	ld (hl), $00 ; _RAM_C805_DrawnTilemapBytes
 	ld hl, $4020
 	ld (_RAM_C800_CharacterDrawingVRAMAddress), hl
-	ld a, (_RAM_C120_)
+	ld a, (_RAM_C120_GameState)
 	sub $04
 	ld hl, _DATA_1E02A_ - 2 ; Look up text to draw
 	call _LABEL_5B14_DrawIndexedScriptEntry
-	ld a, (_RAM_C120_)
+	ld a, (_RAM_C120_GameState)
 	cp $05
 	ret nz
 	call _LABEL_5A9C_LoadControlPadAndNumberTiles
@@ -12063,7 +12066,7 @@ _LABEL_5AB3_DrawBox:
 	call _LABEL_5ACE_
 	ld a, $87
 	ld (Paging_Slot2), a
-	ld a, (_RAM_C120_)
+	ld a, (_RAM_C120_GameState)
 	ld hl, _DATA_1DF65_ - 2
 	call _LABEL_6191_ReadAthPointerFromHL
 	ld e, (hl)
@@ -12277,14 +12280,14 @@ _DATA_5C0C_:
 
 _LABEL_5C23_:
 	di
-	rst $10	; _LABEL_10_
+	rst $10	; _LABEL_10_ScreenOff
 	ld de, $82FD
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	ld de, $7000
 	ld bc, $0300
 	ld hl, $0000
 	call _LABEL_2E5_
-	call _LABEL_263_
+	call _LABEL_263_SpriteTableAddress3f00
 	ei
 	call _LABEL_61B9_
 	ld a, $87
@@ -12292,7 +12295,7 @@ _LABEL_5C23_:
 	ld hl, _DATA_63F6_
 	ld de, $C000
 	ld bc, $0011
-	call _LABEL_77B6_
+	call _LABEL_77B6_CopyToVRAM
 	call _LABEL_4C95_
 	call _LABEL_5A53_
 	ld a, $88
@@ -12323,7 +12326,7 @@ _LABEL_5C23_:
 	call _LABEL_633D_LoadTilesRLE
 	ld a, $87
 	ld (Paging_Slot2), a
-	ld a, (_RAM_C120_)
+	ld a, (_RAM_C120_GameState)
 	cp $0A
 	jr nz, +
 	ld hl, _DATA_1DF55_
@@ -12379,7 +12382,7 @@ _LABEL_5C23_:
 	ld (hl), $00
 	ld hl, $0060
 	ld (_RAM_C11D_), hl
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 _LABEL_5D22_:
 	ld a, (hl)
@@ -12523,7 +12526,7 @@ _LABEL_5DD6_:
 	call _LABEL_2E5_
 	ei
 	ld a, $0D
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_5AB3_DrawBox
 	xor a
 	ld (_RAM_C104_TilemapHighByte), a
@@ -12561,7 +12564,7 @@ _LABEL_5E06_:
 	ld hl, _DATA_6383_
 	ld de, $C000
 	ld bc, $0011
-	call _LABEL_77B6_
+	call _LABEL_77B6_CopyToVRAM
 	ld a, $87
 	ld (Paging_Slot2), a
 	call _LABEL_5ED7_
@@ -12589,7 +12592,7 @@ _LABEL_5E6C_:
 	ld hl, _DATA_6394_
 	ld de, $C000
 	ld bc, $0011
-	call _LABEL_77B6_
+	call _LABEL_77B6_CopyToVRAM
 	ld a, $87
 	ld (Paging_Slot2), a
 	call _LABEL_5ED7_
@@ -12607,7 +12610,7 @@ _LABEL_5EB5_:
 	ld (_RAM_C11D_), hl
 	ld hl, _RAM_C70C_
 	set 7, (hl)
-	jp _LABEL_18_
+	jp _LABEL_18_ScreenOn
 
 _LABEL_5EC3_:
 	ld a, (_RAM_C109_)
@@ -12657,8 +12660,8 @@ _LABEL_5EEB_:
 	ld hl, _DATA_6372_
 	ld de, $C000
 	ld bc, $0011
-	call _LABEL_77B6_
-	call _LABEL_18_
+	call _LABEL_77B6_CopyToVRAM
+	call _LABEL_18_ScreenOn
 	jp _LABEL_617F_
 
 ; 35th entry of Jump Table from 312E (indexed by _RAM_C70C_)
@@ -12689,7 +12692,7 @@ _LABEL_5F35_:
 	ld hl, _DATA_63B6_
 	ld de, $C000
 	ld bc, $0020
-	call _LABEL_77B6_
+	call _LABEL_77B6_CopyToVRAM
 	ld a, $87
 	ld (Paging_Slot2), a
 	xor a
@@ -12720,7 +12723,7 @@ _LABEL_5F35_:
 	ld (iy+2), $88
 	ld (iy+4), $A2
 	ld (iy+5), $97
-	call _LABEL_18_
+	call _LABEL_18_ScreenOn
 	jp _LABEL_617F_
 
 ; Data from 5FDF to 5FE3 (5 bytes)
@@ -12938,16 +12941,16 @@ _LABEL_6191_ReadAthPointerFromHL:
 
 _LABEL_619B_:
 	di
-	rst $10	; _LABEL_10_
-	call _LABEL_29B_
+	rst $10	; _LABEL_10_ScreenOff
+	call _LABEL_29B_BlankSpriteTableAndMirror
 	ld hl, _RAM_C401_
 	ld (hl), $00
 	ld de, $7800
 	ld bc, $0380
 	ld hl, $0000
 	call _LABEL_2E5_
-	call _LABEL_276_
-	call _LABEL_263_
+	call _LABEL_276_8x16SpritesOff
+	call _LABEL_263_SpriteTableAddress3f00
 	ei
 	ret
 
@@ -13296,7 +13299,7 @@ _DATA_63B6_:
 .db $0C $00 $3F $2B $1F $30 $29 $03 $02 $0B $38 $04 $24 $2F $30 $03
 
 ; Data from 63D6 to 63F5 (32 bytes)
-_DATA_63D6_:
+_DATA_63D6_Palette:
 .db $08 $00 $3F $38 $3C $03 $0F $30 $20 $2A $02 $00 $00 $00 $00 $00
 .db $08 $00 $3F $38 $3C $03 $0F $30 $20 $2A $00 $00 $00 $00 $00 $00
 
@@ -14598,7 +14601,7 @@ _LABEL_6EE6_:
 	pop af
 	and $04
 	jp z, _LABEL_CC4_
-	ld hl, _DATA_6_ - 1
+	ld hl, 5
 	add hl, de
 	ld (iy+15), l
 	ld (iy+16), h
@@ -15021,9 +15024,9 @@ _LABEL_7272_:
 ; 1st entry of Jump Table from 312E (indexed by _RAM_C70C_)
 _LABEL_729C_:
 	di
-	call _LABEL_10_
+	call _LABEL_10_ScreenOff
 	call _LABEL_2DC_
-	call _LABEL_29B_
+	call _LABEL_29B_BlankSpriteTableAndMirror
 	xor a
 	out (Port_VDPAddress), a
 	ld a, $88
@@ -15033,7 +15036,7 @@ _LABEL_729C_:
 	ld a, $89
 	out (Port_VDPAddress), a
 	ld a, $08
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	ld hl, _RAM_C70C_
 	inc (hl)
@@ -15041,7 +15044,7 @@ _LABEL_729C_:
 	ld (_RAM_C70D_), hl
 	ld a, $C7
 	ld (_RAM_DE04_), a
-	call _LABEL_18_
+	call _LABEL_18_ScreenOn
 	ei
 	ret
 
@@ -15058,15 +15061,15 @@ _LABEL_72D0_:
 	ret nz
 +:
 	di
-	call _LABEL_10_
+	call _LABEL_10_ScreenOff
 	ld a, $81
-	ld (_RAM_C120_), a
+	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	ld hl, _RAM_C70C_
 	inc (hl)
 	ld hl, $04B0
 	ld (_RAM_C70D_), hl
-	call _LABEL_18_
+	call _LABEL_18_ScreenOn
 	ei
 	ret
 
@@ -15090,9 +15093,9 @@ _LABEL_7310_:
 	ld (Paging_Slot2), a
 	call _LABEL_11339_
 	di
-	call _LABEL_10_
+	call _LABEL_10_ScreenOff
 	call _LABEL_2DC_
-	call _LABEL_29B_
+	call _LABEL_29B_BlankSpriteTableAndMirror
 	ld a, $26
 	out (Port_VDPAddress), a
 	ld a, $80
@@ -15127,7 +15130,7 @@ _LABEL_7310_:
 	ld de, $C000
 	ld hl, _DATA_764F_
 	ld bc, $0020
-	call _LABEL_2BA_LoadPalette
+	call _LABEL_2BA_LoadToVRAMAtDE
 	ld hl, _DATA_3CEB0_
 	ld (_RAM_C325_), hl
 	ld hl, _DATA_322D0_
@@ -15169,7 +15172,7 @@ _LABEL_7310_:
 	ld (_RAM_C79C_), a
 	ld a, $C5
 	ld (_RAM_DE04_), a
-	call _LABEL_18_
+	call _LABEL_18_ScreenOn
 	ei
 	ld hl, (_RAM_C700_)
 	inc hl
@@ -15508,9 +15511,9 @@ _LABEL_7616_:
 	ld (Paging_Slot2), a
 	call _LABEL_11339_
 	di
-	rst $10	; _LABEL_10_
-	ld hl, _RAM_C200_
-	ld de, _RAM_C200_ + 1
+	rst $10	; _LABEL_10_ScreenOff
+	ld hl, _RAM_C200_SpriteTableMirror
+	ld de, _RAM_C200_SpriteTableMirror + 1
 	ld bc, $1BFE
 	ld (hl), $00
 	ldir
@@ -15635,11 +15638,11 @@ _DATA_76FE_:
 .dw _DATA_2EF64_ _DATA_2F0E6_ _DATA_2F268_ _DATA_2F3EA_ _DATA_2F56C_ _DATA_2F6EE_ _DATA_2F6EE_ _DATA_2F870_
 .dw _DATA_2F97C_ _DATA_2FAFE_ _DATA_2FC80_ _DATA_2FDC2_
 
-_LABEL_77B6_:
+_LABEL_77B6_CopyToVRAM:
 	di
-	rst $08	; _LABEL_8_VRAMAddressToDE
+    rst $08	; _LABEL_8_VRAMAddressToDE
 	ei
-	jp _LABEL_2BB_
+	jp _LABEL_2BB_WritetoVRAM
 
 _LABEL_77BC_:
 	ld a, e
@@ -21475,7 +21478,7 @@ _LABEL_16CE7_:
 	ld a, $19
 	ld (_RAM_C104_TilemapHighByte), a
 	di
-	call _LABEL_2CD_
+	call _LABEL_2CD_Load1bppTilemap
 	ei
 	ret
 
@@ -21893,7 +21896,7 @@ _DATA_1D5B6_:
 .db $01 $41 $51 $98 $6A $7A $4E $27 $00 $1D $FD $45 $47 $1B $01 $1C
 .db $01 $49 $1C $07 $1E $0F $01 $48 $FE
 
-; 1st entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_)
+; 1st entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_GameState)
 ; Data from 1D60F to 1D667 (89 bytes)
 _DATA_1D60F_:
 .db $2A $07 $14 $1B $23 $15 $4C $02 $06 $4C $02 $27 $3B $1D $FD $21
@@ -22242,7 +22245,7 @@ _DATA_1D8A9_:
 .db $4E $7B $95 $59 $69 $54 $71 $8C $54 $FE $8F $5E $54 $56 $95 $6A
 .db $92 $98 $90 $FE $5E $9A
 
-; Pointer Table from 1DA46 to 1DA5D (12 entries, indexed by _RAM_C120_)
+; Pointer Table from 1DA46 to 1DA5D (12 entries, indexed by _RAM_C120_GameState)
 _DATA_1DA46_:
 .dw _DATA_1DA96_ _DATA_1DACE_ _DATA_1DB16_ _DATA_1DB60_ _DATA_1DBED_ _DATA_1DC37_ _DATA_1DCC0_ _DATA_1DD52_
 .dw _DATA_1DBA8_ _DATA_1DC79_ _DATA_1DD09_ _DATA_1DD97_
@@ -22253,7 +22256,7 @@ _DATA_1DA46_:
 .db $02 $10 $21 $00 $46 $17 $46 $02 $46 $1C $46 $24 $FD $09 $09 $43
 .db $0A $08 $37 $10 $4C $02 $48 $FE
 
-; 1st entry of Pointer Table from 1DA46 (indexed by _RAM_C120_)
+; 1st entry of Pointer Table from 1DA46 (indexed by _RAM_C120_GameState)
 ; Data from 1DA96 to 1DACD (56 bytes)
 _DATA_1DA96_:
 .db $00 $23 $19 $27 $6F $8E $4E $7B $95 $59 $5F $95 $5E $28 $FD $3D
@@ -22261,7 +22264,7 @@ _DATA_1DA96_:
 .db $3F $16 $47 $00 $46 $17 $46 $02 $46 $1C $46 $24 $FD $09 $09 $43
 .db $0A $08 $37 $10 $4C $02 $48 $FE
 
-; 2nd entry of Pointer Table from 1DA46 (indexed by _RAM_C120_)
+; 2nd entry of Pointer Table from 1DA46 (indexed by _RAM_C120_GameState)
 ; Data from 1DACE to 1DB15 (72 bytes)
 _DATA_1DACE_:
 .db $00 $23 $19 $27 $6F $8E $4E $7B $95 $59 $5F $95 $5E $28 $FD $40
@@ -22270,7 +22273,7 @@ _DATA_1DACE_:
 .db $01 $10 $47 $00 $46 $17 $46 $02 $46 $1C $46 $FD $24 $09 $09 $43
 .db $0A $08 $37 $10 $4C $02 $48 $FE
 
-; 4th entry of Pointer Table from 1DE33 (indexed by _RAM_C120_)
+; 4th entry of Pointer Table from 1DE33 (indexed by _RAM_C120_GameState)
 ; Data from 1DB16 to 1DB5F (74 bytes)
 _DATA_1DB16_:
 .db $00 $23 $19 $28 $00 $12 $49 $19 $40 $47 $00 $44 $1C $3C $FD $11
@@ -22279,7 +22282,7 @@ _DATA_1DB16_:
 .db $02 $46 $1C $46 $24 $10 $4B $02 $1A $4B $02 $FD $11 $41 $3E $02
 .db $24 $1B $1D $3A $37 $10 $4C $02 $48 $FE
 
-; 4th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_)
+; 4th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_GameState)
 ; Data from 1DB60 to 1DBA7 (72 bytes)
 _DATA_1DB60_:
 .db $09 $02 $13 $07 $22 $02 $43 $45 $02 $46 $1C $46 $11 $41 $FD $1D
@@ -22288,7 +22291,7 @@ _DATA_1DB60_:
 .db $24 $9B $05 $01 $28 $06 $4B $02 $08 $01 $45 $FD $1D $41 $3E $02
 .db $24 $10 $37 $10 $4C $02 $48 $FE
 
-; 9th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_)
+; 9th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_GameState)
 ; Data from 1DBA8 to 1DBEC (69 bytes)
 _DATA_1DBA8_:
 .db $99 $09 $02 $13 $07 $22 $02 $43 $3C $3E $41 $27 $6F $8E $FD $4E
@@ -22297,7 +22300,7 @@ _DATA_1DBA8_:
 .db $1C $01 $41 $1D $06 $27 $6F $8E $4E $7C $28 $FD $29 $05 $03 $37
 .db $10 $4C $02 $48 $FE
 
-; 5th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_)
+; 5th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_GameState)
 ; Data from 1DBED to 1DC36 (74 bytes)
 _DATA_1DBED_:
 .db $99 $00 $23 $19 $28 $47 $00 $12 $40 $3C $11 $01 $08 $01 $FD $09
@@ -22306,7 +22309,7 @@ _DATA_1DBED_:
 .db $01 $10 $47 $10 $46 $1A $4C $02 $23 $02 $46 $FD $1C $46 $24 $09
 .db $09 $43 $0A $08 $37 $10 $4C $02 $48 $FE
 
-; 6th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_)
+; 6th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_GameState)
 ; Data from 1DC37 to 1DC78 (66 bytes)
 _DATA_1DC37_:
 .db $10 $46 $0E $02 $3C $29 $4C $02 $10 $06 $45 $28 $3C $3A $FD $24
@@ -22315,7 +22318,7 @@ _DATA_1DC37_:
 .db $45 $10 $23 $01 $3E $02 $24 $06 $45 $1B $08 $FD $37 $10 $4C $02
 .db $48 $FE
 
-; 10th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_)
+; 10th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_GameState)
 ; Data from 1DC79 to 1DCBF (71 bytes)
 _DATA_1DC79_:
 .db $10 $4A $05 $46 $06 $3E $40 $45 $15 $4B $02 $2F $46 $24 $FD $1D
@@ -22324,7 +22327,7 @@ _DATA_1DC79_:
 .db $47 $00 $46 $17 $46 $02 $46 $1C $46 $24 $47 $FD $09 $09 $43 $0A
 .db $08 $37 $10 $4C $02 $48 $FE
 
-; 7th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_)
+; 7th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_GameState)
 ; Data from 1DCC0 to 1DD08 (73 bytes)
 _DATA_1DCC0_:
 .db $12 $37 $01 $22 $02 $43 $3C $38 $1D $04 $10 $27 $44 $41 $FD $01
@@ -22333,7 +22336,7 @@ _DATA_1DCC0_:
 .db $02 $21 $06 $41 $3E $02 $24 $47 $29 $0E $43 $FD $05 $3F $09 $09
 .db $43 $0A $08 $37 $10 $4C $02 $48 $FE
 
-; 11th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_)
+; 11th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_GameState)
 ; Data from 1DD09 to 1DD51 (73 bytes)
 _DATA_1DD09_:
 .db $99 $00 $23 $19 $28 $1A $4C $49 $1D $10 $19 $09 $1D $21 $FD $06
@@ -22342,7 +22345,7 @@ _DATA_1DD09_:
 .db $46 $24 $10 $4B $02 $1A $4B $02 $11 $41 $3E $FD $02 $24 $09 $09
 .db $43 $0A $08 $37 $10 $4C $02 $48 $FE
 
-; 8th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_)
+; 8th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_GameState)
 ; Data from 1DD52 to 1DD96 (69 bytes)
 _DATA_1DD52_:
 .db $02 $10 $43 $27 $07 $41 $37 $05 $3F $12 $05 $0F $42 $1C $FD $3B
@@ -22351,7 +22354,7 @@ _DATA_1DD52_:
 .db $01 $1C $02 $46 $1C $46 $11 $41 $3E $02 $24 $FD $1B $1D $3A $37
 .db $10 $4C $02 $48 $FE
 
-; 12th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_)
+; 12th entry of Pointer Table from 1DA46 (indexed by _RAM_C120_GameState)
 ; Data from 1DD97 to 1DE32 (156 bytes)
 _DATA_1DD97_:
 .db $00 $12 $49 $19 $40 $00 $44 $1C $19 $40 $47 $05 $46 $15 $FD $4C
@@ -22366,7 +22369,7 @@ _DATA_1DD97_:
 .db $06 $1A $4D $6F $7D $95 $67 $8D $98 $FE 
 
 
-; Pointer Table from 1DE33 to 1DE3A (4 entries, indexed by _RAM_C120_)
+; Pointer Table from 1DE33 to 1DE3A (4 entries, indexed by _RAM_C120_GameState)
 _DATA_1DE31_:
 .dw +
 .dw _DATA_1DE70_ _DATA_1DEA2_ _DATA_1DEE4_ _DATA_1DB16_
@@ -22378,7 +22381,7 @@ _DATA_1DE31_:
 .db $00 $46 $17 $46 $02 $46 $FD $1C $46 $45 $09 $09 $43 $0A $08 $37
 .db $10 $4C $02 $48 $FE
 
-; 1st entry of Pointer Table from 1DE33 (indexed by _RAM_C120_)
+; 1st entry of Pointer Table from 1DE33 (indexed by _RAM_C120_GameState)
 ; Data from 1DE70 to 1DEA1 (50 bytes)
 _DATA_1DE70_:
 .db $00 $23 $19 $28 $47 $3D $02 $10 $4B $02 $23 $6F $8E $4E $FD $7A
@@ -22386,7 +22389,7 @@ _DATA_1DE70_:
 .db $02 $46 $1C $46 $45 $47 $09 $09 $43 $0A $08 $37 $FD $10 $4C $02
 .db $48 $FE
 
-; 2nd entry of Pointer Table from 1DE33 (indexed by _RAM_C120_)
+; 2nd entry of Pointer Table from 1DE33 (indexed by _RAM_C120_GameState)
 ; Data from 1DEA2 to 1DEE3 (66 bytes)
 _DATA_1DEA2_:
 .db $00 $23 $19 $28 $00 $46 $17 $46 $23 $6F $8E $4E $7A $98 $FD $21
@@ -22395,7 +22398,7 @@ _DATA_1DEA2_:
 .db $46 $02 $46 $1C $46 $45 $09 $09 $43 $0A $08 $FD $37 $10 $4C $02
 .db $48 $FE
 
-; 3rd entry of Pointer Table from 1DE33 (indexed by _RAM_C120_)
+; 3rd entry of Pointer Table from 1DE33 (indexed by _RAM_C120_GameState)
 ; Data from 1DEE4 to 1DF1C (57 bytes)
 _DATA_1DEE4_:
 .db $00 $23 $19 $28 $2B $01 $06 $46 $1C $06 $23 $6F $8E $4E $FD $7A
@@ -22424,67 +22427,67 @@ _DATA_1DF55_:
 _DATA_1DF5D_:
 .db $38 $39 $3A $3B $3C $3D $3E $3F
 
-; Pointer Table from 1DF65 to 1DF7E (13 entries, indexed by _RAM_C120_)
+; Pointer Table from 1DF65 to 1DF7E (13 entries, indexed by _RAM_C120_GameState)
 _DATA_1DF65_:
 .dw _DATA_1DF7F_ _DATA_1DF83_ _DATA_1DF87_ _DATA_1DF87_ _DATA_1DF8B_ _DATA_1DF8F_ _DATA_1DF93_ _DATA_1DF97_
 .dw _DATA_1DF9B_ _DATA_1DF9F_ _DATA_1DFA3_ _DATA_1DF93_ _DATA_1DFA7_
 
-; 1st entry of Pointer Table from 1DF65 (indexed by _RAM_C120_)
+; 1st entry of Pointer Table from 1DF65 (indexed by _RAM_C120_GameState)
 ; Data from 1DF7F to 1DF82 (4 bytes)
 _DATA_1DF7F_:
 .db $02 $79 $1C $10
 
-; 2nd entry of Pointer Table from 1DF65 (indexed by _RAM_C120_)
+; 2nd entry of Pointer Table from 1DF65 (indexed by _RAM_C120_GameState)
 ; Data from 1DF83 to 1DF86 (4 bytes)
 _DATA_1DF83_:
 .db $C4 $78 $1A $12
 
-; 3rd entry of Pointer Table from 1DF65 (indexed by _RAM_C120_)
+; 3rd entry of Pointer Table from 1DF65 (indexed by _RAM_C120_GameState)
 ; Data from 1DF87 to 1DF8A (4 bytes)
 _DATA_1DF87_:
 .db $82 $78 $1C $12
 
-; 5th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_)
+; 5th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_GameState)
 ; Data from 1DF8B to 1DF8E (4 bytes)
 _DATA_1DF8B_:
 .db $48 $7C $15 $02
 
-; 6th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_)
+; 6th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_GameState)
 ; Data from 1DF8F to 1DF92 (4 bytes)
 _DATA_1DF8F_:
 .db $94 $7A $0A $02
 
-; 7th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_)
+; 7th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_GameState)
 ; Data from 1DF93 to 1DF96 (4 bytes)
 _DATA_1DF93_:
 .db $8A $7A $15 $02
 
-; 8th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_)
+; 8th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_GameState)
 ; Data from 1DF97 to 1DF9A (4 bytes)
 _DATA_1DF97_:
 .db $44 $78 $1A $14
 
-; 9th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_)
+; 9th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_GameState)
 ; Data from 1DF9B to 1DF9E (4 bytes)
 _DATA_1DF9B_:
 .db $42 $78 $1C $14
 
-; 10th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_)
+; 10th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_GameState)
 ; Data from 1DF9F to 1DFA2 (4 bytes)
 _DATA_1DF9F_:
 .db $44 $70 $1A $02
 
-; 11th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_)
+; 11th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_GameState)
 ; Data from 1DFA3 to 1DFA6 (4 bytes)
 _DATA_1DFA3_:
 .db $44 $70 $1A $05
 
-; 13th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_)
+; 13th entry of Pointer Table from 1DF65 (indexed by _RAM_C120_GameState)
 ; Data from 1DFA7 to 1DFAA (4 bytes)
 _DATA_1DFA7_:
 .db $50 $70 $0E $02
 
-; Pointer Table from 1DFAB to 1DFB2 (4 entries, indexed by _RAM_C120_)
+; Pointer Table from 1DFAB to 1DFB2 (4 entries, indexed by _RAM_C120_GameState)
 _DATA_1DFAB_DrivingSenseTextTable:
 .dw + ++ +++ ++++
 
@@ -22507,7 +22510,7 @@ _DATA_1DFAB_DrivingSenseTextTable:
 _DATA_1DFD3_:
 .dw _DATA_1DFDD_ _DATA_1DFEE_ _DATA_1DFFB_ _DATA_1E008_ _DATA_1E019_
 
-; 2nd entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_)
+; 2nd entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_GameState)
 _DATA_1DFDD_:
 .db $04 ; Line count
 .dw $79D6, _DATA_1D3D8_ ; せんたくボタン。[EOS]
@@ -22515,21 +22518,21 @@ _DATA_1DFDD_:
 .dw $7B56, _DATA_1D3E1_ ; けっていボタン。[EOS]
 .dw $7C46, _DATA_1D3BF_ ; そうさほうほうがわかったら[LF]　をおしてください。[EOS]
 
-; 3rd entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_)
+; 3rd entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_GameState)
 _DATA_1DFEE_:
 .db $03 
 .dw $7A16, _DATA_1D3EA_
 .dw $7B16, _DATA_1D3F1_ ; あみをふりおろす。[EOS]
 .dw $7C46, _DATA_1D3BF_
 
-; 4th entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_)
+; 4th entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_GameState)
 _DATA_1DFFB_:
 .db $03
 .dw $79D6, _DATA_1D3FB_
 .dw $7AD6, _DATA_1D3EA_
 .dw $7C46, _DATA_1D3BF_
 
-; 5th entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_)
+; 5th entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_GameState)
 _DATA_1E008_:
 .db $04 
 .dw $79ca, _DATA_1D404_
@@ -22537,7 +22540,7 @@ _DATA_1E008_:
 .dw $7B4A, _DATA_1D404_
 .dw $7C46, _DATA_1D3BF_
 
-; 6th entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_)
+; 6th entry of Pointer Table from 1DFD1 (indexed by _RAM_C120_GameState)
 _DATA_1E019_:
 .db $04 
 .dw $79D6, _DATA_1D3FB_
@@ -22545,7 +22548,7 @@ _DATA_1E019_:
 .dw $7B56, _DATA_1D418_
 .dw $7C46, _DATA_1D3BF_
 
-; Pointer Table from 1E02A to 1E03B (9 entries, indexed by _RAM_C120_)
+; Pointer Table from 1E02A to 1E03B (9 entries, indexed by _RAM_C120_GameState)
 _DATA_1E02A_:
 .dw _DATA_1E03C_ _DATA_1E040_ _DATA_1E044_ _DATA_1E048_ _DATA_1E04C_ _DATA_1E050_ _DATA_1E054_ _DATA_1E058_
 .dw _DATA_1E05C_
@@ -24576,11 +24579,11 @@ _DATA_2FA22_ControlPadTilemap:
 .db $38 $01 $39 $01 $3A $01 $3B $01 $3C $01 $3D $01 $3E $01 $3E $07
 .db $3E $05 $3E $03
 
-; Pointer Table from 2FAC6 to 2FACF (5 entries, indexed by _RAM_C120_)
+; Pointer Table from 2FAC6 to 2FACF (5 entries, indexed by _RAM_C120_GameState)
 _DATA_2FAC6_TitleScreenAmendments:
 .dw + ++ +++ ++++ +
 
-; 1st entry of Pointer Table from 2FAC6 (indexed by _RAM_C120_)
+; 1st entry of Pointer Table from 2FAC6 (indexed by _RAM_C120_GameState)
 ; Data from 2FAD0 to 2FAD0 (1 bytes)
 +:
 .db 3

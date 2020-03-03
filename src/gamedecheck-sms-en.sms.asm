@@ -8,7 +8,7 @@ slotsize $4000
 slot 2 $8000 "PagedROM"
 .endme
 
-.define BankCount 256/16 ; Original rom is 256KB
+.define BankCount 1024/16 ; Original rom is 256KB
 
 .rombankmap
 bankstotal BankCount
@@ -23,6 +23,7 @@ banks BankCount-2
 ; Macros
 .define Port_VDPData $BE
 .define Port_VDPAddress $BF
+.define Port_VDPControl $BF
 
 .define PAGING $ffff ; only one slot used
 
@@ -37,6 +38,7 @@ banks BankCount-2
 ; Original game RAM we use
 .define RAM_Score                                 $c0a1 ; dw Score in BCD
 .define RAM_TilemapHighByte                       $c104 ; db High byte for tilemap writes
+.define RAM_DrivingSenseTestSubgame               $c10d ; db 0-3 - useful for hacking
 .define RAM_ScriptRendererVRAMAddress             $c800 ; dw Where in VRAM we are dynamically loading font characters
 .define RAM_ScriptRendererTilemapVRAMAddress      $c802 ; dw Where in VRAM we draw to the tilemap
 .define RAM_ScriptRendererStartTileIndex          $c804 ; db Tile index of RAM_ScriptRendererVRAMAddress
@@ -117,7 +119,51 @@ PatchAt\1:
 ; no need for that, we have loads of space.
 
 ; Add SDSC header. This also fixes the checksum.
-.sdsctag 0.01, "Game de Check English translation", "https://smspower.org/Translations/GameDeCheck-SMS-EN", "SMS Power!"
+.sdsctag 0.1, "Game de Check English translation", "https://smspower.org/Translations/GameDeCheck-SMS-EN", "SMS Power!"
+
+; The original game has a bug in its "turn off/on" routines.
+; When turning the screen on or off it's important to not have an interrupt happen.
+  START_CODE_PATCH $0010 $0017
+ScreenOff: ; $10
+  jp ScreenOffFix
+  END_CODE_PATCH_HARD
+  
+  START_CODE_PATCH $0018 $002f
+ScreenOn: ; $18
+  jp ScreenOnFix
+  END_CODE_PATCH_HARD
+  
+.section "Screen on handler" free
+ScreenOnFix:
+  ld a,($c103)
+  and $40
+  ret nz ; nothing to do
+  ld a,($c103)
+  or $40
+  ld ($c103),a
+  di
+    out (Port_VDPControl), a
+    ld a,$81
+    out (Port_VDPControl), a
+  ei
+  ret
+.ends
+
+.section "Screen off handler" free
+ScreenOffFix:
+  ld a,($c103)
+  and $40
+  ret z ; nothing to do
+  ld a,($c103)
+  and $bf
+  ld ($c103),a
+  di
+  out (Port_VDPControl), a
+  ld a,$81
+  out (Port_VDPControl), a
+  ; do not ei
+  ret
+.ends
 
 ; We use ZX7 to compress replacement graphics.
 .slot "FixedROM"
@@ -763,3 +809,5 @@ TextWithBorderInit:
 ; TODO: popup-window text using alternate font
 ; TODO: police screen is custom
 
+; TODO: 1MB expansion
+; TODO: no repros splash
