@@ -124,7 +124,8 @@ PatchAt\1:
 
 ; The original game has a bug in its "turn screen off/on" routines.
 ; When turning the screen on or off it's important to not have an interrupt happen,
-; else the result can fail. This patch is a little ugly in order to fit in the space.
+; else the action can fail, e.g. leaving the screen off. 
+; This patch is a little ugly in order to fit in the space.
 
   START_CODE_PATCH $0010 $002f
 ScreenOff: ; $10
@@ -421,7 +422,7 @@ GoalText:      .asc "Goal", $fe
   ; Driving Eye
   
   START_CODE_PATCH $1bf8 $1c17
-  ld de, $4000 ; load address
+  TileWriteAddressToDE 0
   ld a, 1 ; palette index
   call LoadBorders
   END_CODE_PATCH
@@ -510,7 +511,7 @@ SpeechBubblePatch:
   jp zx7_decompress ; and ret
 .ends
 
-.bank 4 slot 2
+.bank 4 slot "PagedROM"
 .section "Speech bubble data" superfree
 TooEarlyTooLateTiles:
 .incbin "too-early-too-late.tiles.zx7"
@@ -660,9 +661,14 @@ RiskControlGoal
   ld (RAM_ScriptRendererTilemapVRAMAddress),de
   ld hl,RAM_NumberToTextBuffer ; string is here
   call Text
-  END_CODE_PATCH_HARD
+  END_CODE_PATCH
+  
 
-; No longer need the digits (I hope)
+
+
+  ; Number rendering
+
+; No longer need the digits
 .unbackground $10000 $100ff ; Tiles for digits
 .unbackground $10100 $10157 ; Tilemaps for digits
   
@@ -689,7 +695,7 @@ NumberToString:
   ld hl,RAM_NumberToTextBuffer
   ld b,2
 -:ld a,(hl)
-  cp '0'-' '
+  cp '0'-' ' ; We can't use the .asciitable mapping here :(
   ret nz
   xor a ; ' '
   ld (hl),a
@@ -771,9 +777,15 @@ Text:
     ld de,(RAM_ScriptRendererVRAMAddress) ; VRAM location for tiles
     ld a,(RAM_1bppIndex) ; palette index
     ld bc,8*2 ; 2 tiles
-    di
-      call Load1bppTiles
-    ei
+;    ld a,(PAGING)
+;    push af
+;      ld a,:Font
+;      ld (PAGING),a
+      di
+        call Load1bppTiles
+      ei
+;    pop af
+;    ld (PAGING),a
     ; increment pointer
     ld de,(RAM_ScriptRendererVRAMAddress)
     ld hl,32*2
@@ -836,7 +848,7 @@ TextWithBorderInit:
 .if BankCount > 16
 
 .macro FillPage args page
-.bank page slot 2
+.bank page slot "PagedROM"
 .org 0
 .dbrnd $4000 $00 $ff
 .endm
@@ -850,6 +862,34 @@ TextWithBorderInit:
 .endif
 
 
+; You're The Best Driver
+/*
+  ; Patch out the borders/text loader
+  START_CODE_PATCH $28f5 $290a
+  ; Load the borders only
+  TileWriteAddressToDE 0
+  ld a, 2 ; palette index
+  
+  Problem: we need to load to indices 1/2 now. 
+  The original just encodes the tiles all over again... maybe we can do the same...
+  ; 
+  
+  call LoadBorders
+  ; Init the text stuff
+  ld hl, $04 ; tile index
+  ld a, 2 ; palette index
+  call TextWithBorderInit
+  END_CODE_PATCH
+
+  ; "Start"
+  START_CODE_PATCH $297a $298b
+  ld bc, $020a ; dimensions
+  ld de, $5956 ; tilemap address - unusual tilemap location
+	ld hl, StartText
+  call TextWithBorder
+  END_CODE_PATCH
+
+*/
 ; TODO: burnt-in text
 ; TODO: popup-window text using alternate font
 ; TODO: police screen is custom

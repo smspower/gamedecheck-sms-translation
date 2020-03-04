@@ -31,8 +31,8 @@ $10158  $10177  4           1bpp box
 $10178  $1032f  55          1bpp text - Goal, Start, ...
 
 $10550  $1070e  32          Text: numbers
-$1070f  $108ec  36          Text
-$108ed  $10966  8           Text
+$1070f  $108ec  36          Text for YTBD part 1
+$108ed  $10966  8           Text for YTBD part 2
 
 $18000  $189ac  122         Logo text
 $189ad  $18b6c              Tilemap for above

@@ -24,7 +24,7 @@ $1dde8: The test is over.[EOS]
 
 ; Title screen
 ゲームをえらんでください。[LF+][LF]　　ドライビングセンステスト[LF+]　　きみはべストドライバー[LF+]　　ピョンきちアドべンチャー[EOS]
-$1ddf6: Please choose a game.[LF+][LF]    Driving Sense Test[LF+]    You are the Best Driver[LF+]    Pyonkichi's Adventure[EOS]
+$1ddf6: Please choose a game.[LF+][LF]    Driving Sense Test[LF+]    You're The Best Driver[LF+]    Pyonkichi's Adventure[EOS]
 
 あなたは、とてもゆうしゅうな[LF+]ドライバーです。[LF+]　このちょうしであんぜんうん[LF+]てんをこころがけましょう。[EOS]
 $1de3b: You are a flawless[LF+]driver.[LF+]This is how[LF+]you should safely drive.[EOS]
@@ -38,47 +38,62 @@ $1dea2: You are a safe driver.[LF+]Keep an eye on your[LF+]speed and the distanc
 あなたはへいきんてきなドライ[LF+]バーです。でも、つかれている[LF+]ときのうんてんには、じゅうぶ[LF+]んちゅういしましょう。[EOS]
 $1dee4: You are an average[LF+]driver. Be sure to be[LF+]extra cautious when[LF+]driving while tired.[EOS]
 
-あなたはあせったり、あわてや[LF+]すいけいこうがあるので、ひご[LF+]ろからこころをおちつけて、き[LF+]もちをうんてんにしゅうちゅう[LF+]するようにつとめましょう。[EOS]
-$1db16: You have a tendency[LF+]to be impatient and easily panic. Calm[LF+]yourself and concentrate on driving.[EOS]
 ; End of Driving Sense Test - "advice"
+; Also at end of You're The Best Driver
 ; Width = 28
-; TODO: seems buggy? I get "better" advice when I do worse...
+; Ratings are 1-13 based on the previous scores, 1 is best.
 
+; Rating 1
 あなたのドライビングセンスは[LF+]たいへんゆうしゅうです。この[LF+]ちょうしであんぜんうんてんに[LF+]こころがけましょう。[EOS]
 $1da5e: Your driving sense is very[LF]high level.[LF+]This is how you should[LF]safely drive.[EOS]
 
+; Rating 2
 あなたのドライビングセンスは[LF+]ゆうしゅうです。これからも、[LF+]あせらず、あんぜんうんてんに[LF+]こころがけましょう。[EOS]
 $1da96: Your driving sense is high[LF]level.[LF+]Keep up your patience and[LF]your safe driving.[EOS]
 
+; Rating 3
 あなたのドライビングセンスは[LF+]りょうこうです。これからも、[LF+]スピードとしゃかんきょりに、[LF+]ちゅういし、あんぜんうんてん[LF+]にこころがけましょう。[EOS]
-$1dace: You are a fine driver.[LF+]Keep an eye on your speed[LF+]and the distance between[LF+]cars when [LF+]driving.[EOS]
+$1dace: You are a fine driver.[LF+]Keep an eye on your speed[LF]and the distance between[LF]cars when driving.[EOS]
 
+; Rating 4
+あなたはあせったり、あわてや[LF+]すいけいこうがあるので、ひご[LF+]ろからこころをおちつけて、き[LF+]もちをうんてんにしゅうちゅう[LF+]するようにつとめましょう。[EOS]
+$1db16: You have a tendency to be[LF]impatient and easily panic.[LF+]Calm yourself and[LF]concentrate on driving.[EOS]
+
+; Rating 5
 こうそくどうろをうんてんする[LF+]ときや、つかれているときには[LF+]しりょくがていかするので、２[LF+]じかんに１かいはきゅうけいを[LF+]とるようにしましょう。[EOS]
-$1db60: When driving on the highway,[LF+]your eyesight will diminish[LF+]as you become tired. Be sure to take a[LF+]break every two hours.[EOS]
+$1db60: When driving on the highway,[LF]your eyesight will diminish[LF]as you become tired. Be sure[LF]to take a break every two[LF]hours.[EOS]
 
+; Rating 6
 　あなたは、あせりやすいけい[LF+]こうがあるので、くるまのかげ[LF+]からのこどものとびだしなどに[LF+]ちゅういし、しんちょうなうん[LF+]てんにこころがけましょう。[EOS]
-$1dbed: You have a tendency to be impatient,[LF+]so be sure to drive carefully and watch out for things[LF+]like children running into the street.[EOS]
+$1dbed: You have a tendency to be[LF]impatient, so be sure to[LF]drive carefully and watch[LF]out for things like children[LF]running into the street.[EOS]
 
+; Rating 7
 しんごうやひょうしきをはやめ[LF+]にみるとともに、うせつやしん[LF+]ろへんこうのさいには、けっし[LF+]てむりをしないようにきをつけ[LF+]ましょう。[EOS]
-$1dc37: You must be careful to[LF+]not react strongly as soon as you see[LF+]traffic signals or signs, or when making right turns or[LF+]changing direction.
+$1dc37: You must be careful to not[LF]react strongly as soon as[LF]you see traffic signals or[LF]signs, or when making right[LF]turns or changing direction.[EOS]
 
+; Rating 8
 せまいどうろやみとおしのわる[LF+]いところではむりをせず、また[LF+]とっさのばあいにもあわてずに[LF+]たいおうできるように、ひごろ[LF+]からこころがけましょう。[EOS]
-$1dcc0: Do not force your way through[LF+]narrow roads or places with bad visibility,[LF+]and remember to keep calm during an emergency.[EOS]
+$1dcc0: Do not force your way[LF]through narrow roads or[LF]places with bad visibility,[LF]and remember to keep calm[LF]during an emergency.[EOS]
 
+; Rating 9
 うしろのくるまからせかされて[LF+]もあせったりあわてたりしない[LF+]で、じぶんのテンポをまもって[LF+]おちついてうんてんするように[LF+]つとめましょう。[EOS]
-$1dd52: Even if a car behind you[LF+]is trying to rush you, do not panic.[LF+]Continue at your own pace, calm down and[LF+]concentrate on driving.[EOS]
+$1dd52: Even if a car behind you is[LF]trying to rush you, do not[LF]panic. Continue at your own[LF]pace, calm down and[LF]concentrate on driving.[EOS]
 
+; Rating 10
 　こうそくどうろやよるのドラ[LF+]イブは、しりょくがていかしや[LF+]すいので、とくにちゅういし、[LF+]つかれているときのドライブは[LF+]ひかえましょう。[EOS]
-$1dba8: It easy for your eyesight to diminish while driving on the highway or at night, so be extra cautious and refrain from driving when tired.[EOS]
+$1dba8: It easy for your eyesight to[LF]diminish while driving on[LF]the highway or at night, so[LF]be extra cautious and[LF]refrain from driving when[LF]tired.[EOS]
 
+; Rating 11
 しゃかんきょりをじゅうぶんに[LF+]とって、スピードはひかえめに[LF+]し、つねに、こころによゆうを[LF+]もって、あんぜんうんてんに、[LF+]こころがけましょう。[EOS]
-$1dc79: Maintain plenty of distance between[LF+]vehicles, maintain a sensible speed, and[LF+]always remain calm in order to drive safely.[EOS]
+$1dc79: Maintain plenty of distance[LF]between vehicles, maintain a[LF]sensible speed, and always[LF]remain calm in order to[LF]drive safely.[EOS]
 
+; Rating 12
 　あなたはちょっとしたことで[LF+]きぶんがどうようしやすいので[LF+]、つねにこころをおちつけて、[LF+]うんてんにしゅうちゅうするよ[LF+]うにこころがけましょう。[EOS]
-$1dd09: You become agitated easily,[LF+]so remember to always keep yourself calm and[LF+]concentrate on driving.[EOS]
+$1dd09: You become agitated easily,[LF]so remember to always keep[LF]yourself calm and[LF]concentrate on driving.[EOS]
 
+; Rating 13
 あせったりあわてたり、かんじ[LF+]ょうてきにカーッとならないよ[LF+]うに、つねにれいせいなうんて[LF+]んをこころがけ、スピードのだ[LF+]しすぎにちゅういしましょう。[EOS]
-$1dd97: Be sure to always keep your cool[LF+]when driving and not become panicked[LF+]or emotional and upset. Make[LF+]sure you don’t drive at an unsafe speed.[EOS]
+$1dd97: Be sure to always keep your[LF]cool when driving and not[LF]become panicked or emotional[LF]and upset. Make sure you[LF]don't drive at an unsafe[LF]speed.[EOS]
 
 ; End of Driving Sense Test - results screen - begin
 
@@ -115,7 +130,7 @@ $1da3a: Risk Control[EOS]
 $1d398:  Driving Eye [EOS]
 
 うごいているものをみわけるし[LF+]りょくと、ひろうしやすいかど[LF+]うかをみるためのテストです。[LF+]　まどのそとをよこぎるものが[LF+]なにかをあててください。[EOS]
-$1d522: This will test your ability to[LF+]recognize moving objects and whether[LF+]or not you become easily tired.[LF+]Please guess at which objects pass by[LF+]outside the window.[EOS]
+$1d522: This will test your ability[LF]to recognize moving objects[LF]and whether or not you[LF]become easily tired.[LF+]Please guess at which[LF]objects pass by outside the[LF]window.[EOS]
 
 スピードセンス[EOS]
 $1d3a1:  Speed Sense [EOS]
@@ -128,16 +143,14 @@ $1d3a9:  Driving Technique [EOS]
 
 ; Is there a typo in Japanese here...? 'ibun' doesn't really make sense, though 'zuibun' would.
 ; Double checked the game, it's not an issue with the text dump
-; 
 ちゅういりょくをてきせいには[LF+]いぶんできるか、またそのちゅ[LF+]ういりょくをじぞくできるかを[LF+]みるためのテストです。まえを[LF+]はしっているオートバイのあと[LF+]を、ついていってください。[EOS]
-$1d5b6: This will test your attentiveness[LF+]and how long that attentiveness lasts.[LF+]Please follow behind the[LF+]motorcycle in front of you.[EOS]
+$1d5b6: This will test your[LF]attentiveness and how long[LF]that attentiveness lasts.[LF+]Please follow behind the[LF]motorcycle in front of you.[EOS]
 
-; Description screen title, space padding
 リスクコントロール[EOS]
 $1d3b5:  Risk Control [EOS]
 
 ふくざつなじょうきょうのもと[LF+]で、てきせつなはんだんと、き[LF+]びんなしょちができるかをみる[LF+]ためのテストです。オゥムがさ[LF+]しだす、はたのいろにしたがっ[LF+]てボタンをおしてください。[EOS]
-$1d60f: This will test your correct judgement of[LF+]and quick response to complicated situations.[LF+]When the parot waves a flag, push the button[LF+]that matches its color.[EOS]
+$1d60f: This will test your correct[LF]judgement of, and quick[LF]response to, complicated[LF]situations.[LF+]When the parot waves a flag,[LF]push the button that matches[LF]its color.[EOS]
 
 せんたくボタン。[EOS]
 $1d3d8: Move Cursor[EOS]
@@ -158,8 +171,10 @@ $1d3f1: Swing the net[EOS]
 $1d3fb: Move left or right[EOS]
 
 ; The parrot waves a colored flag in the Risk Control section
+; Max width 25
+; "When the parrot waves __ push this button"
 オウムが　をだしたらおす。[EOS]
-$1d404: When the parrot waves __ push this button[EOS]
+$1d404: Push when parrot waves __[EOS]
 
 ブレーキ。[EOS]
 $1d412: Brake[EOS]
@@ -176,7 +191,7 @@ $1d428: Practice[EOS]
 
 ; End of practice phase
 テストをはじめます。[EOS]
-$1d42e: Starting the test[EOS]
+$1d42e: Start of the test[EOS]
 
 ピョンきちくんは、ピョンこ[LF+]ちゃんのおうちへ、あそびに[LF+]いきます。とちゅうで、いろ[LF+]いろなことをします。[LF+]そのとき、ピョンきちくんが[LF+]とったこうどうは、ただしい[LF+]でしょうか。[EOS]
 $1d439: Pyonkichi-kun is going to[LF]visit Pyonko's house.[LF+]On the way, various things[LF]will happen.[LF+]Will Pyonkichi-kun make[LF]the correct choices?[EOS]

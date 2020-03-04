@@ -76,10 +76,10 @@ _RAM_C120_GameState db
 
 .enum $C123 export
 _RAM_C123_ db
-_RAM_C124_ db
-_RAM_C125_ db
-_RAM_C126_ db
-_RAM_C127_ db
+_RAM_C124_DrivingEyeScore db
+_RAM_C125_SpeedSenseScore db
+_RAM_C126_DrivingTechniqueScore db
+_RAM_C127_RiskControlScore db
 _RAM_C128_ db
 _RAM_C129_ db
 _RAM_C12A_ db
@@ -1034,7 +1034,7 @@ _LABEL_240_:
 	ld de, $0000
 	ld h, $00
 	ld bc, $4000
-	call _LABEL_2B0_
+	call _LABEL_2B0_FillVRAM
 	ld a, (_DATA_285_VDPRegisterInitialisation)
 	ld (_RAM_C102_VDPRegister0Value), a
 	ld a, (_DATA_285_VDPRegisterInitialisation + 2)
@@ -1088,7 +1088,7 @@ _LABEL_2A8_BlankSpriteTable:
 	ld de, $7F00
 	ld h, $E8
 	ld bc, $0040
-_LABEL_2B0_:
+_LABEL_2B0_FillVRAM:
 	rst $08	; _LABEL_8_VRAMAddressToDE
 -:
 	ld a, h
@@ -2090,7 +2090,7 @@ _LABEL_B36_:
 	ld de, $4000
 	ld bc, $4000
 	ld h, $00
-	call _LABEL_2B0_
+	call _LABEL_2B0_FillVRAM
 	ld de, $C000
 	ld hl, _DATA_EE69_
 	ld bc, $0011
@@ -3848,9 +3848,9 @@ _LABEL_1B2B_:
 	call _LABEL_330_DrawTilemapBoxBytes
   ; patch end @ 1b86
 	ld de, (_RAM_C0A1_)
-	call _LABEL_515B_
+	call _LABEL_515B_BCDToNumber
 	ld a, l
-	ld (_RAM_C124_), a
+	ld (_RAM_C124_DrivingEyeScore), a
 	ld c, $00
 	cp $5A
 	jp nc, +
@@ -4156,9 +4156,9 @@ _LABEL_1D60_:
 	call _LABEL_330_DrawTilemapBoxBytes
   ; patch end @ 1da8
 	ld de, (_RAM_C0A1_)
-	call _LABEL_515B_
+	call _LABEL_515B_BCDToNumber
 	ld a, l
-	ld (_RAM_C125_), a
+	ld (_RAM_C125_SpeedSenseScore), a
 	ld a, (_RAM_C0A5_)
 	ld bc, $0000
 	cp $05
@@ -4523,7 +4523,7 @@ _LABEL_208C_:
 	call _LABEL_1911_
 	di
 	ld de, (_RAM_C0A1_)
-	call _LABEL_515B_
+	call _LABEL_515B_BCDToNumber
 	ld a, (_RAM_C0A5_)
 	add a, a
 	ld d, $00
@@ -4539,7 +4539,7 @@ _LABEL_208C_:
 	call _LABEL_5180_
 	ld (_RAM_C0A1_), bc
 	pop af
-	ld (_RAM_C126_), a
+	ld (_RAM_C126_DrivingTechniqueScore), a
 	ld c, $00
 	cp $5A
 	jp nc, +
@@ -4753,7 +4753,7 @@ _LABEL_2200_:
 	ld hl, _DATA_10158_TilesBorders1bpp
 	ld a, $02
 	call _LABEL_36A_Load1bppTiles
-  ; patch start @ 227c TODO
+  ; patch start @ 227c
 	ld de, $4480
 	ld hl, _DATA_102F0_TilesStartGoal1bpp
 	ld bc, $0040
@@ -4835,7 +4835,7 @@ _LABEL_22D3_:
 	add hl, hl
 	push hl
 	ld de, (_RAM_C0A1_)
-	call _LABEL_515B_
+	call _LABEL_515B_BCDToNumber
 	pop de
 	and a
 	sbc hl, de
@@ -4844,7 +4844,7 @@ _LABEL_22D3_:
 +:
 	call _LABEL_5180_
 	ld (_RAM_C0A1_), bc
-  ; patch start @ 2329 TODO
+  ; patch start @ 2329
 	ld a, $84
 	ld (Paging_Slot2), a
 	ld de, $6000
@@ -4866,9 +4866,9 @@ _LABEL_22D3_:
 	call _LABEL_330_DrawTilemapBoxBytes
   ; patch end @ 235c
 	ld de, (_RAM_C0A1_)
-	call _LABEL_515B_
+	call _LABEL_515B_BCDToNumber
 	ld a, l
-	ld (_RAM_C127_), a
+	ld (_RAM_C127_RiskControlScore), a
 	ld c, $00
 	cp $50
 	jp nc, +
@@ -4906,7 +4906,7 @@ _LABEL_2399_:
 	ld hl, $0100
 	ld bc, $00E0
 	call _LABEL_2E5_ ; Blank tilemap?
-  ; patch @ 23b1 TODO
+  ; patch @ 23b1
 	ld de, $7858
 	ld hl, _DATA_10330_TilemapGoal
 	ld bc, $0408
@@ -5063,7 +5063,7 @@ _LABEL_24A0_:
 	call _LABEL_1903_
 	ld a, $02
 	ld (_RAM_C123_), a
-	call _LABEL_25B5_
+	call _LABEL_25B5_ComputeOverallScore
 	ld a, c
 	ld hl, $9A44
 _LABEL_24AF_:
@@ -5198,7 +5198,7 @@ _LABEL_2591_:
 _LABEL_25B2_:
 	jp _LABEL_58B6_
 
-_LABEL_25B5_:
+_LABEL_25B5_ComputeOverallScore:
 	ld hl, _RAM_C128_
 	ld a, (hl)
 	ld b, $03
@@ -5216,7 +5216,7 @@ _LABEL_25B5_:
 	inc c
 	cp $03
 	ret z
-	ld de, _RAM_C124_
+	ld de, _RAM_C124_DrivingEyeScore
 	call _LABEL_2662_
 	ld a, $04
 	call _LABEL_268A_
@@ -5359,7 +5359,7 @@ _LABEL_268A_:
 	ret
 
 _LABEL_26A6_:
-	ld ix, _RAM_C124_
+	ld ix, _RAM_C124_DrivingEyeScore
 	ld hl, _RAM_C130_
 	ld b, $04
 -:
@@ -5657,6 +5657,7 @@ _LABEL_288E_:
 	ld (_RAM_C421_), a
 	ld a, $19
 	ld (_RAM_C420_), a
+  ; patch start @ 28f5
 	ld de, $4000
 	ld hl, _DATA_1070F_
 	ld a, $04
@@ -5665,6 +5666,7 @@ _LABEL_288E_:
 	ld hl, _DATA_108ED_
 	ld a, $04
 	call _LABEL_38A_LoadRLE
+  ; patch end @ 290a
 	ld a, $8F
 	ld (Paging_Slot2), a
 	ld de, $C000
@@ -5709,6 +5711,7 @@ _LABEL_288E_:
 	ld a, $B4
 	ld (_RAM_C118_), a
 	call _LABEL_2FE8_
+  ; patch start @ 297a
 	ld a, $84
 	ld (Paging_Slot2), a
 	ld de, $5956
@@ -5716,6 +5719,7 @@ _LABEL_288E_:
 	ld bc, $040A
 	xor a
 	call _LABEL_330_DrawTilemapBoxBytes
+  ; patch end @ 298b
 	ld de, $82F7
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	ei
@@ -5850,7 +5854,7 @@ _LABEL_2A3B_:
 	ld hl, $0708
 	ld (_RAM_C118_), hl
 	ld de, (_RAM_C872_)
-	call _LABEL_515B_
+	call _LABEL_515B_BCDToNumber
 	ld b, $00
 	ld a, l
 	cp $5B
@@ -9282,7 +9286,7 @@ _LABEL_4541_:
 	set 7, (hl)
 	ld e, a
 	ld d, $00
-	call _LABEL_515B_
+	call _LABEL_515B_BCDToNumber
 	ld a, l
 	and $78
 	rrca
@@ -10777,33 +10781,33 @@ _DATA_512A_:
 .db $87 $06 $00 $4F $09 $06 $02 $AF $1A $9E $27 $12 $13 $23 $10 $F8
 .db $C9
 
-_LABEL_515B_:
-	ld a, d
+_LABEL_515B_BCDToNumber:
+	ld a, d ; hundreds digit
 	and $0F
 	ld h, $00
 	ld l, a
 	add hl, hl
-	add hl, hl
+	add hl, hl ; x4
 	push hl
-	add hl, hl
-	add hl, hl
-	add hl, hl
-	push hl
-	add hl, hl
+    add hl, hl
+    add hl, hl
+    add hl, hl ; x32
+    push hl
+      add hl, hl ; x64
+    pop bc
+    add hl, bc
 	pop bc
-	add hl, bc
-	pop bc
-	add hl, bc
+	add hl, bc ; total x100
 	ld a, e
-	and $F0
+	and $F0 ; tens digit
 	rrca
-	ld b, a
+	ld b, a ; x8
 	rrca
-	rrca
-	add a, b
+	rrca ; x2
+	add a, b ; total x10
 	ld c, a
 	ld b, $00
-	ld a, e
+	ld a, e ; units
 	and $0F
 	ld e, a
 	ld d, b
