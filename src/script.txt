@@ -35,7 +35,7 @@ $1dea2: You are a safe driver.[LF+]Keep an eye on your[LF+]speed and the distanc
 $1dee4: You are an average[LF+]driver. Be sure to be[LF+]extra cautious when[LF+]driving while tired.[EOS]
 
 あなたはあせったり、あわてや[LF+]すいけいこうがあるので、ひご[LF+]ろからこころをおちつけて、き[LF+]もちをうんてんにしゅうちゅう[LF+]するようにつとめましょう。[EOS]
-$1db16: あなたはあせったり、あわてや[LF+]すいけいこうがあるので、ひご[LF+]ろからこころをおちつけて、き[LF+]もちをうんてんにしゅうちゅう[LF+]するようにつとめましょう。[EOS]
+$1db16: You have a tendency[LF+]to be impatient and easily panic. Calm[LF+]yourself and concentrate on driving.[EOS]
 
 あなたのドライビングセンスは[LF+]たいへんゆうしゅうです。この[LF+]ちょうしであんぜんうんてんに[LF+]こころがけましょう。[EOS]
 $1da5e: Your driving sense is[LF+]very high level. This is[LF+]how you should safely[LF+]drive.[EOS]
@@ -44,19 +44,34 @@ $1da5e: Your driving sense is[LF+]very high level. This is[LF+]how you should sa
 $1da96: Your driving sense is[LF+]high level. Keep up[LF+]your patience and[LF+]your safe driving.[EOS]
 
 あなたのドライビングセンスは[LF+]りょうこうです。これからも、[LF+]スピードとしゃかんきょりに、[LF+]ちゅういし、あんぜんうんてん[LF+]にこころがけましょう。[EOS]
-$1dace: あなたのドライビングセンスは[LF+]りょうこうです。これからも、[LF+]スピードとしゃかんきょりに、[LF+]ちゅういし、あんぜんうんてん[LF+]にこころがけましょう。[EOS]
+$1dace: You are a fine driver.[LF+]Keep an eye on your speed[LF+]and the distance between[LF+]cars when [LF+]driving.[EOS]
 
 こうそくどうろをうんてんする[LF+]ときや、つかれているときには[LF+]しりょくがていかするので、２[LF+]じかんに１かいはきゅうけいを[LF+]とるようにしましょう。[EOS]
-$1db60: こうそくどうろをうんてんする[LF+]ときや、つかれているときには[LF+]しりょくがていかするので、２[LF+]じかんに１かいはきゅうけいを[LF+]とるようにしましょう。[EOS]
+$1db60: When driving on the highway,[LF+]your eyesight will diminish[LF+]as you become tired. Be sure to take a[LF+]break every two hours.[EOS]
 
-$1dbed: 　あなたは、あせりやすいけい[LF+]こうがあるので、くるまのかげ[LF+]からのこどものとびだしなどに[LF+]ちゅういし、しんちょうなうん[LF+]てんにこころがけましょう。[EOS]
-$1dc37: しんごうやひょうしきをはやめ[LF+]にみるとともに、うせつやしん[LF+]ろへんこうのさいには、けっし[LF+]てむりをしないようにきをつけ[LF+]ましょう。[EOS]
-$1dcc0: せまいどうろやみとおしのわる[LF+]いところではむりをせず、また[LF+]とっさのばあいにもあわてずに[LF+]たいおうできるように、ひごろ[LF+]からこころがけましょう。[EOS]
-$1dd52: うしろのくるまからせかされて[LF+]もあせったりあわてたりしない[LF+]で、じぶんのテンポをまもって[LF+]おちついてうんてんするように[LF+]つとめましょう。[EOS]
-$1dba8: 　こうそくどうろやよるのドラ[LF+]イブは、しりょくがていかしや[LF+]すいので、とくにちゅういし、[LF+]つかれているときのドライブは[LF+]ひかえましょう。[EOS]
-$1dc79: しゃかんきよりをじゅうぶんに[LF+]とって、スピードはひかえめに[LF+]し、つねに、こころによゆうを[LF+]もって、あんぜんうんてんに、[LF+]こころがけましょう。[EOS]
-$1dd09: 　あなたはちょっとしたことで[LF+]きぶんがどうようしやすいので[LF+]、つねにこころをおちつけて、[LF+]うんてんにしゅうちゅうするよ[LF+]うにこころがけましょう。[EOS]
-$1dd97: あせったりあわてたり、かんじ[LF+]ょうてきにカーッとならないよ[LF+]うに、つねにれいせいなうんて[LF+]んをこころがけ、スピードのだ[LF+]しすぎにちゅういしましょう。[EOS]
+　あなたは、あせりやすいけい[LF+]こうがあるので、くるまのかげ[LF+]からのこどものとびだしなどに[LF+]ちゅういし、しんちょうなうん[LF+]てんにこころがけましょう。[EOS]
+$1dbed: You have a tendency to be impatient,[LF+]so be sure to drive carefully and watch out for things[LF+]like children running into the street.[EOS]
+
+しんごうやひょうしきをはやめ[LF+]にみるとともに、うせつやしん[LF+]ろへんこうのさいには、けっし[LF+]てむりをしないようにきをつけ[LF+]ましょう。[EOS]
+$1dc37: You must be careful to[LF+]not react strongly as soon as you see[LF+]traffic signals or signs, or when making right turns or[LF+]changing direction.
+
+せまいどうろやみとおしのわる[LF+]いところではむりをせず、また[LF+]とっさのばあいにもあわてずに[LF+]たいおうできるように、ひごろ[LF+]からこころがけましょう。[EOS]
+$1dcc0: Do not force your way through[LF+]narrow roads or places with bad visibility,[LF+]and remember to keep calm during an emergency.[EOS]
+
+うしろのくるまからせかされて[LF+]もあせったりあわてたりしない[LF+]で、じぶんのテンポをまもって[LF+]おちついてうんてんするように[LF+]つとめましょう。[EOS]
+$1dd52: Even if a car behind you[LF+]is trying to rush you, do not panic.[LF+]Continue at your own pace, calm down and[LF+]concentrate on driving.[EOS]
+
+　こうそくどうろやよるのドラ[LF+]イブは、しりょくがていかしや[LF+]すいので、とくにちゅういし、[LF+]つかれているときのドライブは[LF+]ひかえましょう。[EOS]
+$1dba8: It easy for your eyesight to diminish while driving on the highway or at night, so be extra cautious and refrain from driving when tired.[EOS]
+
+しゃかんきょりをじゅうぶんに[LF+]とって、スピードはひかえめに[LF+]し、つねに、こころによゆうを[LF+]もって、あんぜんうんてんに、[LF+]こころがけましょう。[EOS]
+$1dc79: Maintain plenty of distance between[LF+]vehicles, maintain a sensible speed, and[LF+]always remain calm in order to drive safely.[EOS]
+
+　あなたはちょっとしたことで[LF+]きぶんがどうようしやすいので[LF+]、つねにこころをおちつけて、[LF+]うんてんにしゅうちゅうするよ[LF+]うにこころがけましょう。[EOS]
+$1dd09: You become agitated easily,[LF+]so remember to always keep yourself calm and[LF+]concentrate on driving.[EOS]
+
+あせったりあわてたり、かんじ[LF+]ょうてきにカーッとならないよ[LF+]うに、つねにれいせいなうんて[LF+]んをこころがけ、スピードのだ[LF+]しすぎにちゅういしましょう。[EOS]
+$1dd97: Be sure to always keep your cool[LF+]when driving and not become panicked[LF+]or emotional and upset. Make[LF+]sure you don’t drive at an unsafe speed.[EOS]
 
 そうごうせいせき[EOS]
 $1da14: Combined Results[EOS]
@@ -64,8 +79,11 @@ $1da14: Combined Results[EOS]
 ドライビングアイ[EOS]
 $1da1d: ドライビングアイ[EOS]
 
+; Changing this back to Speed Sense after playing through the
+; game further. "Sense of Speed" sounds more natural,
+; but since this is a 'name', Speed Sense works
 スピードセンス[EOS]
-$1da26: [Sense of Speed][EOS]
+$1da26: Speed Sense[EOS]
 
 ドライビングテクニック[EOS]
 $1da2e: ~Driving Technique~[EOS]
@@ -73,14 +91,17 @@ $1da2e: ~Driving Technique~[EOS]
 リスクコントロール[EOS]
 $1da3a: ~Risk Control~[EOS]
 
+; Literally Driving Eye, which is how I will leave it since it's a name
+; but you could use something like "Eyesight Test" or "Sight Reaction" or
+; something like that to reflect what the actual game is
 ドライビングアイ[EOS]
-$1d398: ドライビングアイ[EOS]
+$1d398: Driving Eye[EOS]
 
 うごいているものをみわけるし[LF+]りょくと、ひろうしやすいかど[LF+]うかをみるためのテストです。[LF+]　まどのそとをよこぎるものが[LF+]なにかをあててください。[EOS]
-$1d522: うごいているものをみわけるし[LF+]りょくと、ひろうしやすいかど[LF+]うかをみるためのテストです。[LF+]　まどのそとをよこぎるものが[LF+]なにかをあててください。[EOS]
+$1d522: This will test your ability to[LF+]recognize moving objects and whether[LF+]or not you become easily tired.[LF+]Please guess at which objects pass by[LF+]outside the window.[EOS]
 
 スピードセンス[EOS]
-$1d3a1: Sense of Speed[EOS]
+$1d3a1: Speed Sense[EOS]
 
 ただしいスピードかんかくを[LF+]もっているか、あせりやすい[LF+]けいこうがないかをみるため[LF+]のテストです。[LF+]　はしってくるどうぶつを、[LF+]つかまえてください。[EOS]
 $1d56b: ただしいスピードかんかくを[LF+]もっているか、あせりやすい[LF+]けいこうがないかをみるため[LF+]のテストです。[LF+]　はしってくるどうぶつを、[LF+]つかまえてください。[EOS]
@@ -89,15 +110,18 @@ $1d56b: ただしいスピードかんかくを[LF+]もっているか、あせ�
 ドライビングテクニック[EOS]
 $1d3a9:  Driving Technique [EOS]
 
+; Is there a typo in Japanese here...? 'ibun' doesn't really make sense, though 'zuibun' would.
+; Double checked the game, it's not an issue with the text dump
+; 
 ちゅういりょくをてきせいには[LF+]いぶんできるか、またそのちゅ[LF+]ういりょくをじぞくできるかを[LF+]みるためのテストです。まえを[LF+]はしっているオートバイのあと[LF+]を、ついていってください。[EOS]
-$1d5b6: ちゅういりょくをてきせいには[LF+]いぶんできるか、またそのちゅ[LF+]ういりょくをじぞくできるかを[LF+]みるためのテストです。まえを[LF+]はしっているオートバイのあと[LF+]を、ついていってください。[EOS]
+$1d5b6: This will test your attentiveness[LF+]and how long that attentiveness lasts.[LF+]Please follow behind the[LF+]motorcycle in front of you.[EOS]
 
 ; Description screen title, space padding
 リスクコントロール[EOS]
 $1d3b5:  Risk Control [EOS]
 
 ふくざつなじょうきょうのもと[LF+]で、てきせつなはんだんと、き[LF+]びんなしょちができるかをみる[LF+]ためのテストです。オゥムがさ[LF+]しだす、はたのいろにしたがっ[LF+]てボタンをおしてください。[EOS]
-$1d60f: [Awaiting translation][EOS]
+$1d60f: This will test your correct judgement of[LF+]and quick response to complicated situations.[LF+]When the parot waves a flag, push the button[LF+]that matches its color.[EOS]
 
 せんたくボタン。[EOS]
 $1d3d8: Move Cursor[EOS]
@@ -117,8 +141,9 @@ $1d3f1: Swing the net[EOS]
 さゆうのいどう。[EOS]
 $1d3fb: Move left or right[EOS]
 
-オゥムが　をだしたらおす。[EOS]
-$1d404: Press when you see[EOS]
+; The parrot waves a colored flag in the Risk Control section
+オウムが　をだしたらおす。[EOS]
+$1d404: When the parrot waves __ push this button[EOS]
 
 ブレーキ。[EOS]
 $1d412: Brake[EOS]
