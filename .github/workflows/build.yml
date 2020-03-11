@@ -25,11 +25,21 @@ jobs:
       
     - name: build
       shell: cmd
-      working-directory: ./src
+      working-directory: src
+      run: make.cmd
+      
+    - name: make patches
       run: |
-        type make.cmd
-        set
-        call ..\build_config_default.cmd
-        set
-        call make.cmd
+        tools\flips --create "src\Game De Check! Koutsuu Anzen [Proto] (JP).sms" "src\gamedecheck-sms-en.sms" "src\gamedecheck-sms-en.ips"
+        tools\flips --create "src\Game De Check! Koutsuu Anzen [Proto] (JP).sms" "src\gamedecheck-sms-en.sms" "src\gamedecheck-sms-en.bps"
 
+    - uses: actions/upload-artifact@v1
+      with:
+        name: rom
+        path: src/gamedecheck-sms-en.sms
+        
+    - uses: actions/upload-artifact@v1
+      with:
+        name: patches
+        path: src/gamedecheck-sms-en.ips
+        path: src/gamedecheck-sms-en.bps
