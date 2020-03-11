@@ -14,7 +14,7 @@ jobs:
     - name: get tools
       run: |
         Invoke-WebRequest -Uri https://github.com/maxim-zhao/sms-build-tools/releases/download/1.0.73/tools.7z -OutFile tools.7z
-        7z x tools.7z -o c:\tools
+        7z x tools.7z -oc:\tools
       
     - name: build
       run: |
