@@ -41,6 +41,4 @@ jobs:
     - uses: actions/upload-artifact@v1
       with:
         name: patches
-        path: |
-          src/gamedecheck-sms-en.ips
-          src/gamedecheck-sms-en.bps
+        path: src/gamedecheck-sms-en.?ps
