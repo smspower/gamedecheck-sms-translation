@@ -21,6 +21,6 @@ jobs:
       shell: cmd
       working-directory: ./src
       run: |
-        dir
-        make
+        type make.cmd
+        set
 
