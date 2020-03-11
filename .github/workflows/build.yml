@@ -10,35 +10,34 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v2
-      
+
     - name: get tools
       shell: pwsh
       run: |
         Invoke-WebRequest -Uri https://github.com/maxim-zhao/sms-build-tools/releases/download/1.0.73/tools.7z -OutFile tools.7z
         7z x tools.7z -otools
-        
+
     - name: get rom
       shell: pwsh
       run: |
         Invoke-WebRequest -Uri https://www.smspower.org/maxim/uploads/Blag/secret.zip -OutFile rom.zip
         7z x rom.zip -osrc
-      
+
     - name: build
       shell: cmd
       working-directory: src
       run: make.cmd
-      
+
     - name: make patches
       run: |
         tools\flips --create "src\Game De Check! Koutsuu Anzen [Proto] (JP).sms" "src\gamedecheck-sms-en.sms" "src\gamedecheck-sms-en.ips"
-        tools\flips --create "src\Game De Check! Koutsuu Anzen [Proto] (JP).sms" "src\gamedecheck-sms-en.sms" "src\gamedecheck-sms-en.bps"
 
     - uses: actions/upload-artifact@v1
       with:
         name: rom
         path: src/gamedecheck-sms-en.sms
-        
+
     - uses: actions/upload-artifact@v1
       with:
-        name: patches
-        path: src/gamedecheck-sms-en.?ps
+        name: patch
+        path: src/gamedecheck-sms-en.ips
