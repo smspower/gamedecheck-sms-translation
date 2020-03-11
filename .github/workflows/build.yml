@@ -22,5 +22,5 @@ jobs:
       working-directory: ./src
       run: |
         dir
-        call make.cmd
-       
+        make
+
