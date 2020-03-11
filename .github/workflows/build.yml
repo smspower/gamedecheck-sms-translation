@@ -13,17 +13,6 @@ jobs:
     - name: checkout
       uses: actions/checkout@v2
       
-    - name: get tools
-      uses: wei/wget@v1.1.1
-      with:
-        args: https://github.com/maxim-zhao/sms-build-tools/releases/download/1.0.73/tools.7z
-        
-    - name: unzip tools
-      uses: DuckSoft/extract-7z-action@v1.0
-      with:
-        pathSource: tools.7z
-        pathTarget: tools
-        
     - name: Build
       run: |
         dir
