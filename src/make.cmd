@@ -1,4 +1,4 @@
-rem @echo off
+@echo off
 setlocal
 
 call ..\build_config_default.cmd
