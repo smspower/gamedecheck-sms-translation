@@ -12,11 +12,14 @@ jobs:
       uses: actions/checkout@v2
       
     - name: get tools
+      shell: pwsh
       run: |
         Invoke-WebRequest -Uri https://github.com/maxim-zhao/sms-build-tools/releases/download/1.0.73/tools.7z -OutFile tools.7z
         7z x tools.7z -oc:\tools
       
     - name: build
+      shell: cmd
       run: |
         cd src
         build.cmd
+       
