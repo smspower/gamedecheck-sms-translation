@@ -22,5 +22,6 @@ jobs:
       run: |
         cd src
         dir
+        echo call make.cmd
         call make.cmd
        
