@@ -23,4 +23,7 @@ jobs:
       run: |
         type make.cmd
         set
+        call ..\build_config_default.cmd
+        set
+        call make.cmd
 
