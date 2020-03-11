@@ -1,8 +1,6 @@
 name: CI
 
-on:
-  push:
-  pull_request:
+on: [push, pull_request]
 
 jobs:
   build:
@@ -12,6 +10,9 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v2
+      
+    - name: get tools
+      run: Invoke-WebRequest -Uri https://github.com/maxim-zhao/sms-build-tools/releases/download/1.0.73/tools.7z -OutFile tools.7z
       
     - name: Build
       run: |
