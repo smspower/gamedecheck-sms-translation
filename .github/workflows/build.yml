@@ -20,6 +20,8 @@ jobs:
     - name: build
       shell: cmd
       run: |
+        dir
         cd src
+        dir
         make.cmd
        
