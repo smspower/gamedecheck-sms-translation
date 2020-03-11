@@ -19,7 +19,8 @@ jobs:
       
     - name: build
       shell: cmd
-      working-directory: .\src
+      working-directory: ./src
       run: |
-        call .\make.cmd
+        dir
+        call make.cmd
        
