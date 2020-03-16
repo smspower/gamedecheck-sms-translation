@@ -607,9 +607,9 @@ DrivingTechniqueInit:
   ; Risk Control
   
   ; Flags location on instruction screen
-  PatchB $2fb0e $da + 2 * 11
-  PatchB $2fb12 $9a + 2 * 11
-  PatchB $2fb16 $5a + 2 * 11
+  PatchB $2fb0e $da + 2 * 16
+  PatchB $2fb12 $9a + 2 * 16
+  PatchB $2fb16 $5a + 2 * 16
 
   ; "Start"
   START_CODE_PATCH $227c $2296
