@@ -6044,10 +6044,12 @@ _LABEL_2BFA_:
 	xor a
 	ld (_RAM_C118_), a
 	ld de, $3060
+  ; patch begin @ 2c22
 	ld bc, $0410
 	ld hl, _DATA_10330_TilemapGoal
 	ld a, $10
 	jp _LABEL_3027_
+  ; patch end @ 2c2c
 
 ; 11th entry of Jump Table from 2730 (indexed by _RAM_C10D_)
 _LABEL_2C2D_:
@@ -6068,6 +6070,7 @@ _LABEL_2C2D_:
 	ld (_RAM_C118_), a
 	ld a, $8D
 	call _LABEL_4EE_BufferPush
+  ; patch begin @ 2c47
 	ld a, $84
 	ld (Paging_Slot2), a
 	ld de, $6000
@@ -6085,6 +6088,7 @@ _LABEL_2C2D_:
 	ld hl, _RAM_C177_NumberTilemap
 	ld a, $11
 	jp _LABEL_3027_
+  ; patch end @ 2c76
 
 ; 13th entry of Jump Table from 2730 (indexed by _RAM_C10D_)
 _LABEL_2C77_:
@@ -6580,80 +6584,86 @@ _LABEL_2FE8_:
 	ret
 
 _LABEL_3027_:
+; a = tilemap high byte to use
+; hl = tilemap data
+; d, e = location to draw at?
 	ld (_RAM_C104_TilemapHighByte), a
 	push hl
-	ld a, (_RAM_C303_)
-	and $F8
-	add a, d
-	jr c, +
-	cp $E0
-	jr c, ++
+    ld a, (_RAM_C303_) ; Y scroll?
+    and $F8 ; round down to multiple of 8
+    add a, d ; add d
+    jr c, + ; account for wrapping
+    cp $E0
+    jr c, ++
 +:
-	add a, $20
+    add a, $20
 ++:
-	ld l, a
-	ld h, $00
-	add hl, hl
-	add hl, hl
-	add hl, hl
-	ld a, (_RAM_C30F_)
-	neg
-	and $F8
-	add a, e
-	rrca
-	rrca
-	ld e, a
-	ld d, $00
-	add hl, de
-	ld de, $7800
-	add hl, de
-	ex de, hl
+    ld l, a
+    ld h, $00
+    add hl, hl
+    add hl, hl
+    add hl, hl
+    ld a, (_RAM_C30F_) ; X scroll?
+    neg
+    and $F8 ; subtract from e and round down to multiple of 8
+    add a, e
+    rrca
+    rrca
+    ld e, a
+    ld d, $00
+    add hl, de
+    ld de, $7800 ; offset into tilemap
+    add hl, de
+    ex de, hl
 	pop hl
+  ; then load tilemap
+  ; patch start @ 3053
 --:
 	push bc
-	ld b, c
-	ld c, $BE
-	push de
+    ld b, c
+    ld c, $BE
+    push de
 -:
-	di
-	rst $08	; _LABEL_8_VRAMAddressToDE
-	ei
-	dec b
-	ld a, (hl)
-	out (Port_VDPData), a
-	inc hl
-	ld c, e
-	inc e
-	inc e
-	ld a, (_RAM_C104_TilemapHighByte)
-	or (hl)
-	out (Port_VDPData), a
-	inc hl
-	ld a, c
-	and $3F
-	add a, $02
-	cp $40
-	jr c, +
-	ld a, c
-	and $C0
-	ld e, a
+      di
+        rst $08	; _LABEL_8_VRAMAddressToDE
+      ei
+      dec b
+      ld a, (hl)
+      out (Port_VDPData), a
+      inc hl
+      ld c, e
+      inc e
+      inc e
+      ld a, (_RAM_C104_TilemapHighByte)
+      or (hl)
+      out (Port_VDPData), a
+      inc hl
+      ld a, c
+      and $3F
+      add a, $02
+      cp $40
+      jr c, +
+      ld a, c
+      and $C0
+      ld e, a
 +:
-	djnz -
-	pop de
-	push hl
-	ld hl, $0040
-	add hl, de
-	ex de, hl
-	ld a, d
-	cp $7F
-	jr nz, +
-	ld a, $78
+      djnz -
+    pop de
+    push hl
+      ld hl, $0040
+      add hl, de
+      ex de, hl
+      ld a, d
+      cp $7F
+      jr nz, +
+      ld a, $78
 +:
-	pop hl
+    pop hl
 	pop bc
 	dec b
 	jp nz, --
 	ret
+  ; patch end @ 308d
 
 ; Data from 308E to 30CD (64 bytes)
 .db $87 $21 $BE $30 $16 $00 $5F $19 $7E $E6 $7F $5F $FD $7E $16 $E5

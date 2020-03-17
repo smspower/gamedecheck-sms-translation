@@ -39,19 +39,18 @@ banks BankCount-2
 .define RAM_Score                                 $c0a1 ; dw Score in BCD
 .define RAM_VDPRegister1                          $c103 ; db Last value written to VDP register 1
 .define RAM_TilemapHighByte                       $c104 ; db High byte for tilemap writes
+.define RAM_1bppIndex                             $c105 ; db Palette index for 1bpp tiles
 .define RAM_DrivingSenseTestSubgame               $c10d ; db 0-3 - useful for hacking
+.define RAM_NumberToTextBuffer                    $c177 ; dsb 4 Buffer for rendering scores to text
 .define RAM_ScriptRendererVRAMAddress             $c800 ; dw Where in VRAM we are dynamically loading font characters
 .define RAM_ScriptRendererTilemapVRAMAddress      $c802 ; dw Where in VRAM we draw to the tilemap
 .define RAM_ScriptRendererStartTileIndex          $c804 ; db Tile index of RAM_ScriptRendererVRAMAddress
 .define RAM_ScriptRendererCharacterCount          $c805 ; db How many characters we have loaded so far
 .define RAM_ScriptRendererDrawnCharsBufferPointer $c807 ; dw Points to a buffer holding the indices of characters drawn so far
-.define RAM_NumberToTextBuffer                    $c177 ; dsb 4 Buffer for rendering scores to text
+.define RAM_Score_YTBD                            $c872 ; dw Score in BCD
 
-; My own invention
-.define RAM_1bppIndex $c806
 
 ; Original game functions we call
-.define Load1bppTiles                $036A
 .define DrawBox                      $0948
 .define SetVRAMAddressToDEScreenOn   $6308
 
@@ -423,7 +422,7 @@ GoalText:      .asc "Goal", $fe
   
   START_CODE_PATCH $1bf8 $1c17
   TileWriteAddressToDE 0
-  ld a, 1 ; palette index
+  ld a, $01 ; palette indices
   call LoadBorders
   END_CODE_PATCH
   
@@ -435,11 +434,11 @@ GoalText:      .asc "Goal", $fe
 .section "Start in Driving Eye" free
 DrivingEyeStart:
   ld hl, 4 ; tile index
-  ld a, 1 ; palette index
+  ld a, $01 ; palette indexes
   call TextWithBorderInit
   ld bc, $0208 ; dimensions
   TilemapWriteAddressToDE 11, 12
-	ld hl, StartText
+  ld hl, StartText
   jp TextWithBorder ; and ret
 .ends
   
@@ -456,7 +455,7 @@ DrivingEyeStart:
 CorrectIncorrect:
   push hl
     ld hl, 4 ; tile index
-    ld a, 1 ; palette index
+    ld a, $01 ; palette indices
     call TextWithBorderInit
   pop hl
   jp TextWithBorder ; and ret
@@ -465,11 +464,11 @@ CorrectIncorrect:
   ; Score
   START_CODE_PATCH $1b52 $1b86
   ld hl, 4 ; tile index
-  ld a, 1 ; palette index
+  ld a, $01 ; palette indices
   call TextWithBorderInit
   ld bc, $0214 ; dimensions
   TilemapWriteAddressToDE 5, 18
-	ld hl, ScoreText
+  ld hl, ScoreText
   call TextWithBorder
   ; Draw in score
   ld hl,RAM_Score + 1
@@ -485,14 +484,14 @@ CorrectIncorrect:
   ; "Start"
   START_CODE_PATCH $1e55 $1e75
   TileWriteAddressToDE $100
-  ld a, 1 ; palette index
+  ld a, $01 ; palette indices
   call LoadBorders
   ld hl, $104 ; tile index
-  ld a, 1 ; palette index
+  ld a, $01 ; palette indices
   call TextWithBorderInit
   ld bc, $0208 ; dimensions
   ld de,$7296 ; tilemap address - unusual tilemap location
-	ld hl, StartText
+  ld hl, StartText
   call TextWithBorder
   call SpeechBubblePatch
   END_CODE_PATCH
@@ -530,14 +529,14 @@ TooEarlyTooLateTiles:
   ; Score
   START_CODE_PATCH $1d88 $1dbb
   TileWriteAddressToDE $100
-  ld a, 1 ; palette index
+  ld a, $01 ; palette indices
   call LoadBorders
   ld hl, $104 ; tile index
-  ld a, 1 ; palette index
+  ld a, $01 ; palette indices
   call TextWithBorderInit
   ld bc, $0214 ; dimensions
   TilemapWriteAddressToDE 5, 6
-	ld hl, ScoreText
+  ld hl, ScoreText
   call TextWithBorder
   ; Draw in score
   ld hl,RAM_Score + 1
@@ -555,7 +554,7 @@ TooEarlyTooLateTiles:
   call DrivingTechniqueInit
   ld bc, $0208 ; dimensions
   TilemapWriteAddressToDE 12, 17
-	ld hl, GoalText
+  ld hl, GoalText
   call TextWithBorder
   END_CODE_PATCH
   
@@ -564,7 +563,7 @@ TooEarlyTooLateTiles:
   call DrivingTechniqueInit
   ld bc, $020a ; dimensions
   TilemapWriteAddressToDE 11, 5
-	ld hl, StartText
+  ld hl, StartText
   call TextWithBorder    
   END_CODE_PATCH
   
@@ -572,18 +571,18 @@ TooEarlyTooLateTiles:
   START_CODE_PATCH $20f7 $212a
   ; We load the borders at index 0 (sprites) as we need more VRAM space...
   TileWriteAddressToDE 0
-  ld a, 2 ; palette index
+  ld a, $02 ; palette indices
   call LoadBorders
   
   ld hl, 4 ; tile index
-  ld a, 2 ; palette index
+  ld a, $02 ; palette indices
   call TextWithBorderInit
   ld a, 0
   ld (RAM_TilemapHighByte),a ; don't use sprite palette TODO make this an option?
 
   ld bc, $0214 ; dimensions
   TilemapWriteAddressToDE 5, 0
-	ld hl, ScoreText
+  ld hl, ScoreText
   call TextWithBorder
   ; Draw in score
   ld hl,RAM_Score + 1
@@ -597,7 +596,7 @@ TooEarlyTooLateTiles:
 .section "Driving Technique message box init" free
 DrivingTechniqueInit:
   ld hl, $104 ; tile index
-  ld a, 2 ; palette index
+  ld a, $02 ; palette indices
   call TextWithBorderInit
   ld a, 1
   ld (RAM_TilemapHighByte),a ; don't use sprite palette TODO make this an option?
@@ -614,13 +613,13 @@ DrivingTechniqueInit:
   ; "Start"
   START_CODE_PATCH $227c $2296
   ld hl, $4 ; tile index
-  ld a, 2 ; palette index
+  ld a, $02 ; palette indices
   call TextWithBorderInit
   ld a, 0
   ld (RAM_TilemapHighByte),a ; don't use sprite palette TODO make this an option?
   ld bc, $0208 ; dimensions
   TilemapWriteAddressToDE 11,1
-	ld hl, StartText
+  ld hl, StartText
   call TextWithBorder
   END_CODE_PATCH
   
@@ -632,27 +631,27 @@ DrivingTechniqueInit:
 .section "Risk Control Goal text" free
 RiskControlGoal
   ld hl, $4 ; tile index
-  ld a, 2 ; palette index
+  ld a, $02 ; palette indices
   call TextWithBorderInit
   ld a, 0
   ld (RAM_TilemapHighByte),a ; don't use sprite palette TODO make this an option?
   ld bc, $0208 ; dimensions
   TilemapWriteAddressToDE 12,1
-	ld hl, GoalText
+  ld hl, GoalText
   jp TextWithBorder ; and ret
 .ends
 
   ; Score
   START_CODE_PATCH $2329 $235c
   ld hl, 4 ; tile index
-  ld a, 2 ; palette index
+  ld a, $02 ; palette indices
   call TextWithBorderInit
   ld a, 0
   ld (RAM_TilemapHighByte),a ; don't use sprite palette TODO make this an option?
 
   ld bc, $0216 ; dimensions
   TilemapWriteAddressToDE 5, 1
-	ld hl, ScoreText
+  ld hl, ScoreText
   call TextWithBorder
   ; Draw in score
   ld hl,RAM_Score + 1
@@ -713,11 +712,12 @@ _emit:
 .bank 0 slot "FixedROM"
 .section "Load borders" free
 LoadBorders:
+  ld (RAM_1bppIndex),a
   ld hl,PAGING
   ld (hl),4
   ld hl,$8158 ; data
   ld bc,$20 ; byte count
-  jp $36a ; load and return
+  jp Load1bppTiles ; load and return
 .ends
 
 .section "Draw text with border" free
@@ -775,17 +775,16 @@ Text:
     ld de,Font
     add hl,de
     ld de,(RAM_ScriptRendererVRAMAddress) ; VRAM location for tiles
-    ld a,(RAM_1bppIndex) ; palette index
     ld bc,8*2 ; 2 tiles
-;    ld a,(PAGING)
-;    push af
-;      ld a,:Font
-;      ld (PAGING),a
+    ld a,(PAGING)
+    push af
+      ld a,:Font
+      ld (PAGING),a
       di
         call Load1bppTiles
       ei
-;    pop af
-;    ld (PAGING),a
+    pop af
+    ld (PAGING),a
     ; increment pointer
     ld de,(RAM_ScriptRendererVRAMAddress)
     ld hl,32*2
@@ -841,6 +840,59 @@ TextWithBorderInit:
   ld a, :Font
   ld (PAGING), a
   ret
+  
+Load1bppTiles:
+; We want to have a = $bbbbffff for the background and foreground colour
+; and 1bpp data %01010011
+; and emit to the VDP
+; %bfbfbbff ; with the LSB of b and f first
+; %bfbfbbff
+; %bfbfbbff
+; %bfbfbbff
+
+  rst $08  ; _LABEL_8_VRAMAddressToDE
+---:
+  ld a, (hl) ; Get byte for pixel row
+  exx
+    ld h, a ; pixel row is in here now
+    ld a, (RAM_1bppIndex) ; Get palette data
+    and $f
+    ld e,a ; e is the foreground colour
+    ld a, (RAM_1bppIndex)
+    srl a
+    srl a
+    srl a
+    srl a
+    ld d,a ; d is the background colour
+    ; So we want to pick a bit from either d or e for each bit in a, for each of the bitplanes
+    ld c,4 ; bitplanes
+--: ld b,8 ; bits
+    ld a,h ; get 1bpp data back
+-:  rra ; get 1bpp bit in carry
+    push de
+      jr c,_1
+_0:   srl d ; We want to get the LSB of D into the left of A
+      jr +
+_1:   srl e
++:  pop de ; restore
+    djnz - ; repeat for 8 bits
+    rra ; last bit was left in carry
+    ; emit
+    out (Port_VDPData), a
+    ; shift d and e
+    srl d
+    srl e
+    ; repeat for four bitplanes
+    dec c
+    jr nz,--
+  exx
+  inc hl
+  dec bc
+  ld a, b
+  or c
+  jr nz, ---
+  ret
+
 .ends
 
 ; 1MB expansion
@@ -863,22 +915,20 @@ TextWithBorderInit:
 
 
 ; You're The Best Driver
-/*
-  ; Patch out the borders/text loader
+
+; This game uses similar "Start", "Goal", "Score" tiles to the previous one -
+; but it loads the font at different indices which are incompatible with the
+; text renderer!
+.unbackground $1070f $10966
+
   START_CODE_PATCH $28f5 $290a
-  ; Load the borders only
   TileWriteAddressToDE 0
-  ld a, 2 ; palette index
-  
-  Problem: we need to load to indices 1/2 now. 
-  The original just encodes the tiles all over again... maybe we can do the same...
-  ; 
-  
+  ld a, $12 ; palette indices
   call LoadBorders
   ; Init the text stuff
   ld hl, $04 ; tile index
-  ld a, 2 ; palette index
-  call TextWithBorderInit
+  ld a, $12 ; palette indices
+  call TextWithBorderInit  
   END_CODE_PATCH
 
   ; "Start"
@@ -887,9 +937,47 @@ TextWithBorderInit:
   ld de, $5956 ; tilemap address - unusual tilemap location
 	ld hl, StartText
   call TextWithBorder
+  
+  END_CODE_PATCH_HARD
+  
+  ; "Goal"
+  ; This is drawn at a location relative to X, Y scroll so we need to patch the routine at $3027 that computes the real VRAM address...
+  START_CODE_PATCH $3053 $308d
+  ret ; make it return after computing the drawing address
+  END_CODE_PATCH_HARD
+
+  ; Then we make helpers that call the above and then draw something
+.bank 0 slot "FixedROM"
+.section "YTBD text drawing helpers" free
+YTBDTextWithBorder:
+  call $302a ; skip first istruction, leave tilemap high byte alone
+  jp TextWithBorder
+.ends
+  
+  START_CODE_PATCH $2c22 $2c2c
+  ld bc, $0208 ; dimensions
+  ld hl, GoalText
+  jp YTBDTextWithBorder ; and ret
+  END_CODE_PATCH_HARD
+  
+  ; "Score ... points"
+  START_CODE_PATCH $2c47 $2c76
+  ld bc, $0214 ; dimensions
+  ld hl, ScoreText
+  ld de, $8828 ; drawing position
+  call YTBDTextWithBorder
+  
+  ; Draw in score
+  ld hl,RAM_Score_YTBD + 1
+  call NumberToString
+  ld de, $9078 ; drawing position
+  call $302a
+  ld (RAM_ScriptRendererTilemapVRAMAddress),de
+  ld hl,RAM_NumberToTextBuffer ; string is here
+  jp Text ; and ret
   END_CODE_PATCH
 
-*/
+
 ; TODO: burnt-in text
 ; TODO: popup-window text using alternate font
 ; TODO: police screen is custom

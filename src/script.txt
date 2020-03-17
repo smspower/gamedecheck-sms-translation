@@ -26,20 +26,25 @@ $1dde8: The test is over.[EOS]
 ゲームをえらんでください。[LF+][LF]　　ドライビングセンステスト[LF+]　　きみはべストドライバー[LF+]　　ピョンきちアドべンチャー[EOS]
 $1ddf6: Please choose a game.[LF+][LF]    Driving Sense Test[LF+]    You're The Best Driver[LF+]    Pyonkichi's Adventure[EOS]
 
+; You Are The Best Driver "Advice"
+; Width = 28
+; Rating 1
 あなたは、とてもゆうしゅうな[LF+]ドライバーです。[LF+]　このちょうしであんぜんうん[LF+]てんをこころがけましょう。[EOS]
-$1de3b: You are a flawless[LF+]driver.[LF+]This is how[LF+]you should safely drive.[EOS]
+$1de3b: You are a flawless driver.[LF+]This is how you should[LF]safely drive.[EOS]
 
+; Rating 2
 あなたは、ゆうしゅうなドライ[LF+]バーです。これからも、いまま[LF+]でのうんてんを、こころがけま[LF+]しょう。[EOS]
-$1de70: You are an excellent[LF+] driver. Keep up[LF+]your safe driving.[EOS]
+$1de70: You are an excellent driver.[LF+]Keep up your safe driving.[EOS]
 
+; Rating 3
 あなたはあんぜんなドライバー[LF+]です。これからも、スピードと[LF+]しゃかんきょりにちゅういして[LF+]あんぜんうんてんをこころがけ[LF+]ましょう。[EOS]
-$1dea2: You are a safe driver.[LF+]Keep an eye on your[LF+]speed and the distance between[LF+]cars when [LF+]driving.[EOS]
+$1dea2: You are a safe driver.[LF+]Keep an eye on your speed[LF]and the distance between[LF]cars when driving.[EOS]
 
+; Rating 4
 あなたはへいきんてきなドライ[LF+]バーです。でも、つかれている[LF+]ときのうんてんには、じゅうぶ[LF+]んちゅういしましょう。[EOS]
-$1dee4: You are an average[LF+]driver. Be sure to be[LF+]extra cautious when[LF+]driving while tired.[EOS]
+$1dee4: You are an average driver.[LF+]Be sure to be extra cautious[LF]when driving while tired.[EOS]
 
 ; End of Driving Sense Test - "advice"
-; Also at end of You're The Best Driver
 ; Width = 28
 ; Ratings are 1-13 based on the previous scores, 1 is best.
 
@@ -56,6 +61,7 @@ $1da96: Your driving sense is high[LF]level.[LF+]Keep up your patience and[LF]yo
 $1dace: You are a fine driver.[LF+]Keep an eye on your speed[LF]and the distance between[LF]cars when driving.[EOS]
 
 ; Rating 4
+; Also YTBD rating 5
 あなたはあせったり、あわてや[LF+]すいけいこうがあるので、ひご[LF+]ろからこころをおちつけて、き[LF+]もちをうんてんにしゅうちゅう[LF+]するようにつとめましょう。[EOS]
 $1db16: You have a tendency to be[LF]impatient and easily panic.[LF+]Calm yourself and[LF]concentrate on driving.[EOS]
 

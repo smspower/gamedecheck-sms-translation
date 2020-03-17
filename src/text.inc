@@ -269,19 +269,19 @@ Script1ddf6: .asc "Please choose a game.", $fd, $ff, "    Driving Sense Test", $
 .ends
 .bank 7 slot 2
 .section "Script1de3b" free
-Script1de3b: .asc "You are a flawless", $fd, "driver.", $fd, "This is how", $fd, "you should safely drive.", $fe
+Script1de3b: .asc "You are a flawless driver.", $fd, "This is how you should", $ff, "safely drive.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1de70" free
-Script1de70: .asc "You are an excellent", $fd, " driver. Keep up", $fd, "your safe driving.", $fe
+Script1de70: .asc "You are an excellent driver.", $fd, "Keep up your safe driving.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dea2" free
-Script1dea2: .asc "You are a safe driver.", $fd, "Keep an eye on your", $fd, "speed and the distance between", $fd, "cars when ", $fd, "driving.", $fe
+Script1dea2: .asc "You are a safe driver.", $fd, "Keep an eye on your speed", $ff, "and the distance between", $ff, "cars when driving.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dee4" free
-Script1dee4: .asc "You are an average", $fd, "driver. Be sure to be", $fd, "extra cautious when", $fd, "driving while tired.", $fe
+Script1dee4: .asc "You are an average driver.", $fd, "Be sure to be extra cautious", $ff, "when driving while tired.", $fe
 .ends
   PatchW $2d2e Script2ca4
   PatchW $2d36 Script2d50
