@@ -165,7 +165,7 @@ Script1d522: .asc "This will test your ability", $ff, "to recognize moving objec
 .ends
 .bank 7 slot 2
 .section "Script1d56b" free
-Script1d56b: .asc "[Awaiting translation]", $fe
+Script1d56b: .asc "This will test if you have", $ff, "a proper sense of speed", $ff, "and that you don't have a", $ff, "tendency to become", $ff, "impatient easily.", $fd, "Try to catch each animal", $ff, "as it flies by.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d5b6" free

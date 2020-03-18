@@ -141,8 +141,9 @@ $1d522: This will test your ability[LF]to recognize moving objects[LF]and whethe
 スピードセンス[EOS]
 $1d3a1:  Speed Sense [EOS]
 
+; Width = 26
 ただしいスピードかんかくを[LF+]もっているか、あせりやすい[LF+]けいこうがないかをみるため[LF+]のテストです。[LF+]　はしってくるどうぶつを、[LF+]つかまえてください。[EOS]
-$1d56b: [Awaiting translation][EOS]
+$1d56b: This will test if you have[LF]a proper sense of speed[LF]and that you don't have a[LF]tendency to become[LF]impatient easily.[LF+]Try to catch each animal[LF]as it flies by.[EOS]
 
 ドライビングテクニック[EOS]
 $1d3a9:  Driving Technique [EOS]
