@@ -1,6 +1,5 @@
 .unbackground $2ca4 $2cc5
 .unbackground $2d50 $2d5d
-.unbackground $5c0c $5c22
 .unbackground $5fdf $5fe3
 .unbackground $1d398 $1d3a0
 .unbackground $1d3a1 $1d3a8
@@ -62,10 +61,6 @@ Script2ca4: .asc "Select Mode", $ff, $ff, $fd, "        Car", $ff, $ff, $ff, "  
 .bank 0 slot 0
 .section "Script2d50" free
 Script2d50: .asc "The game is over.", $fe
-.ends
-.bank 0 slot 0
-.section "Script5c0c" free
-Script5c0c: .asc "Lost    Points     Remaining    Points"
 .ends
 .bank 0 slot 0
 .section "Script5fdf" free
@@ -349,4 +344,3 @@ Script1dee4: .asc "You are an average driver.", $fd, "Be sure to be extra cautio
   PatchW $5e55 Script1d668
   PatchW $5ea1 Script1d671
   PatchW $5fa2 Script5fdf
-  PatchW $5cc1 Script5c0c

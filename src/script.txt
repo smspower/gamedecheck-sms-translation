@@ -218,8 +218,8 @@ $1d4f0: You have committed a[LF]violation.[EOS]
 ; Patched to: あなたは、事故をおこしました。
 $1d4fe: You have caused an[LF]accident.[EOS]
 
-げんてん　　　　てん　　　もちてん　　　　てん
-$5c0c: Lost    Points     Remaining    Points
+;げんてん　　　　てん　　　もちてん　　　　てん
+; Removed: $5c0c: Lost    Points     Remaining    Points
 
 
 ゲームをはじめます。[EOS]

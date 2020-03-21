@@ -67,7 +67,7 @@ _RAM_C118_ dw
 .ende
 
 .enum $C11D export
-_RAM_C11D_ dw
+_RAM_C11D_TextRevealDelayCounter dw
 .ende
 
 .enum $C120 export
@@ -508,8 +508,8 @@ _RAM_C805_DrawnTilemapBytes db ; Number of chars written to tilemap since _RAM_C
 .enum $C807 export
 _RAM_C807_TileIndices dw
 _RAM_C809_ db
-_RAM_C80A_ db
-_RAM_C80B_ db
+_RAM_C80A_RevealTextFlag db
+_RAM_C80B_RevealTextIndex db
 _RAM_C80C_ db
 _RAM_C80D_ db
 _RAM_C80E_ db
@@ -532,19 +532,16 @@ _RAM_C82E_ db
 .ende
 
 .enum $C855 export
-_RAM_C855_ db
-.ende
-
-.enum $C859 export
-_RAM_C859_ dsb $d
+_RAM_C855_TextRevealTilemap dsb 4
+_RAM_C859_TextBuffer dsb $d
 _RAM_C866_ db
 .ende
 
 .enum $C870 export
 _RAM_C870_ db
-_RAM_C871_ db
+_RAM_C871_YTBD_PointsLost_Hundreds db
 _RAM_C872_ db
-_RAM_C873_ db
+_RAM_C873_YTBD_PointsRemaining_Hundreds db
 _RAM_C874_ db
 .ende
 
@@ -1162,10 +1159,10 @@ _LABEL_2F8_:
 	jr nz, -
 	ret
 
-_LABEL_302_:
+_LABEL_302_EmitTilemapRect:
 	push bc
 	rst $08	; _LABEL_8_VRAMAddressToDE
-	ld b, c
+	ld b, c ; rows
 	ld c, Port_VDPData
 -:
 	outi
@@ -1179,7 +1176,7 @@ _LABEL_302_:
 	add hl, bc
 	ex de, hl
 	pop bc
-	djnz _LABEL_302_
+	djnz _LABEL_302_EmitTilemapRect
 	ret
 
 _LABEL_31C_LoadTilemap:
@@ -1978,7 +1975,7 @@ _DATA_A25_:
 	ld de, $7D8C
 	ld bc, $0113
 	xor a
-	call _LABEL_302_
+	call _LABEL_302_EmitTilemapRect
   
 	ld hl, _DATA_790E_
 	ld de, $C010
@@ -3626,7 +3623,7 @@ _LABEL_199B_:
 	ld bc, $0416
 	ld a, $09
 	ld (_RAM_C104_TilemapHighByte), a
-	call _LABEL_302_
+	call _LABEL_302_EmitTilemapRect
   ; patch start @ 19e3
 	ld a, $84
 	ld (Paging_Slot2), a
@@ -5482,7 +5479,7 @@ _LABEL_2783_:
 	ld (Paging_Slot2), a
 	call _LABEL_53F8_
 	call _LABEL_1748_
-	call _LABEL_5BF2_
+	call _LABEL_5BF2_RevealText
 	call _LABEL_4CA4_
 	ld a, (_RAM_C10D_)
 	and $3F
@@ -5962,11 +5959,11 @@ _LABEL_2AB7_:
 	ld bc, $0403
 	ld a, $01
 	ld (_RAM_C104_TilemapHighByte), a
-	call _LABEL_302_
+	call _LABEL_302_EmitTilemapRect
 	ld de, $7C14
 	ld hl, _DATA_2CD4_
 	ld bc, $0403
-	call _LABEL_302_
+	call _LABEL_302_EmitTilemapRect
 	ld de, $C001
 	ld hl, _DATA_79BE_ + 1
 	ld bc, $000F
@@ -6081,7 +6078,7 @@ _LABEL_2C2D_:
 	ld hl, _DATA_10370_TilemapScore
 	ld a, $10
 	call _LABEL_3027_
-	ld hl, _RAM_C873_
+	ld hl, _RAM_C873_YTBD_PointsRemaining_Hundreds
 	call _LABEL_51A3_NumberToTilemap
 	ld de, $9078
 	ld bc, $020C
@@ -8558,7 +8555,7 @@ _LABEL_401E_:
 	ld (_RAM_C104_TilemapHighByte), a
 	ld hl, _DATA_403D_
 	ld bc, $0602
-	jp _LABEL_302_
+	jp _LABEL_302_EmitTilemapRect
 
 ; Data from 403D to 4048 (12 bytes)
 _DATA_403D_:
@@ -10137,7 +10134,7 @@ _LABEL_4C06_:
 	ld bc, $0303
 	ld a, $09
 	ld (_RAM_C104_TilemapHighByte), a
-	call _LABEL_302_
+	call _LABEL_302_EmitTilemapRect
 	ei
 	ld hl, _DATA_4C6C_
 	ld de, $C000
@@ -12175,47 +12172,49 @@ _DATA_5B33_:
 
 ; 1st entry of Jump Table from 5B33 (indexed by _RAM_C809_)
 _LABEL_5B3B_:
-	ld hl, (_RAM_C11D_)
+	ld hl, (_RAM_C11D_TextRevealDelayCounter)
 	dec hl
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ld a, l
 	or h
 	ret nz
 	ld hl, _RAM_C809_
 	inc (hl)
 	ld hl, $0001
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ret
 
 ; 2nd entry of Jump Table from 5B33 (indexed by _RAM_C809_)
 _LABEL_5B50_:
-	ld hl, (_RAM_C11D_)
+	ld hl, (_RAM_C11D_TextRevealDelayCounter)
 	dec hl
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ld a, l
 	or h
 	ret nz
 	ld hl, $000C
-	ld (_RAM_C11D_), hl
-	ld hl, _RAM_C80B_
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
+	ld hl, _RAM_C80B_RevealTextIndex
 	inc (hl)
 	ld a, (hl)
+  ; start patch @ 5b65
 	cp $18
 	jr nc, _LABEL_5BAB_
-	ld hl, _DATA_5BBE_ - 1
+	ld hl, _DATA_5BBE_TextRevealTilemapStartIndices - 1
 	ld c, a
 	ld b, $00
 	add hl, bc
 	ld a, (hl)
-	ld hl, _RAM_C855_
+	ld hl, _RAM_C855_TextRevealTilemap
 	ld b, $04
 -:
 	ld (hl), a
 	inc a
 	inc hl
 	djnz -
+  ; end patch @ 5b7a
 	ld hl, (_RAM_C802_StartTilemapAddress)
-	ld a, (_RAM_C80B_)
+	ld a, (_RAM_C80B_RevealTextIndex)
 	cp $0E
 	jr nz, +
 	ld bc, $0090
@@ -12227,12 +12226,12 @@ _LABEL_5B50_:
 	add hl, bc
 	ld (_RAM_C802_StartTilemapAddress), hl
 	ld a, $01
-	ld (_RAM_C80A_), a
-	ld a, (_RAM_C80B_)
+	ld (_RAM_C80A_RevealTextFlag), a
+	ld a, (_RAM_C80B_RevealTextIndex)
 	dec a
 	ld c, a
 	ld b, $00
-	ld hl, _RAM_C859_
+	ld hl, _RAM_C859_TextBuffer
 	add hl, bc
 	ld a, (hl)
 	cp $99 ; space
@@ -12243,7 +12242,7 @@ _LABEL_5B50_:
 
 _LABEL_5BAB_:
 	ld hl, $0080
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ld hl, _RAM_C809_
 	inc (hl)
 	ld bc, (_RAM_C872_)
@@ -12254,15 +12253,15 @@ _LABEL_5BAB_:
 	ret
 
 ; Data from 5BBE to 5BD4 (23 bytes)
-_DATA_5BBE_:
+_DATA_5BBE_TextRevealTilemapStartIndices:
 .db $80 $84 $88 $8C $90 $94 $98 $9C $A0 $A4 $A8 $AC $B0 $B4 $B8 $BC
 .db $C0 $C4 $C8 $CC $D0 $D4 $D8
 
 ; 3rd entry of Jump Table from 5B33 (indexed by _RAM_C809_)
 _LABEL_5BD5_:
-	ld hl, (_RAM_C11D_)
+	ld hl, (_RAM_C11D_TextRevealDelayCounter)
 	dec hl
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ld a, l
 	or h
 	ret nz
@@ -12270,9 +12269,9 @@ _LABEL_5BD5_:
 
 ; 4th entry of Jump Table from 5B33 (indexed by _RAM_C809_)
 _LABEL_5BE2_:
-	ld hl, (_RAM_C11D_)
+	ld hl, (_RAM_C11D_TextRevealDelayCounter)
 	dec hl
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ld a, l
 	or h
 	ret nz
@@ -12280,21 +12279,21 @@ _LABEL_5BE2_:
 	ld (_RAM_C10D_), a
 	ret
 
-_LABEL_5BF2_:
-	ld a, (_RAM_C80A_)
+_LABEL_5BF2_RevealText:
+	ld a, (_RAM_C80A_RevealTextFlag)
 	or a
 	ret z
 	xor a
-	ld (_RAM_C80A_), a
-	ld hl, _RAM_C855_
+	ld (_RAM_C80A_RevealTextFlag), a
+	ld hl, _RAM_C855_TextRevealTilemap
 	ld de, (_RAM_C802_StartTilemapAddress)
-	ld bc, $0202
+	ld bc, $0202 ; dimensions
 	xor a
 	ld (_RAM_C104_TilemapHighByte), a
-	jp _LABEL_302_
+	jp _LABEL_302_EmitTilemapRect
 
 ; Data from 5C0C to 5C22 (23 bytes)
-_DATA_5C0C_:
+_DATA_5C0C_PointsLostRemaining:
 .db $0D $46 $1C $46 $99 $99 $99 $99 $1C $46 $99 $99 $99 $3B $1A $1C
 .db $46 $99 $99 $99 $99 $1C $46
 
@@ -12365,21 +12364,24 @@ _LABEL_5C23_:
   ld a, (_RAM_C874_)
 	call _LABEL_5D95_
 
-	ld hl, _DATA_5C0C_ ; base text
-	ld de, _RAM_C859_ ; buffer
-	ld bc, $0017
+  ; start patch @ 5cc0
+	ld hl, _DATA_5C0C_PointsLostRemaining ; base text
+	ld de, _RAM_C859_TextBuffer ; buffer
+	ld bc, $0017 ; too short now
 	ldir
   
-	ld hl, _RAM_C871_
+  ; insert score digits
+	ld hl, _RAM_C871_YTBD_PointsLost_Hundreds
 	ld c, $05
-	call _LABEL_5D22_
-	ld hl, _RAM_C873_
+	call _LABEL_5D22_ScoreToBuffer
+	ld hl, _RAM_C873_YTBD_PointsRemaining_Hundreds
 	ld c, $12
-	call _LABEL_5D22_
+	call _LABEL_5D22_ScoreToBuffer
 	ld a, $02
 	ld (_RAM_C80C_), a
 
-	ld hl, _RAM_C859_ ; load tiles to VRAM
+  ; Then load the tiles needed
+	ld hl, _RAM_C859_TextBuffer ; load tiles to VRAM
 	ld b, $17
 	ld de, $5000
 	call _LABEL_6308_SetVRAMAddressToDE
@@ -12388,46 +12390,59 @@ _LABEL_5C23_:
 	ld a, (_RAM_C872_)
 	cp $60
 	jr nc, +
-	ld a, (_RAM_C873_)
+	ld a, (_RAM_C873_YTBD_PointsRemaining_Hundreds)
 	or a
 	jr nz, +
-	ld a, $0D
+	ld a, $0D ; first 13
 	ld (_RAM_C80C_), a
 
-	ld hl, _RAM_C866_ ; Load tiles to VRAM again, last 10 only
+	ld hl, _RAM_C859_TextBuffer + 13 ; _RAM_C866_ ; Load tiles to VRAM again, last 10 only
 	ld b, $0A
 	ld de, $5680
 	call _LABEL_6308_SetVRAMAddressToDE
 	call _LABEL_5D62_LoadFontTilesWithColour
+  ; end patch @ 5d0d
 +:
 	ld hl, $7288
 	ld (_RAM_C802_StartTilemapAddress), hl
 	ld hl, _RAM_C809_
 	ld (hl), $00
 	ld hl, $0060
-	ld (_RAM_C11D_), hl
-	jp _LABEL_18_ScreenOn
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
+	jp _LABEL_18_ScreenOn ; and ret
 
-_LABEL_5D22_:
-	ld a, (hl)
+_LABEL_5D22_ScoreToBuffer:
+; c = offset into text buffer
+; hl points to score
+	ld a, (hl) ; read byte to a
 	dec hl
-	ld b, (hl)
-	ld de, $C859
+	ld b, (hl) ; preceding to b
+
+  ; hl points into text buffer
+	ld de, _RAM_C859_TextBuffer
 	ld l, c
 	ld h, $00
 	add hl, de
+  
+  ; mask a
 	and $0F
 	jr z, +
+  ; offset
 	add a, $9A
+  ; load back to buffer
 	ld (hl), a
+  ; get high nibble of b
 	ld a, b
 	and $F0
 	rrca
 	rrca
 	rrca
 	rrca
+  ; same again
+  ; offset
 	add a, $9A
 	inc hl
+  ; write to buffer
 	ld (hl), a
 	ld a, b
 	and $0F
@@ -12631,7 +12646,7 @@ _LABEL_5E6C_:
 	call _LABEL_5AED_
 _LABEL_5EB5_:
 	ld hl, $0258
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ld hl, _RAM_C70C_
 	set 7, (hl)
 	jp _LABEL_18_ScreenOn
@@ -12640,9 +12655,9 @@ _LABEL_5EC3_:
 	ld a, (_RAM_C109_)
 	and $30
 	jr nz, +
-	ld hl, (_RAM_C11D_)
+	ld hl, (_RAM_C11D_TextRevealDelayCounter)
 	dec hl
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ld a, l
 	or h
 	ret nz

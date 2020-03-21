@@ -39,7 +39,7 @@ banks BankCount-2
 .define RAM_Score                                 $c0a1 ; dw Score in BCD
 .define RAM_VDPRegister1                          $c103 ; db Last value written to VDP register 1
 .define RAM_TilemapHighByte                       $c104 ; db High byte for tilemap writes
-.define RAM_1bppIndex                             $c105 ; db Palette index for 1bpp tiles
+.define RAM_1bppColours                           $c105 ; db Palette index for 1bpp tiles
 .define RAM_DrivingSenseTestSubgame               $c10d ; db 0-3 - useful for hacking
 .define RAM_NumberToTextBuffer                    $c177 ; dsb 4 Buffer for rendering scores to text
 .define RAM_ScriptRendererVRAMAddress             $c800 ; dw Where in VRAM we are dynamically loading font characters
@@ -413,7 +413,7 @@ IncorrectText: .asc "Incorrect", $fe
 GoalText:      .asc "Goal", $fe
 .ends
 
-; THe original code loads the tiles it needs early on and then loads tilemaps
+; The original code loads the tiles it needs early on and then loads tilemaps
 ; when it wants to display some text. We replace that with some use of the
 ; script engine. That means we need to patch out places that load more than
 ; just the tiles...
@@ -712,11 +712,11 @@ _emit:
 .bank 0 slot "FixedROM"
 .section "Load borders" free
 LoadBorders:
-  ld (RAM_1bppIndex),a
+  ld (RAM_1bppColours),a
   ld hl,PAGING
   ld (hl),4
   ld hl,$8158 ; data
-  ld bc,$20 ; byte count
+  ld b,$20 ; byte count
   jp Load1bppTiles ; load and return
 .ends
 
@@ -775,7 +775,7 @@ Text:
     ld de,Font
     add hl,de
     ld de,(RAM_ScriptRendererVRAMAddress) ; VRAM location for tiles
-    ld bc,8*2 ; 2 tiles
+    ld b,8*2 ; 2 tiles
     ld a,(PAGING)
     push af
       ld a,:Font
@@ -822,7 +822,7 @@ Text:
 TextWithBorderInit:
 ; hl = tile index to start at
 ; a = palette index for 1bpp tiles
-  ld (RAM_1bppIndex),a
+  ld (RAM_1bppColours),a
   ld a,l
   ld (RAM_ScriptRendererStartTileIndex),a ; tile start index
   ld a,h
@@ -844,21 +844,22 @@ TextWithBorderInit:
 Load1bppTiles:
 ; We want to have a = $bbbbffff for the background and foreground colour
 ; and 1bpp data %01010011
-; and emit to the VDP
+; and emit to the VDP at address de
 ; %bfbfbbff ; with the LSB of b and f first
 ; %bfbfbbff
 ; %bfbfbbff
 ; %bfbfbbff
 
   rst $08  ; _LABEL_8_VRAMAddressToDE
+Load1bppTilesAtCurrentVRAMAddress:
 ---:
   ld a, (hl) ; Get byte for pixel row
   exx
     ld h, a ; pixel row is in here now
-    ld a, (RAM_1bppIndex) ; Get palette data
+    ld a, (RAM_1bppColours) ; Get palette data
     and $f
     ld e,a ; e is the foreground colour
-    ld a, (RAM_1bppIndex)
+    ld a, (RAM_1bppColours)
     srl a
     srl a
     srl a
@@ -887,10 +888,7 @@ _1:   srl e
     jr nz,--
   exx
   inc hl
-  dec bc
-  ld a, b
-  or c
-  jr nz, ---
+  djnz ---
   ret
 
 .ends
@@ -976,7 +974,134 @@ YTBDTextWithBorder:
   ld hl,RAM_NumberToTextBuffer ; string is here
   jp Text ; and ret
   END_CODE_PATCH
+  
+  ; Police screen
+  START_CODE_PATCH $5c8f $5cb9
+  ; Removing Kanji loading and drawing
+  END_CODE_PATCH
+  
+  ; Boxes to 4 rows
+  PatchB $1df9f + 3, 4
+  PatchB $1dfa3 + 3, 4
+  
+  ; The original game does this:
+  ; 1. Load text to RAM buffer
+  ; 2. Inject score text
+  ; 3. Load tiles for these buffers to VRAM, with no de-duplication
+  ; 4. Emit tilemap slowly, assuming sequentil tile use
+  ; Unfortunately the buffer is not big enough for us to use... so we have to do it in parts.
+  
+  .unbackground $5d22 $5d94 ; Original code
+  .unbackground $5c0c $5c22 ; Original text
+  
+.section "Script for police screen" free
+TextLost:       .asc "Lost      ", $fe
+TextRemaining:  .asc "Remaining ", $fe
+TextPoints:     .asc " Points", $fe
+.ends
+  
+  START_CODE_PATCH $5cc0 $5d0d
 
+  ; Set VRAM address
+  ld de,$5000
+  rst $08
+  
+	ld a,$02 ; colours for text
+	ld (RAM_1bppColours), a
+
+  ; First load the first bit of text
+  ld hl,TextLost
+  call LoadColouredTiles
+  
+  ; Then render the points lost digits
+  ld hl,$c870+1
+  call NumberToString
+  ; And emit tiles
+  ld hl,RAM_NumberToTextBuffer
+  call LoadColouredTiles
+  
+  ; And "Points"
+  ld hl,TextPoints
+  call LoadColouredTiles
+  
+  ; Change the colour when points remaining is < 60
+  ld a,($c872+1) ; Hundreds
+  or a
+  jr nz,+
+  ld a,($c872) ; Remaining digits
+  cp $60 ; BCD
+  jr nc,+
+  
+  ; Change the colour
+	ld a,$0d ; colours for text
+	ld (RAM_1bppColours), a
+  
++:; Now load the text similar to the above
+  ld hl,TextRemaining
+  call LoadColouredTiles
+
+  ld hl,$c872+1
+  call NumberToString
+
+  ld hl,RAM_NumberToTextBuffer
+  call LoadColouredTiles
+  
+  ; And "Points"
+  ld hl,TextPoints
+  call LoadColouredTiles
+  
+  END_CODE_PATCH
+  
+.section "LoadColouredTiles" free
+LoadColouredTiles:
+  ; hl = pointer to text
+-:ld a,(hl)
+  cp $fe
+  ret z
+  push hl
+  push bc
+    ; Multiply by 16 (bytes per character) and offset into table
+    ; Could share this with the normal font loader
+    ld h,0
+    ld l,a
+    add hl,hl
+    add hl,hl
+    add hl,hl
+    add hl,hl
+    ld bc,Font
+    add hl,bc
+    
+    ld b,16; byte count
+    call Load1bppTilesAtCurrentVRAMAddress
+  pop bc
+  pop hl
+  inc hl
+  jr -
+.ends
+
+  ; We also need to change the way it draws to the screen...
+
+  PatchB $5c03 1 ; $02 ; Character width
+
+  ; Tilemap is generated on the fly here
+  START_CODE_PATCH $5b65 $5b7a
+  cp 41 ; total length plus 1
+  jp nc,$5bab ; original code
+  ; Compute tile index. It's $7e + a * 2.
+  add a,a
+  add a,$7e
+  ld ($c855),a
+  inc a
+  ld ($c856),a
+  END_CODE_PATCH
+  
+  ; We patch the way it's emitted...
+  PatchW $5b5b 6 ; Delay counter - twice as fast
+  PatchB $5b82 21 ; Characters on the first row
+  PatchW $5b86 $9a ; Tilemap bytes between rows
+  PatchW $5b8b 2 ; Tilemap bytes per character
+  
+  
 
 ; TODO: burnt-in text
 ; TODO: popup-window text using alternate font

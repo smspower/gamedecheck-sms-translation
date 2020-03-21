@@ -28,9 +28,6 @@ tables =  [
   { 'start': 0x05e55, 'bank': 7, 'stride': 1, 'count': 1 },
   { 'start': 0x05ea1, 'bank': 7, 'stride': 1, 'count': 1 },
   { 'start': 0x05fa2, 'bank': 7, 'stride': 1, 'count': 1 },
-  
-  # Base text for ???
-  { 'start': 0x05cc1, 'bank': 7, 'stride': 1, 'count': 1, 'length': 23 },
 ]
   
 mapping = {
