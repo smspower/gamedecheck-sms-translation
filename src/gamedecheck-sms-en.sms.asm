@@ -606,9 +606,9 @@ DrivingTechniqueInit:
   ; Risk Control
   
   ; Flags location on instruction screen
-  PatchB $2fb0e $da + 2 * 16
-  PatchB $2fb12 $9a + 2 * 16
-  PatchB $2fb16 $5a + 2 * 16
+  PatchB $2fb0e $da + 2 * 15
+  PatchB $2fb12 $9a + 2 * 15
+  PatchB $2fb16 $5a + 2 * 15
 
   ; "Start"
   START_CODE_PATCH $227c $2296
@@ -950,7 +950,7 @@ _1:   srl e
 .bank 0 slot "FixedROM"
 .section "YTBD text drawing helpers" free
 YTBDTextWithBorder:
-  call $302a ; skip first istruction, leave tilemap high byte alone
+  call $302a ; skip first instruction, leave tilemap high byte alone
   jp TextWithBorder
 .ends
   

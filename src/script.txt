@@ -200,17 +200,27 @@ $1d428: Practice[EOS]
 テストをはじめます。[EOS]
 $1d42e: Start of the test[EOS]
 
+; Pyonkichi's Adventure intro text
 ピョンきちくんは、ピョンこ[LF+]ちゃんのおうちへ、あそびに[LF+]いきます。とちゅうで、いろ[LF+]いろなことをします。[LF+]そのとき、ピョンきちくんが[LF+]とったこうどうは、ただしい[LF+]でしょうか。[EOS]
 $1d439: Pyonkichi-kun is going to[LF]visit Pyonko's house.[LF+]On the way, various things[LF]will happen.[LF+]Will Pyonkichi-kun make[LF]the correct choices?[EOS]
 
+; You're The Best Driver intro text
 あなたのもちてんは１００てん[LF+]です。こうつうじこやこうつう[LF+]いはんをおこすと、げんてんさ[LF+]れ、もちてんがなくなるとゲー[LF+]ムオーバーです。[LF+]　こうつうきそくをまもって、[LF+]ゴールしてください。[EOS]
 $1d491: You will start with 100[LF]points. If there are any[LF]accidents or traffic[LF]violations, points will be[LF]deducted.[LF+]If you reach zero points,[LF]it's game over.[LF+]Your goal is to obey traffic[LF]laws.[EOS]
 
+; You're The Best Driver police screens
+
 あなたは、　　をしました。[EOS]
-$1d4f0: You did    [EOS]
+; Patched to: あなたは、違反をしました。
+$1d4f0: You have committed a[LF]violation.[EOS]
 
 あなたは、　　をおこしまし[LF+]た。[EOS]
-$1d4fe: You caused 　　[LF+][EOS]
+; Patched to: あなたは、事故をおこしました。
+$1d4fe: You have caused an[LF]accident.[EOS]
+
+げんてん　　　　てん　　　もちてん　　　　てん
+$5c0c: Lost    Points     Remaining    Points
+
 
 ゲームをはじめます。[EOS]
 $1d50f: The game is starting[EOS]
@@ -226,6 +236,3 @@ $1d671: Try Harder Next Time[EOS]
 
 せいせき[EOS]
 $5fdf: Results[EOS]
-
-げんてん　　　　てん　　　もちてん　　　　てん
-$5c0c: Lost    Points     Remaining    Points

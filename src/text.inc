@@ -145,11 +145,11 @@ Script1d491: .asc "You will start with 100", $ff, "points. If there are any", $f
 .ends
 .bank 7 slot 2
 .section "Script1d4f0" free
-Script1d4f0: .asc "You did    ", $fe
+Script1d4f0: .asc "You have committed a", $ff, "violation.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d4fe" free
-Script1d4fe: .asc "You caused 　　", $fd, $fe
+Script1d4fe: .asc "You have caused an", $ff, "accident.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d50f" free

@@ -1134,7 +1134,7 @@ _LABEL_2DC_:
 	ld de, $7800
 	ld bc, $0380
 	ld hl, $0000
-_LABEL_2E5_:
+_LABEL_2E5_BlankTilemap:
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	ld a, c
 	or a
@@ -3557,7 +3557,7 @@ _LABEL_195C_:
 	ld de, $7C00
 	ld hl, $00A0
 	ld bc, $0100
-	jp _LABEL_2E5_
+	jp _LABEL_2E5_BlankTilemap
 
 ; 1st entry of Jump Table from 192F (indexed by _RAM_C123_)
 _LABEL_1968_:
@@ -4905,7 +4905,7 @@ _LABEL_2399_:
 	ld de, $7800
 	ld hl, $0100
 	ld bc, $00E0
-	call _LABEL_2E5_ ; Blank tilemap?
+	call _LABEL_2E5_BlankTilemap ; Blank tilemap?
   ; patch @ 23b1
 	ld de, $7858
 	ld hl, _DATA_10330_TilemapGoal
@@ -11929,7 +11929,7 @@ _LABEL_595B_:
     ld de, $7800
     ld bc, $0380
     ld hl, $0000
-    call _LABEL_2E5_
+    call _LABEL_2E5_BlankTilemap
     call _LABEL_276_8x16SpritesOff
     call _LABEL_263_SpriteTableAddress3f00
 	ei
@@ -12299,28 +12299,29 @@ _DATA_5C0C_:
 .db $46 $99 $99 $99 $99 $1C $46
 
 _LABEL_5C23_:
+; Police screen
 	di
 	rst $10	; _LABEL_10_ScreenOff
-	ld de, $82FD
+	ld de, $82FD ; Switch tilemap address
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	ld de, $7000
 	ld bc, $0300
 	ld hl, $0000
-	call _LABEL_2E5_
+	call _LABEL_2E5_BlankTilemap
 	call _LABEL_263_SpriteTableAddress3f00
 	ei
-	call _LABEL_61B9_
+	call _LABEL_61B9_ ; ?
 	ld a, $87
 	ld (Paging_Slot2), a
-	ld hl, _DATA_63F6_
+	ld hl, _DATA_63F6_PoliceScreenPalette
 	ld de, $C000
 	ld bc, $0011
-	call _LABEL_77B6_CopyToVRAM
-	call _LABEL_4C95_
-	call _LABEL_5A53_
+	call _LABEL_77B6_CopyToVRAM ; load palette
+	call _LABEL_4C95_ ; inits some state
+	call _LABEL_5A53_ ; text box with border
 	ld a, $88
 	ld (Paging_Slot2), a
-	ld hl, _DATA_23CEE_
+	ld hl, _DATA_23CEE_PoliceTiles
 	ld de, $6080
 	call _LABEL_633D_LoadTilesRLE
 	ld a, $87
@@ -12330,18 +12331,19 @@ _LABEL_5C23_:
 	ld hl, _DATA_1DF1D_
 	ld de, $748E
 	ld bc, $0408
-	call _LABEL_630C_
+	call _LABEL_630C_DrawTilemap
 	ld hl, _DATA_1DF3D_
 	ld de, $74A2
 	ld bc, $0403
-	call _LABEL_630C_
+	call _LABEL_630C_DrawTilemap
 	ld hl, _DATA_1DF49_
 	ld de, $74AA
 	ld bc, $0403
-	call _LABEL_630C_
+	call _LABEL_630C_DrawTilemap
+  ; start code patch @ 5c8f
 	ld a, $8A
 	ld (Paging_Slot2), a
-	ld hl, _DATA_2BF04_
+	ld hl, _DATA_2BF04_PoliceScreenKanji ; TODO: remove this?
 	ld de, $6600
 	call _LABEL_633D_LoadTilesRLE
 	ld a, $87
@@ -12357,8 +12359,10 @@ _LABEL_5C23_:
 ++:
 	ld de, $709A
 	ld bc, $0204
-	call _LABEL_630C_
-	ld a, (_RAM_C874_)
+	call _LABEL_630C_DrawTilemap ; draw kanji to tilemap
+  ; end patch @ 5cb9
+	
+  ld a, (_RAM_C874_)
 	call _LABEL_5D95_
 
 	ld hl, _DATA_5C0C_ ; base text
@@ -12543,7 +12547,7 @@ _LABEL_5DD6_:
 	ld bc, $00E0
 	ld hl, $0000
 	di
-	call _LABEL_2E5_
+	call _LABEL_2E5_BlankTilemap
 	ei
 	ld a, $0D
 	ld (_RAM_C120_GameState), a
@@ -12968,7 +12972,7 @@ _LABEL_619B_:
 	ld de, $7800
 	ld bc, $0380
 	ld hl, $0000
-	call _LABEL_2E5_
+	call _LABEL_2E5_BlankTilemap
 	call _LABEL_276_8x16SpritesOff
 	call _LABEL_263_SpriteTableAddress3f00
 	ei
@@ -13220,7 +13224,7 @@ _LABEL_6308_SetVRAMAddressToDE:
 	ei
 	ret
 
-_LABEL_630C_:
+_LABEL_630C_DrawTilemap:
 	push bc
 	call _LABEL_6308_SetVRAMAddressToDE
 	ld b, c
@@ -13235,7 +13239,7 @@ _LABEL_630C_:
 	add hl, bc
 	ex de, hl
 	pop bc
-	djnz _LABEL_630C_
+	djnz _LABEL_630C_DrawTilemap
 	ret
 
 _LABEL_6327_LoadTilemap:
@@ -13324,7 +13328,7 @@ _DATA_63D6_Palette:
 .db $08 $00 $3F $38 $3C $03 $0F $30 $20 $2A $00 $00 $00 $00 $00 $00
 
 ; Data from 63F6 to 6406 (17 bytes)
-_DATA_63F6_:
+_DATA_63F6_PoliceScreenPalette:
 .db $08 $00 $3F $20 $2F $2B $0B $16 $04 $2A $30 $3E $01 $0F $00 $03
 .db $08
 
@@ -22987,7 +22991,7 @@ _DATA_23C6E_:
 .db $18 $00 $00 $00 $18 $00 $00 $00 $18 $00 $00 $00 $18 $00 $00 $00
 
 ; Data from 23CEE to 23FFF (786 bytes)
-_DATA_23CEE_:
+_DATA_23CEE_PoliceTiles:
 .db $07 $00 $81 $01 $03 $00 $8D $01 $40 $67 $ED $4B $78 $FC $FC $FE
 .db $00 $FF $9C $39 $05 $00 $83 $98 $DC $CA $07 $00 $81 $31 $06 $00
 .db $02 $C0 $9E $02 $05 $0B $13 $A6 $7E $00 $00 $96 $9C $39 $33 $66
@@ -23145,7 +23149,7 @@ _DATA_27DA6_:
 .incbin "Game De Check! Koutsuu Anzen [Proto] (JP)_DATA_28000_.inc"
 
 ; Data from 2BF04 to 2BFFF (252 bytes)
-_DATA_2BF04_:
+_DATA_2BF04_PoliceScreenKanji:
 .db $7F $00 $81 $00 $00 $B3 $60 $33 $31 $07 $00 $37 $FB $33 $CC $FC
 .db $98 $FE $00 $FC $0C $FC $30 $1F $18 $18 $1F $18 $1A $1B $04 $FE
 .db $00 $08 $FE $0E $0C $0C $30 $37 $33 $37 $30 $68 $E7 $43 $60 $FE

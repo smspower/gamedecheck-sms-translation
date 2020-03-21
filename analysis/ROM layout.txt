@@ -71,7 +71,7 @@ $268C0  $27332  142         ?
 
 $28000  $2f9f1  Lots        Rabbit sprites 4bpp uncompressed with some metadata
 
-$2BF04  $2bf94  16          Text
+$2BF04  $2bf94  16          Police screen kanji for violation, accident
 
 $2FB18  $2fbd1  10          1, 2, 3
 $2FBD2  $2fc24  4           Hand
