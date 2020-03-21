@@ -13,6 +13,8 @@ if exist ..\build_config.cmd ( call ..\build_config.cmd )
 
 %CONFIG_BMP2TILE% assets\too-early-too-late.png     -tileoffset 228 -savetiles too-early-too-late.tiles.zx7 || exit /b
 
+%CONFIG_BMP2TILE% assets\signs.png -noremovedupes -savetiles signs.tiles.bin || exit /b
+
 rem This is needed to make it emit UTF-8 into the pipe
 set PYTHONIOENCODING=UTF8
 %CONFIG_PYTHON% script-tool.py generate "Game De Check! Koutsuu Anzen [Proto] (JP).sms" script.txt > text.inc || exit /b

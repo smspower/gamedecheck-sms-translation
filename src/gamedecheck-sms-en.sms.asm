@@ -1001,7 +1001,9 @@ TextPoints:     .asc " Points", $fe
 .ends
   
   START_CODE_PATCH $5cc0 $5d0d
-
+  ; Original game doesn't do this...
+  di
+  
   ; Set VRAM address
   ld de,$5000
   rst $08
@@ -1101,7 +1103,10 @@ LoadColouredTiles:
   PatchW $5b86 $9a ; Tilemap bytes between rows
   PatchW $5b8b 2 ; Tilemap bytes per character
   
-  
+  ; Signs
+  START_CODE_PATCH $258a0 $25adf
+  .incbin "signs.tiles.bin"
+  END_CODE_PATCH_HARD
 
 ; TODO: burnt-in text
 ; TODO: popup-window text using alternate font
