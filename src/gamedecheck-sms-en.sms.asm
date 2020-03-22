@@ -1117,7 +1117,7 @@ LoadColouredTiles:
 .unbackground $3333e $33c9b ; really blank to end of bank?
 
   START_CODE_PATCH $78fc $790d
-  .dw PyonkichiQuestion1Tiles, $0820, PyonkichiQuestion1Tilemap
+  .dw PyonkichiQuestion1Tiles, $0826, PyonkichiQuestion1Tilemap
   .dw PyonkichiQuestion2Tiles, $061a, PyonkichiQuestion2Tilemap
   .dw PyonkichiQuestion3Tiles, $0626, PyonkichiQuestion3Tilemap
   END_CODE_PATCH_HARD
