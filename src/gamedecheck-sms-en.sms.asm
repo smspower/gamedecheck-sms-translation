@@ -1107,12 +1107,16 @@ LoadColouredTiles:
   START_CODE_PATCH $258a0 $25adf
   .incbin "signs.tiles.bin"
   END_CODE_PATCH_HARD
-  
+
+  ; The km/h overlay has a 1px error...
+  START_CODE_PATCH $1b87a $1bfff ; blank after the original data
+  .incbin "bestdriver-sprites1.tiles.pscompr"
+  END_CODE_PATCH_HARD
   
   
   ; Pyonkichi's Adventure
   
-  ; Questions are stored as optimised RLE tiles + raw tilemaps
+  ; Text is stored as optimised RLE tiles + raw tilemaps
   ; We re-encode them and rebuild the table
 .unbackground $3333e $33c9b ; really blank to end of bank?
 

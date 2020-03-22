@@ -14,6 +14,8 @@ if exist ..\build_config.cmd ( call ..\build_config.cmd )
 %CONFIG_BMP2TILE% assets\too-early-too-late.png     -tileoffset 228 -savetiles too-early-too-late.tiles.zx7 || exit /b
 
 %CONFIG_BMP2TILE% assets\signs.png -noremovedupes -savetiles signs.tiles.bin || exit /b
+%CONFIG_BMP2TILE% assets\bestdriver-sprites1.png -noremovedupes -savetiles bestdriver-sprites1.tiles.pscompr || exit /b
+
 
 %CONFIG_BMP2TILE% assets\PyonkichiQuestion1.png -tileoffset 199 -savetiles PyonkichiQuestion1.tiles.pscompr -savetilemap PyonkichiQuestion1.tilemap.bin || exit /b
 %CONFIG_BMP2TILE% assets\PyonkichiQuestion2.png -tileoffset 199 -savetiles PyonkichiQuestion2.tiles.pscompr -savetilemap PyonkichiQuestion2.tilemap.bin || exit /b
