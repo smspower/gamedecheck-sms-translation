@@ -14455,11 +14455,13 @@ _LABEL_6DA2_:
 	ld de, $0000
 	call _LABEL_673E_
 	ld a, (iy+22)
+  ; patch start @ 6dca
 	ld hl, _DATA_6DF3_
 	call _LABEL_6191_ReadAthPointerFromHL
 	ld (iy+4), l
 	ld (iy+5), h
 	ld (iy+21), $FF
+  ; patch end @ 6dd9
 ; 93rd entry of Jump Table from 1672 (indexed by _RAM_C400_)
 _LABEL_6DDA_:
 	bit 7, (iy+0)
@@ -19775,9 +19777,22 @@ _DATA_14ED2_:
 ; 1st entry of Pointer Table from 6DF3 (indexed by _RAM_C416_)
 ; Data from 14FD2 to 14FFF (46 bytes)
 _DATA_14FD2_:
-.db $0F $00 $00 $7B $00 $08 $7C $00 $10 $7C $00 $18 $7C $00 $20 $7D
-.db $08 $00 $7E $08 $08 $7F $08 $10 $80 $08 $18 $81 $08 $20 $82 $10
-.db $00 $83 $10 $08 $84 $10 $10 $85 $10 $18 $84 $10 $20 $86
+.db $0F 
+.db $00 $00 $7B 
+.db $00 $08 $7C 
+.db $00 $10 $7C 
+.db $00 $18 $7C 
+.db $00 $20 $7D
+.db $08 $00 $7E 
+.db $08 $08 $7F 
+.db $08 $10 $80 
+.db $08 $18 $81 
+.db $08 $20 $82 
+.db $10 $00 $83 
+.db $10 $08 $84 
+.db $10 $10 $85 
+.db $10 $18 $84 
+.db $10 $20 $86
 
 ; 2nd entry of Pointer Table from 6DF3 (indexed by _RAM_C416_)
 ; Data from 15000 to 15048 (73 bytes)

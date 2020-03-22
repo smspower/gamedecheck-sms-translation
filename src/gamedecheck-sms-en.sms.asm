@@ -1118,7 +1118,7 @@ LoadColouredTiles:
   
   ; Text is stored as optimised RLE tiles + raw tilemaps
   ; We re-encode them and rebuild the table
-.unbackground $3333e $33c9b ; really blank to end of bank?
+.unbackground $32f81 $33c9b ; really blank to end of bank - following data is a repeat from earlier banks
 
   START_CODE_PATCH $78fc $790d
   .dw PyonkichiQuestion1Tiles, $0826, PyonkichiQuestion1Tilemap
@@ -1134,7 +1134,172 @@ PyonkichiQuestion3Tiles: .incbin "PyonkichiQuestion3.tiles.pscompr"
 PyonkichiQuestion1Tilemap: .incbin "PyonkichiQuestion1.tilemap.bin"
 PyonkichiQuestion2Tilemap: .incbin "PyonkichiQuestion2.tilemap.bin"
 PyonkichiQuestion3Tilemap: .incbin "PyonkichiQuestion3.tilemap.bin"
-.ends  
+.ends
+
+
+  ; Speech bubbles in the original are built from a fixed tileset.
+  ; We replace this with dynamic tile loading because we can't fit
+  ; decent results in the 8 sprite limit, and we can't fit nice 
+  ; tiles in the tile limit.
+  ; Note that in the interests of simplicity (and because there 
+  ; isn't an easy way to do it), we don't de-dupe the tiles, even 
+  ; though there are many duplicates on the edges.
+
+  START_CODE_PATCH $6dca $6dd9
+  jp PyonkichiSpeechBubble
+  END_CODE_PATCH_HARD
+
+.bank 0 slot "FixedROM"
+.section "PyonkichiSpeechBubble" free
+PyonkichiSpeechBubble:
+  ; a = speech bubble index
+  ; 5 bytes per entry
+  ld b,a
+  add a,a
+  add a,a
+  add a,b
+  ld e,a
+  ld d,0
+  ld hl,_TilesTable
+  add hl,de
+  ; first entry is the bank
+  ld a,(PAGING)
+  push af
+    ld a,(hl)
+    inc hl
+    ld (PAGING),a
+    ; next is the tile data address
+    ld a,(hl)
+    inc hl
+    push hl
+      ld h,(hl)
+      ld l,a
+      TileWriteAddressToDE 379
+      call zx7_decompress
+    pop hl
+    inc hl
+  pop af
+  ld (PAGING),a
+  ; next is the sprite data
+  ld a,(hl)
+	ld (iy+4), a
+  inc hl
+  ld a,(hl)
+	ld (iy+5), a
+	ld (iy+21), $FF
+  jp $6dda
+
+_TilesTable:
+  ; There are 24 entries with some duplicates.
+.db :PyonkichiSpeechBubble1
+.dw PyonkichiSpeechBubble1, _Tiles32x24 ;　やあ！ Hi!
+.db :PyonkichiSpeechBubble2
+.dw PyonkichiSpeechBubble2, _Tiles64x24 ;　あそぼうよ。 Let's play.
+.db :PyonkichiSpeechBubble3
+.dw PyonkichiSpeechBubble3, _Tiles48x24 ;　うん。 Yeah.
+.db :PyonkichiSpeechBubble4
+.dw PyonkichiSpeechBubble4, _Tiles64x24 ;　きょうそうしようよ。 Let's race.
+.db :PyonkichiSpeechBubble5
+.dw PyonkichiSpeechBubble5, _Tiles56x24 ;　やめようよ。 Stop it.
+.db :PyonkichiSpeechBubble5
+.dw PyonkichiSpeechBubble5, _Tiles56x24 ;　やめようよ。 Stop it.
+.db :PyonkichiSpeechBubble6
+.dw PyonkichiSpeechBubble6, _Tiles64x32 ;　あぶないから。 That's dangerous.
+.db :PyonkichiSpeechBubble7
+.dw PyonkichiSpeechBubble7, _Tiles40x24 ;　はい。 Yes.
+.db :PyonkichiSpeechBubble3
+.dw PyonkichiSpeechBubble3, _Tiles48x24 ;　うん。 Yeah.
+.db :PyonkichiSpeechBubble7
+.dw PyonkichiSpeechBubble7, _Tiles40x24 ;　はい。 Yes.
+.db :PyonkichiSpeechBubble8
+.dw PyonkichiSpeechBubble8, _Tiles64x32 ;　おはな　ください。 One flower, please.
+.db :PyonkichiSpeechBubble8
+.dw PyonkichiSpeechBubble8, _Tiles64x32 ;　おはな　ください。 One flower, please.
+.db :PyonkichiSpeechBubble9
+.dw PyonkichiSpeechBubble9, _Tiles64x24 ;　ピョンこちゃん。 Pyonko-chan.
+.db :PyonkichiSpeechBubble10
+.dw PyonkichiSpeechBubble10,_Tiles64x24 ;　おもしろい？ Sounds fun?
+.db :PyonkichiSpeechBubble11
+.dw PyonkichiSpeechBubble11,_Tiles40x24 ;　わいわい Yay!
+.db :PyonkichiSpeechBubble12
+.dw PyonkichiSpeechBubble12,_Tiles64x24 ;　あぶないよ。 Watch out!
+.db :PyonkichiSpeechBubble13
+.dw PyonkichiSpeechBubble13,_Tiles40x24 ;　わ～[glitch, one missing tile]
+.db :PyonkichiSpeechBubble13
+.dw PyonkichiSpeechBubble13,_Tiles40x24 ;　お～い Hey!
+.db :PyonkichiSpeechBubble14
+.dw PyonkichiSpeechBubble14,_Tiles64x24 ;　バイバイ Bye bye
+.db :PyonkichiSpeechBubble15
+.dw PyonkichiSpeechBubble15,_Tiles64x24 ;　いらっしゃい。 Welcome.
+.db :PyonkichiSpeechBubble15
+.dw PyonkichiSpeechBubble15,_Tiles64x24 ;　いらっしゃい。 Welcome.
+.db :PyonkichiSpeechBubble16
+.dw PyonkichiSpeechBubble16,_Tiles56x24 ;　まいど！ Thanks!
+.db :PyonkichiSpeechBubble17
+.dw PyonkichiSpeechBubble17,_Tiles56x24 ;　やめようよ！ Stop it!
+.db :PyonkichiSpeechBubble6
+.dw PyonkichiSpeechBubble6, _Tiles64x32 ;　あぶないから。 That's dangerous.
+
+; Sprite data format is
+; db n ; count of entries
+; db y,x,n ; n times
+.macro SpriteData args w,h,startindex
+.db w*h
+.define x 0
+.define y 0
+.define n startindex
+
+.repeat h
+.repeat w
+.db y,x,n
+.redefine x x+8
+.redefine n n+1
+.endr
+.redefine y y+8
+.redefine x 0
+.endr
+
+.undefine x
+.undefine y
+.undefine n
+.endm
+
+_Tiles32x24: SpriteData 4,3,$7b
+_Tiles40x24: SpriteData 5,3,$7b
+_Tiles48x24: SpriteData 6,3,$7b
+_Tiles56x24: SpriteData 7,3,$7b
+_Tiles64x24: SpriteData 8,3,$7b
+_Tiles64x32: SpriteData 8,4,$7b
+
+.ends
+  
+  .unbackground $6df3 $6e22 ; pointer table for data
+  .unbackground $14fd2 $15523 ; pointed sprite data
+
+.macro PyonkichiSpeechBubbleTiles
+.bank 12 slot PagedROM
+.section "PyonkichiSpeechBubble\1" superfree
+PyonkichiSpeechBubble\1: .incbin "Pyonkichi-speechbubbles-\1.tiles.zx7"
+.ends
+.endm
+
+  PyonkichiSpeechBubbleTiles 1
+  PyonkichiSpeechBubbleTiles 2
+  PyonkichiSpeechBubbleTiles 3
+  PyonkichiSpeechBubbleTiles 4
+  PyonkichiSpeechBubbleTiles 5
+  PyonkichiSpeechBubbleTiles 6
+  PyonkichiSpeechBubbleTiles 7
+  PyonkichiSpeechBubbleTiles 8
+  PyonkichiSpeechBubbleTiles 9
+  PyonkichiSpeechBubbleTiles 10
+  PyonkichiSpeechBubbleTiles 11
+  PyonkichiSpeechBubbleTiles 12
+  PyonkichiSpeechBubbleTiles 13
+  PyonkichiSpeechBubbleTiles 14
+  PyonkichiSpeechBubbleTiles 15
+  PyonkichiSpeechBubbleTiles 16
+  PyonkichiSpeechBubbleTiles 17
 
 ; TODO: burnt-in text
 ; TODO: popup-window text using alternate font
