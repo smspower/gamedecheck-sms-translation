@@ -1117,9 +1117,9 @@ LoadColouredTiles:
 .unbackground $3333e $33c9b ; really blank to end of bank?
 
   START_CODE_PATCH $78fc $790d
-  .dw PyonkichiQuestion1Tiles, $081c, PyonkichiQuestion1Tilemap
-  .dw PyonkichiQuestion2Tiles, $0626, PyonkichiQuestion2Tilemap
-  .dw PyonkichiQuestion3Tiles, $0628, PyonkichiQuestion3Tilemap
+  .dw PyonkichiQuestion1Tiles, $0820, PyonkichiQuestion1Tilemap
+  .dw PyonkichiQuestion2Tiles, $061a, PyonkichiQuestion2Tilemap
+  .dw PyonkichiQuestion3Tiles, $061a, PyonkichiQuestion3Tilemap
   END_CODE_PATCH_HARD
 
 .bank $c slot "PagedROM"
