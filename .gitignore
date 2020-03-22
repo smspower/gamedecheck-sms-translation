@@ -7,3 +7,4 @@ linkfile
 *.zx7
 build_config.cmd
 *.bin
+*.pscompr

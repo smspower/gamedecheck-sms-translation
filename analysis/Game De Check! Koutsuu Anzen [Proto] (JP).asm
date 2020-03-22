@@ -56,7 +56,7 @@ _RAM_C106_ dw
 _RAM_C108_ db
 _RAM_C109_ db
 _RAM_C10A_ db
-_RAM_C10B_ db
+_RAM_C10B_VBlankSignal db
 _RAM_C10C_ db
 _RAM_C10D_ db
 _RAM_C10E_ db
@@ -478,7 +478,7 @@ _RAM_C79C_ db
 .ende
 
 .enum $C7A4 export
-_RAM_C7A4_ dw
+_RAM_C7A4_PyonkichiBoxTilemapAddress dw
 .ende
 
 .enum $C7A8 export
@@ -547,7 +547,7 @@ _RAM_C874_ db
 
 .enum $C900 export
 _RAM_C900_Buffer dsb $100
-_RAM_CA00_ dsb $200
+_RAM_CA00_TilemapBackup dsb $200
 _RAM_CC00_ dsb $100
 _RAM_CD00_ dsb $100
 .ende
@@ -860,7 +860,7 @@ _LABEL_FB_:
 	jp z, _LABEL_16B_
 -:
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	ld hl, $0130
 	push hl
 	ld a, (_RAM_C109_)
@@ -1878,7 +1878,7 @@ _LABEL_9F7_:
 	bit 7, (hl)
 	jr z, ++
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	ld a, (_RAM_C109_)
 	and $20
 	jr nz, +
@@ -2064,7 +2064,7 @@ _LABEL_B36_:
 	jr z, ++
 	ex de, hl
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	ld a, (_RAM_C109_)
 	and $3F
 	jr nz, +
@@ -2128,7 +2128,7 @@ _LABEL_B9F_:
 	push ix
 	push iy
 	in a, (Port_VDPStatus)
-	ld a, (_RAM_C10B_)
+	ld a, (_RAM_C10B_VBlankSignal)
 	or a
 	jp z, +
 	ld hl, _RAM_C10C_
@@ -2151,7 +2151,7 @@ _LABEL_B9F_:
 
 +:
 	xor a
-	ld (_RAM_C10B_), a
+	ld (_RAM_C10B_VBlankSignal), a
 	call _LABEL_499_
 	pop iy
 	pop ix
@@ -2184,10 +2184,11 @@ _LABEL_C05_:
 	ei
 	ret
 
-_LABEL_C1C_:
-	ld (_RAM_C10B_), a
--:
-	ld a, (_RAM_C10B_)
+_LABEL_C1C_WaitForVBLank:
+  ; Write to RAM
+	ld (_RAM_C10B_VBlankSignal), a
+-:; Wait for it to be cleared
+  ld a, (_RAM_C10B_VBlankSignal)
 	or a
 	jr nz, -
 	ret
@@ -3465,7 +3466,7 @@ _LABEL_18A9_:
 	bit 7, (hl)
 	jp z, _LABEL_18F0_
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	ld a, (_RAM_C10A_)
 	or a
 	jp nz, _LABEL_54E_
@@ -5425,7 +5426,7 @@ _LABEL_2700_:
 	bit 7, (hl)
 	jp z, _LABEL_274A_
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	ld a, (_RAM_C10A_)
 	or a
 	jp nz, _LABEL_54E_
@@ -6546,13 +6547,13 @@ _LABEL_2FE8_:
 	ld b, $03
 -:
 	push bc
-	ld hl, _RAM_CA00_
+	ld hl, _RAM_CA00_TilemapBackup
 	ld bc, $0200
 	call +
 	inc d
 	inc d
 	exx
-	ld hl, _RAM_CA00_
+	ld hl, _RAM_CA00_TilemapBackup
 	ld bc, $0200
 	call _LABEL_2BA_LoadToVRAMAtDE
 	inc d
@@ -6560,8 +6561,8 @@ _LABEL_2FE8_:
 	exx
 	pop bc
 	djnz -
-	ld hl, _RAM_CA00_
-	ld de, _RAM_CA00_ + 1
+	ld hl, _RAM_CA00_TilemapBackup
+	ld de, _RAM_CA00_TilemapBackup + 1
 	ld bc, $01FF
 	ld (hl), $00
 	ldir
@@ -6674,7 +6675,7 @@ _LABEL_30CE_:
 	bit 7, (hl)
 	jp z, +
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	ld a, (_RAM_C10A_)
 	or a
 	jp nz, _LABEL_54E_
@@ -10010,7 +10011,7 @@ _LABEL_4B02_:
 -:
 	push bc
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	call _LABEL_164E_
 	call _LABEL_54E_
 	pop bc
@@ -10042,7 +10043,7 @@ _LABEL_4B3F_:
 -:
 	push bc
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	call _LABEL_164E_
 	call _LABEL_54E_
 	pop bc
@@ -15338,7 +15339,7 @@ _LABEL_74A1_:
 	ld d, a
 	add a, a
 	add a, d
-	call _LABEL_782D_
+	call _LABEL_782D_PyonkichiShowBox
 	jp _LABEL_758C_
 
 ; 14th entry of Jump Table from 312E (indexed by _RAM_C70C_)
@@ -15683,7 +15684,7 @@ _LABEL_77B6_CopyToVRAM:
 	ei
 	jp _LABEL_2BB_WritetoVRAM
 
-_LABEL_77BC_:
+_LABEL_77BC_EmitTilemapRow:
 	ld a, e
 	and $3F
 	add a, c
@@ -15775,114 +15776,123 @@ _LABEL_781C_:
 	djnz _LABEL_781C_
 	ret
 
-_LABEL_782D_:
+_LABEL_782D_PyonkichiShowBox:
+  ; a = ?
+  ; _RAM_C303_ = scroll position?
 	push af
-	ld hl, _RAM_CA00_
-	exx
-	ld a, (_RAM_C303_)
-	and $F8
-	ld d, $00
-	add a, a
-	rl d
-	add a, a
-	rl d
-	add a, a
-	rl d
-	ld e, a
-	ld hl, $3800
-	add hl, de
-	ld (_RAM_C7A4_), hl
-	ld a, $8C
-	ld (Paging_Slot2), a
-	pop af
-	push hl
-	ld e, a
-	ld d, $00
-	ld hl, _DATA_78FC_
-	add hl, de
-	ld e, (hl)
-	inc hl
-	ld d, (hl)
-	inc hl
-	push hl
-	ex de, hl
-	ld de, $58E0
-	ld a, $04
-	call _LABEL_633D_LoadTilesRLE
-	pop hl
-	ld c, (hl)
-	inc hl
-	ld b, (hl)
-	inc hl
-	ld e, (hl)
-	inc hl
-	ld d, (hl)
-	pop hl
-_LABEL_786F_:
-	ld a, $01
-	call _LABEL_C1C_
-	di
-	ld a, l
-	out (Port_VDPAddress), a
-	ld a, h
-	out (Port_VDPAddress), a
-	ei
-	exx
-	ld b, $40
-	ld c, Port_VDPData
-	jp _LABEL_7884_
+    ld hl, _RAM_CA00_TilemapBackup
+    exx
+      ; compute tilemap address from scroll position
+      ld a, (_RAM_C303_)
+      and $F8
+      ld d, $00
+      add a, a
+      rl d
+      add a, a
+      rl d
+      add a, a
+      rl d
+      ld e, a
+      ld hl, $3800
+      add hl, de
+      ld (_RAM_C7A4_PyonkichiBoxTilemapAddress), hl
+      ld a, $8C ; guess the script is here?
+      ld (Paging_Slot2), a
+      pop af ; get original a back
+      push hl
+        ld e, a
+        ld d, $00
+        ld hl, _DATA_78FC_PyonkichiQuestionsTable ; table of script entries, indexes are multiples of 6
+        ; First entry is the tile data
+        add hl, de
+        ld e, (hl)
+        inc hl
+        ld d, (hl)
+        inc hl
+        push hl
+          ex de, hl
+          ld de, $58E0 ; Tilemap address
+          ld a, $04 ; bitplanes
+          call _LABEL_633D_LoadTilesRLE
+        pop hl
+        ; Next is dimensions?
+        ld c, (hl)
+        inc hl
+        ld b, (hl)
+        inc hl
+        ; Then tilemap?
+        ld e, (hl)
+        inc hl
+        ld d, (hl)
+      pop hl ; get tilemap address back
 
-_LABEL_7884_:
-	ini
-	nop
-	nop
-	jp nz, _LABEL_7884_
-	exx
-	push bc
-	push hl
-	push de
-	ld a, (_RAM_C30F_)
-	and $F8
-	neg
-	rrca
-	rrca
-	ld e, a
-	ld d, $00
-	add hl, de
-	ld a, $40
-	or h
-	ld h, a
-	pop de
-	ex de, hl
-	ld b, $01
-	ld a, $8C
-	ld (Paging_Slot2), a
-	call _LABEL_77BC_
-	ex de, hl
-	pop hl
-	ld a, $3F
-	and h
-	ld h, a
-	ld bc, $0040
-	add hl, bc
-	ld a, h
-	cp $3F
-	jp c, +
-	ld h, $38
+-:    ld a, $01
+      call _LABEL_C1C_WaitForVBLank
+      ; set the write address
+      di
+        ld a, l
+        out (Port_VDPAddress), a
+        ld a, h
+        out (Port_VDPAddress), a
+      ei
+    exx
+    ld b, $40 ; bytes count
+    ld c, Port_VDPData
+    jp + ; no-op
 +:
-	pop bc
-	djnz _LABEL_786F_
-	ret
+-:
+    ini
+    nop
+    nop
+    jp nz, - ; read 64 bytes = 1 tilemap row
+    exx
+      ; b = row count
+      ; c = tilemap width in bytes?
+      push bc
+        push hl
+          push de
+            ld a, (_RAM_C30F_) ; x scroll
+            and $F8 ; compute where to write
+            neg
+            rrca
+            rrca
+            ld e, a
+            ld d, $00
+            add hl, de
+            ld a, $40
+            or h
+            ld h, a
+          pop de
+          ex de, hl
+          ld b, $01 ; rows?
+          ld a, $8C
+          ld (Paging_Slot2), a
+          call _LABEL_77BC_EmitTilemapRow
+          ex de, hl
+        pop hl
+        ; move forward one row, wrapping as needed
+        ld a, $3F
+        and h
+        ld h, a
+        ld bc, $0040
+        add hl, bc
+        ld a, h
+        cp $3F
+        jp c, +
+        ld h, $38
++:    pop bc
+      djnz -
+      ret
 
 _LABEL_78C2_:
-	ld de, (_RAM_C7A4_)
-	ld hl, _RAM_CA00_
+	ld de, (_RAM_C7A4_PyonkichiBoxTilemapAddress)
+	ld hl, _RAM_CA00_TilemapBackup
 	ld b, $08
 	ld c, Port_VDPData
 -:
 	push af
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	pop af
 	ld a, e
 	out (Port_VDPAddress), a
@@ -15913,9 +15923,10 @@ _LABEL_78E2_:
 	ret
 
 ; Pointer Table from 78FC to 790D (9 entries, indexed by unknown)
-_DATA_78FC_:
-.dw _DATA_3333E_ _DATA_81C_ _DATA_339E8_ _DATA_3349A_ _DATA_626_ _DATA_33AC8_ _DATA_336B4_ _DATA_628_
-.dw _DATA_33BAC_
+_DATA_78FC_PyonkichiQuestionsTable:
+.dw _DATA_3333E_PyonkichiQuestion1TilesRLE $081C _DATA_339E8_ 
+.dw _DATA_3349A_PyonkichiQuestion2TilesRLE $0626 _DATA_33AC8_ 
+.dw _DATA_336B4_ $0628 _DATA_33BAC_
 
 ; Data from 790E to 793D (48 bytes)
 _DATA_790E_:
@@ -24856,7 +24867,7 @@ _DATA_32F81_:
 
 ; 1st entry of Pointer Table from 78FC (indexed by unknown)
 ; Data from 3333E to 33499 (348 bytes)
-_DATA_3333E_:
+_DATA_3333E_PyonkichiQuestion1TilesRLE:
 .db $0A $FF $81 $BF $03 $DF $02 $BF $04 $FF $90 $CF $F7 $F7 $FB $FF
 .db $FF $F8 $F6 $EE $DE $DD $BD $FF $FF $1F $EF $02 $F7 $03 $FB $02
 .db $FD $85 $FB $F8 $A7 $97 $F7 $05 $FF $88 $4F $77 $7B $FB $FB $F7
@@ -24882,7 +24893,7 @@ _DATA_3333E_:
 
 ; 4th entry of Pointer Table from 78FC (indexed by unknown)
 ; Data from 3349A to 336B3 (538 bytes)
-_DATA_3349A_:
+_DATA_3349A_PyonkichiQuestion2TilesRLE:
 .db $0C $FF $83 $FE $71 $8F $05 $FF $A0 $0F $F7 $FB $FB $F9 $FD $FD
 .db $EE $F0 $FE $DF $E0 $FB $FD $F7 $9B $7F $FF $4F $3F $FF $FF $F8
 .db $F6 $EE $DE $DD $BD $FF $FF $1F $EF $02 $F7 $02 $FB $82 $FF $FC

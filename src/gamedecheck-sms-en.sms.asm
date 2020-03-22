@@ -1107,10 +1107,33 @@ LoadColouredTiles:
   START_CODE_PATCH $258a0 $25adf
   .incbin "signs.tiles.bin"
   END_CODE_PATCH_HARD
+  
+  
+  
+  ; Pyonkichi's Adventure
+  
+  ; Questions are stored as optimised RLE tiles + raw tilemaps
+  ; We re-encode them and rebuild the table
+.unbackground $3333e $33c9b ; really blank to end of bank?
+
+  START_CODE_PATCH $78fc $790d
+  .dw PyonkichiQuestion1Tiles, $081c, PyonkichiQuestion1Tilemap
+  .dw PyonkichiQuestion2Tiles, $0626, PyonkichiQuestion2Tilemap
+  .dw PyonkichiQuestion3Tiles, $0628, PyonkichiQuestion3Tilemap
+  END_CODE_PATCH_HARD
+
+.bank $c slot "PagedROM"
+.section "Pyonkichi data"
+PyonkichiQuestion1Tiles: .incbin "PyonkichiQuestion1.tiles.pscompr"
+PyonkichiQuestion2Tiles: .incbin "PyonkichiQuestion2.tiles.pscompr"
+PyonkichiQuestion3Tiles: .incbin "PyonkichiQuestion3.tiles.pscompr"
+PyonkichiQuestion1Tilemap: .incbin "PyonkichiQuestion1.tilemap.bin"
+PyonkichiQuestion2Tilemap: .incbin "PyonkichiQuestion2.tilemap.bin"
+PyonkichiQuestion3Tilemap: .incbin "PyonkichiQuestion3.tilemap.bin"
+.ends  
 
 ; TODO: burnt-in text
 ; TODO: popup-window text using alternate font
-; TODO: police screen is custom
 
 ; TODO: 1MB expansion
 ; TODO: no repros splash

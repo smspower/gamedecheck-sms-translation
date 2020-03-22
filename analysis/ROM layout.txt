@@ -82,9 +82,9 @@ $30000  $30eaf  198         Street background?
 
 $32ED0  $32f3c  9           ?
 $32F81  $3333d  67          Text
-$3333e  $33499  23          Text
-$3349A  $336b3  38          Text
-$336B4  $339e7  57          Text
+$3333e  $33499  23          Pyonkichi question 0
+$3349A  $336b3  38          Pyonkichi question 2
+$336B4  $339e7  57          Pyonkichi question 6
 
 $33F03  $33f86  4           ? Same as earlier
 
