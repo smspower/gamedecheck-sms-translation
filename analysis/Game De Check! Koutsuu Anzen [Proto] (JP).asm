@@ -796,7 +796,7 @@ _LABEL_71_:
 	inc hl
 	ld (hl), $02
 	ld sp, $C07F
-	call _LABEL_488_
+	call _LABEL_488_MutePSG
 	ld a, $A8
 	ld (_RAM_C000_), a
 	ld hl, _RAM_C001_
@@ -804,10 +804,10 @@ _LABEL_71_:
 	ld bc, $1FFA
 	ld (hl), $00
 	ldir
-	call _LABEL_479_
-	call _LABEL_240_
-	call _LABEL_415_
-	call _LABEL_442_
+	call _LABEL_479_Delay
+	call _LABEL_240_InitVDPAndVRAM
+	call _LABEL_415_DetectFM
+	call _LABEL_442_DetectKeyboard
 	rst $18	; _LABEL_18_ScreenOn
 	ei
 -:
@@ -1023,7 +1023,7 @@ _DATA_230_:
 _DATA_233_:
 .db $04 $FF $00 $04 $FF $08 $05 $07 $00 $06 $07 $08 $07
 
-_LABEL_240_:
+_LABEL_240_InitVDPAndVRAM:
 	ld hl, _DATA_285_VDPRegisterInitialisation
 	ld b, $16
 	ld c, Port_VDPAddress
@@ -1343,7 +1343,7 @@ _LABEL_3F9_:
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	jp _LABEL_154D_
 
-_LABEL_415_:
+_LABEL_415_DetectFM:
 	ld a, (_RAM_C000_)
 	or $04
 	out (Port_MemoryControl), a
@@ -1372,7 +1372,7 @@ _LABEL_415_:
 	out (Port_MemoryControl), a
 	ret
 
-_LABEL_442_:
+_LABEL_442_DetectKeyboard:
 	ld a, $92
 	out (_PORT_DF_), a
 	ld hl, _RAM_C100_
@@ -1404,7 +1404,7 @@ _LABEL_442_:
 	ld (_RAM_C101_), a
 	ret
 
-_LABEL_479_:
+_LABEL_479_Delay:
 	ld b, $03
 --:
 	push bc
@@ -1418,7 +1418,7 @@ _LABEL_479_:
 	djnz --
 	ret
 
-_LABEL_488_:
+_LABEL_488_MutePSG:
 	ld a, $9F
 	out (Port_PSG), a
 	ld a, $BF
@@ -1915,7 +1915,7 @@ _DATA_A25_:
 	di
 	rst $10	; _LABEL_10_ScreenOff
 	call _LABEL_2DC_
-	call _LABEL_488_
+	call _LABEL_488_MutePSG
 	ld hl, $0300
 	ld (_RAM_C118_), hl
 	ld a, $87

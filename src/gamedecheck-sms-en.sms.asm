@@ -8,7 +8,13 @@ slotsize $4000
 slot 2 $8000 "PagedROM"
 .endme
 
+;.define 1MB
+
+.ifdef 1MB
+.define BankCount 1024/16 ; 1MB expansion
+.else
 .define BankCount 256/16 ; Original rom is 256KB
+.endif
 
 .rombankmap
 bankstotal BankCount
@@ -281,17 +287,23 @@ DrawTilemapEntry:
 
 ; Title screen logo loader code (part 1)
   START_CODE_PATCH $17e $199
+  call TitleScreenLogoPatch
+  END_CODE_PATCH
 
+.bank 0 slot "FixedROM"
+.section "Title screen logo patch" free
+TitleScreenLogoPatch:
   ld a, :TitleScreenTiles
   ld (PAGING),a
   ld hl, TitleScreenTiles
   TileWriteAddressToDE 272
   call zx7_decompress
+  ld a, :TitleScreenTilemap
+  ld (PAGING),a
   ld hl, TitleScreenTilemap
   TilemapWriteAddressToDE 0, 0
   call zx7_decompress
-  
-  END_CODE_PATCH
+.ends
 
 ; Title screen logo loader code (part 2)
   START_CODE_PATCH $1fc $218
@@ -303,6 +315,8 @@ DrawTilemapEntry:
 .section "Title screen logo data" superfree
 TitleScreenTiles:
 .incbin "titlescreen.tiles.zx7"
+.ends
+.section "Title screen logo data 2" superfree
 TitleScreenTilemap:
 .incbin "titlescreen.tilemap.zx7"
 .ends
@@ -895,18 +909,17 @@ _1:   srl e
 
 ; 1MB expansion
 
-.if BankCount > 16
-
+.ifdef 1MB
 .macro FillPage args page
-.bank page slot "PagedROM"
+.bank \1 slot "PagedROM"
 .org 0
 .dbrnd $4000 $00 $ff
 .endm
 
 ; Fill the upper banks with stuff
 .seed 19970327
-.repeat 64-BankCount index n
-  FillPage n + 16
+.repeat BankCount-16 index _n
+  FillPage _n + 16
 .endr
 
 .endif
@@ -1301,8 +1314,44 @@ PyonkichiSpeechBubble\1: .incbin "Pyonkichi-speechbubbles-\1.tiles.zx7"
   PyonkichiSpeechBubbleTiles 16
   PyonkichiSpeechBubbleTiles 17
 
-; TODO: burnt-in text
-; TODO: popup-window text using alternate font
 
-; TODO: 1MB expansion
-; TODO: no repros splash
+; Splash screen
+  ; We hook at the startup...
+  START_CODE_PATCH $009d $009f
+  call Splash
+  END_CODE_PATCH_HARD
+
+.bank 0 slot FixedROM
+.section "Splash screen" free
+Splash:
+  ld a,:SplashTiles
+  ld (PAGING),a
+  ld hl,SplashTiles
+  TileWriteAddressToDE 0
+  call zx7_decompress
+  ld a,:SplashTilemap
+  ld (PAGING),a
+  ld hl,SplashTilemap
+  TilemapWriteAddressToDE 0,0
+  call zx7_decompress
+  ld hl,SplashPalette
+  ld de,$c000
+  ld bc,16
+  call $2ba ; load
+  
+  rst $18 ; screen on
+  ld b,5
+  call $0479+2 ; delay with custom length
+  rst $10  ; screen off
+  call $0240 ; re-init VRAM
+  jp $0425 ; detect FM and return
+.ends
+
+.bank 2 slot "PagedROM"
+.section "Splash screen tiles" superfree
+SplashTiles: .incbin "splash.tiles.zx7"
+.ends
+.section "Splash screen tilemap" superfree
+SplashTilemap: .incbin "splash.tilemap.zx7"
+SplashPalette: .incbin "splash.palette.bin"
+.ends
