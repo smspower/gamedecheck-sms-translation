@@ -56,7 +56,7 @@ _RAM_C106_ dw
 _RAM_C108_ db
 _RAM_C109_ db
 _RAM_C10A_ db
-_RAM_C10B_ db
+_RAM_C10B_VBlankSignal db
 _RAM_C10C_ db
 _RAM_C10D_ db
 _RAM_C10E_ db
@@ -67,7 +67,7 @@ _RAM_C118_ dw
 .ende
 
 .enum $C11D export
-_RAM_C11D_ dw
+_RAM_C11D_TextRevealDelayCounter dw
 .ende
 
 .enum $C120 export
@@ -76,10 +76,10 @@ _RAM_C120_GameState db
 
 .enum $C123 export
 _RAM_C123_ db
-_RAM_C124_ db
-_RAM_C125_ db
-_RAM_C126_ db
-_RAM_C127_ db
+_RAM_C124_DrivingEyeScore db
+_RAM_C125_SpeedSenseScore db
+_RAM_C126_DrivingTechniqueScore db
+_RAM_C127_RiskControlScore db
 _RAM_C128_ db
 _RAM_C129_ db
 _RAM_C12A_ db
@@ -478,7 +478,7 @@ _RAM_C79C_ db
 .ende
 
 .enum $C7A4 export
-_RAM_C7A4_ dw
+_RAM_C7A4_PyonkichiBoxTilemapAddress dw
 .ende
 
 .enum $C7A8 export
@@ -508,8 +508,8 @@ _RAM_C805_DrawnTilemapBytes db ; Number of chars written to tilemap since _RAM_C
 .enum $C807 export
 _RAM_C807_TileIndices dw
 _RAM_C809_ db
-_RAM_C80A_ db
-_RAM_C80B_ db
+_RAM_C80A_RevealTextFlag db
+_RAM_C80B_RevealTextIndex db
 _RAM_C80C_ db
 _RAM_C80D_ db
 _RAM_C80E_ db
@@ -532,25 +532,22 @@ _RAM_C82E_ db
 .ende
 
 .enum $C855 export
-_RAM_C855_ db
-.ende
-
-.enum $C859 export
-_RAM_C859_ dsb $d
+_RAM_C855_TextRevealTilemap dsb 4
+_RAM_C859_TextBuffer dsb $d
 _RAM_C866_ db
 .ende
 
 .enum $C870 export
 _RAM_C870_ db
-_RAM_C871_ db
+_RAM_C871_YTBD_PointsLost_Hundreds db
 _RAM_C872_ db
-_RAM_C873_ db
+_RAM_C873_YTBD_PointsRemaining_Hundreds db
 _RAM_C874_ db
 .ende
 
 .enum $C900 export
 _RAM_C900_Buffer dsb $100
-_RAM_CA00_ dsb $200
+_RAM_CA00_TilemapBackup dsb $200
 _RAM_CC00_ dsb $100
 _RAM_CD00_ dsb $100
 .ende
@@ -863,7 +860,7 @@ _LABEL_FB_:
 	jp z, _LABEL_16B_
 -:
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	ld hl, $0130
 	push hl
 	ld a, (_RAM_C109_)
@@ -1034,7 +1031,7 @@ _LABEL_240_:
 	ld de, $0000
 	ld h, $00
 	ld bc, $4000
-	call _LABEL_2B0_
+	call _LABEL_2B0_FillVRAM
 	ld a, (_DATA_285_VDPRegisterInitialisation)
 	ld (_RAM_C102_VDPRegister0Value), a
 	ld a, (_DATA_285_VDPRegisterInitialisation + 2)
@@ -1088,7 +1085,7 @@ _LABEL_2A8_BlankSpriteTable:
 	ld de, $7F00
 	ld h, $E8
 	ld bc, $0040
-_LABEL_2B0_:
+_LABEL_2B0_FillVRAM:
 	rst $08	; _LABEL_8_VRAMAddressToDE
 -:
 	ld a, h
@@ -1134,7 +1131,7 @@ _LABEL_2DC_:
 	ld de, $7800
 	ld bc, $0380
 	ld hl, $0000
-_LABEL_2E5_:
+_LABEL_2E5_BlankTilemap:
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	ld a, c
 	or a
@@ -1162,10 +1159,10 @@ _LABEL_2F8_:
 	jr nz, -
 	ret
 
-_LABEL_302_:
+_LABEL_302_EmitTilemapRect:
 	push bc
 	rst $08	; _LABEL_8_VRAMAddressToDE
-	ld b, c
+	ld b, c ; rows
 	ld c, Port_VDPData
 -:
 	outi
@@ -1179,7 +1176,7 @@ _LABEL_302_:
 	add hl, bc
 	ex de, hl
 	pop bc
-	djnz _LABEL_302_
+	djnz _LABEL_302_EmitTilemapRect
 	ret
 
 _LABEL_31C_LoadTilemap:
@@ -1881,7 +1878,7 @@ _LABEL_9F7_:
 	bit 7, (hl)
 	jr z, ++
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	ld a, (_RAM_C109_)
 	and $20
 	jr nz, +
@@ -1978,7 +1975,7 @@ _DATA_A25_:
 	ld de, $7D8C
 	ld bc, $0113
 	xor a
-	call _LABEL_302_
+	call _LABEL_302_EmitTilemapRect
   
 	ld hl, _DATA_790E_
 	ld de, $C010
@@ -2067,7 +2064,7 @@ _LABEL_B36_:
 	jr z, ++
 	ex de, hl
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	ld a, (_RAM_C109_)
 	and $3F
 	jr nz, +
@@ -2090,7 +2087,7 @@ _LABEL_B36_:
 	ld de, $4000
 	ld bc, $4000
 	ld h, $00
-	call _LABEL_2B0_
+	call _LABEL_2B0_FillVRAM
 	ld de, $C000
 	ld hl, _DATA_EE69_
 	ld bc, $0011
@@ -2131,7 +2128,7 @@ _LABEL_B9F_:
 	push ix
 	push iy
 	in a, (Port_VDPStatus)
-	ld a, (_RAM_C10B_)
+	ld a, (_RAM_C10B_VBlankSignal)
 	or a
 	jp z, +
 	ld hl, _RAM_C10C_
@@ -2154,7 +2151,7 @@ _LABEL_B9F_:
 
 +:
 	xor a
-	ld (_RAM_C10B_), a
+	ld (_RAM_C10B_VBlankSignal), a
 	call _LABEL_499_
 	pop iy
 	pop ix
@@ -2187,10 +2184,11 @@ _LABEL_C05_:
 	ei
 	ret
 
-_LABEL_C1C_:
-	ld (_RAM_C10B_), a
--:
-	ld a, (_RAM_C10B_)
+_LABEL_C1C_WaitForVBLank:
+  ; Write to RAM
+	ld (_RAM_C10B_VBlankSignal), a
+-:; Wait for it to be cleared
+  ld a, (_RAM_C10B_VBlankSignal)
 	or a
 	jr nz, -
 	ret
@@ -3468,7 +3466,7 @@ _LABEL_18A9_:
 	bit 7, (hl)
 	jp z, _LABEL_18F0_
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	ld a, (_RAM_C10A_)
 	or a
 	jp nz, _LABEL_54E_
@@ -3557,7 +3555,7 @@ _LABEL_195C_:
 	ld de, $7C00
 	ld hl, $00A0
 	ld bc, $0100
-	jp _LABEL_2E5_
+	jp _LABEL_2E5_BlankTilemap
 
 ; 1st entry of Jump Table from 192F (indexed by _RAM_C123_)
 _LABEL_1968_:
@@ -3626,7 +3624,7 @@ _LABEL_199B_:
 	ld bc, $0416
 	ld a, $09
 	ld (_RAM_C104_TilemapHighByte), a
-	call _LABEL_302_
+	call _LABEL_302_EmitTilemapRect
   ; patch start @ 19e3
 	ld a, $84
 	ld (Paging_Slot2), a
@@ -3848,9 +3846,9 @@ _LABEL_1B2B_:
 	call _LABEL_330_DrawTilemapBoxBytes
   ; patch end @ 1b86
 	ld de, (_RAM_C0A1_)
-	call _LABEL_515B_
+	call _LABEL_515B_BCDToNumber
 	ld a, l
-	ld (_RAM_C124_), a
+	ld (_RAM_C124_DrivingEyeScore), a
 	ld c, $00
 	cp $5A
 	jp nc, +
@@ -4156,9 +4154,9 @@ _LABEL_1D60_:
 	call _LABEL_330_DrawTilemapBoxBytes
   ; patch end @ 1da8
 	ld de, (_RAM_C0A1_)
-	call _LABEL_515B_
+	call _LABEL_515B_BCDToNumber
 	ld a, l
-	ld (_RAM_C125_), a
+	ld (_RAM_C125_SpeedSenseScore), a
 	ld a, (_RAM_C0A5_)
 	ld bc, $0000
 	cp $05
@@ -4523,7 +4521,7 @@ _LABEL_208C_:
 	call _LABEL_1911_
 	di
 	ld de, (_RAM_C0A1_)
-	call _LABEL_515B_
+	call _LABEL_515B_BCDToNumber
 	ld a, (_RAM_C0A5_)
 	add a, a
 	ld d, $00
@@ -4539,7 +4537,7 @@ _LABEL_208C_:
 	call _LABEL_5180_
 	ld (_RAM_C0A1_), bc
 	pop af
-	ld (_RAM_C126_), a
+	ld (_RAM_C126_DrivingTechniqueScore), a
 	ld c, $00
 	cp $5A
 	jp nc, +
@@ -4753,6 +4751,7 @@ _LABEL_2200_:
 	ld hl, _DATA_10158_TilesBorders1bpp
 	ld a, $02
 	call _LABEL_36A_Load1bppTiles
+  ; patch start @ 227c
 	ld de, $4480
 	ld hl, _DATA_102F0_TilesStartGoal1bpp
 	ld bc, $0040
@@ -4763,6 +4762,7 @@ _LABEL_2200_:
 	ld bc, $040A
 	xor a
 	call _LABEL_330_DrawTilemapBoxBytes
+  ; patch end @ 2296
 	ld a, $8F
 	ld (Paging_Slot2), a
 	call _LABEL_5087_
@@ -4833,7 +4833,7 @@ _LABEL_22D3_:
 	add hl, hl
 	push hl
 	ld de, (_RAM_C0A1_)
-	call _LABEL_515B_
+	call _LABEL_515B_BCDToNumber
 	pop de
 	and a
 	sbc hl, de
@@ -4842,6 +4842,7 @@ _LABEL_22D3_:
 +:
 	call _LABEL_5180_
 	ld (_RAM_C0A1_), bc
+  ; patch start @ 2329
 	ld a, $84
 	ld (Paging_Slot2), a
 	ld de, $6000
@@ -4861,10 +4862,11 @@ _LABEL_22D3_:
 	ld a, $01
 	ld bc, $0206
 	call _LABEL_330_DrawTilemapBoxBytes
+  ; patch end @ 235c
 	ld de, (_RAM_C0A1_)
-	call _LABEL_515B_
+	call _LABEL_515B_BCDToNumber
 	ld a, l
-	ld (_RAM_C127_), a
+	ld (_RAM_C127_RiskControlScore), a
 	ld c, $00
 	cp $50
 	jp nc, +
@@ -4901,12 +4903,14 @@ _LABEL_2399_:
 	ld de, $7800
 	ld hl, $0100
 	ld bc, $00E0
-	call _LABEL_2E5_
+	call _LABEL_2E5_BlankTilemap ; Blank tilemap?
+  ; patch @ 23b1
 	ld de, $7858
 	ld hl, _DATA_10330_TilemapGoal
 	ld bc, $0408
 	xor a
 	call _LABEL_330_DrawTilemapBoxBytes
+  ; patch end @ 23bd
 	ei
 	ret
 
@@ -5057,7 +5061,7 @@ _LABEL_24A0_:
 	call _LABEL_1903_
 	ld a, $02
 	ld (_RAM_C123_), a
-	call _LABEL_25B5_
+	call _LABEL_25B5_ComputeOverallScore
 	ld a, c
 	ld hl, $9A44
 _LABEL_24AF_:
@@ -5192,7 +5196,7 @@ _LABEL_2591_:
 _LABEL_25B2_:
 	jp _LABEL_58B6_
 
-_LABEL_25B5_:
+_LABEL_25B5_ComputeOverallScore:
 	ld hl, _RAM_C128_
 	ld a, (hl)
 	ld b, $03
@@ -5210,7 +5214,7 @@ _LABEL_25B5_:
 	inc c
 	cp $03
 	ret z
-	ld de, _RAM_C124_
+	ld de, _RAM_C124_DrivingEyeScore
 	call _LABEL_2662_
 	ld a, $04
 	call _LABEL_268A_
@@ -5353,7 +5357,7 @@ _LABEL_268A_:
 	ret
 
 _LABEL_26A6_:
-	ld ix, _RAM_C124_
+	ld ix, _RAM_C124_DrivingEyeScore
 	ld hl, _RAM_C130_
 	ld b, $04
 -:
@@ -5422,7 +5426,7 @@ _LABEL_2700_:
 	bit 7, (hl)
 	jp z, _LABEL_274A_
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	ld a, (_RAM_C10A_)
 	or a
 	jp nz, _LABEL_54E_
@@ -5476,7 +5480,7 @@ _LABEL_2783_:
 	ld (Paging_Slot2), a
 	call _LABEL_53F8_
 	call _LABEL_1748_
-	call _LABEL_5BF2_
+	call _LABEL_5BF2_RevealText
 	call _LABEL_4CA4_
 	ld a, (_RAM_C10D_)
 	and $3F
@@ -5651,6 +5655,7 @@ _LABEL_288E_:
 	ld (_RAM_C421_), a
 	ld a, $19
 	ld (_RAM_C420_), a
+  ; patch start @ 28f5
 	ld de, $4000
 	ld hl, _DATA_1070F_
 	ld a, $04
@@ -5659,6 +5664,7 @@ _LABEL_288E_:
 	ld hl, _DATA_108ED_
 	ld a, $04
 	call _LABEL_38A_LoadRLE
+  ; patch end @ 290a
 	ld a, $8F
 	ld (Paging_Slot2), a
 	ld de, $C000
@@ -5703,6 +5709,7 @@ _LABEL_288E_:
 	ld a, $B4
 	ld (_RAM_C118_), a
 	call _LABEL_2FE8_
+  ; patch start @ 297a
 	ld a, $84
 	ld (Paging_Slot2), a
 	ld de, $5956
@@ -5710,6 +5717,7 @@ _LABEL_288E_:
 	ld bc, $040A
 	xor a
 	call _LABEL_330_DrawTilemapBoxBytes
+  ; patch end @ 298b
 	ld de, $82F7
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	ei
@@ -5829,9 +5837,9 @@ _LABEL_2A3B_:
 	call _LABEL_29B_BlankSpriteTableAndMirror
 	call _LABEL_1903_
 	call _LABEL_1903_
-	ld de, $82FF
+	ld de, $82FF ; name table at $3800
 	rst $08	; _LABEL_8_VRAMAddressToDE
-	ld de, $8800
+	ld de, $8800 ; reset scroll registers
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	inc d
 	rst $08	; _LABEL_8_VRAMAddressToDE
@@ -5844,7 +5852,7 @@ _LABEL_2A3B_:
 	ld hl, $0708
 	ld (_RAM_C118_), hl
 	ld de, (_RAM_C872_)
-	call _LABEL_515B_
+	call _LABEL_515B_BCDToNumber
 	ld b, $00
 	ld a, l
 	cp $5B
@@ -5952,11 +5960,11 @@ _LABEL_2AB7_:
 	ld bc, $0403
 	ld a, $01
 	ld (_RAM_C104_TilemapHighByte), a
-	call _LABEL_302_
+	call _LABEL_302_EmitTilemapRect
 	ld de, $7C14
 	ld hl, _DATA_2CD4_
 	ld bc, $0403
-	call _LABEL_302_
+	call _LABEL_302_EmitTilemapRect
 	ld de, $C001
 	ld hl, _DATA_79BE_ + 1
 	ld bc, $000F
@@ -6034,10 +6042,12 @@ _LABEL_2BFA_:
 	xor a
 	ld (_RAM_C118_), a
 	ld de, $3060
+  ; patch begin @ 2c22
 	ld bc, $0410
 	ld hl, _DATA_10330_TilemapGoal
 	ld a, $10
 	jp _LABEL_3027_
+  ; patch end @ 2c2c
 
 ; 11th entry of Jump Table from 2730 (indexed by _RAM_C10D_)
 _LABEL_2C2D_:
@@ -6058,6 +6068,7 @@ _LABEL_2C2D_:
 	ld (_RAM_C118_), a
 	ld a, $8D
 	call _LABEL_4EE_BufferPush
+  ; patch begin @ 2c47
 	ld a, $84
 	ld (Paging_Slot2), a
 	ld de, $6000
@@ -6068,13 +6079,14 @@ _LABEL_2C2D_:
 	ld hl, _DATA_10370_TilemapScore
 	ld a, $10
 	call _LABEL_3027_
-	ld hl, _RAM_C873_
+	ld hl, _RAM_C873_YTBD_PointsRemaining_Hundreds
 	call _LABEL_51A3_NumberToTilemap
 	ld de, $9078
 	ld bc, $020C
 	ld hl, _RAM_C177_NumberTilemap
 	ld a, $11
 	jp _LABEL_3027_
+  ; patch end @ 2c76
 
 ; 13th entry of Jump Table from 2730 (indexed by _RAM_C10D_)
 _LABEL_2C77_:
@@ -6535,13 +6547,13 @@ _LABEL_2FE8_:
 	ld b, $03
 -:
 	push bc
-	ld hl, _RAM_CA00_
+	ld hl, _RAM_CA00_TilemapBackup
 	ld bc, $0200
 	call +
 	inc d
 	inc d
 	exx
-	ld hl, _RAM_CA00_
+	ld hl, _RAM_CA00_TilemapBackup
 	ld bc, $0200
 	call _LABEL_2BA_LoadToVRAMAtDE
 	inc d
@@ -6549,8 +6561,8 @@ _LABEL_2FE8_:
 	exx
 	pop bc
 	djnz -
-	ld hl, _RAM_CA00_
-	ld de, _RAM_CA00_ + 1
+	ld hl, _RAM_CA00_TilemapBackup
+	ld de, _RAM_CA00_TilemapBackup + 1
 	ld bc, $01FF
 	ld (hl), $00
 	ldir
@@ -6570,80 +6582,86 @@ _LABEL_2FE8_:
 	ret
 
 _LABEL_3027_:
+; a = tilemap high byte to use
+; hl = tilemap data
+; d, e = location to draw at?
 	ld (_RAM_C104_TilemapHighByte), a
 	push hl
-	ld a, (_RAM_C303_)
-	and $F8
-	add a, d
-	jr c, +
-	cp $E0
-	jr c, ++
+    ld a, (_RAM_C303_) ; Y scroll?
+    and $F8 ; round down to multiple of 8
+    add a, d ; add d
+    jr c, + ; account for wrapping
+    cp $E0
+    jr c, ++
 +:
-	add a, $20
+    add a, $20
 ++:
-	ld l, a
-	ld h, $00
-	add hl, hl
-	add hl, hl
-	add hl, hl
-	ld a, (_RAM_C30F_)
-	neg
-	and $F8
-	add a, e
-	rrca
-	rrca
-	ld e, a
-	ld d, $00
-	add hl, de
-	ld de, $7800
-	add hl, de
-	ex de, hl
+    ld l, a
+    ld h, $00
+    add hl, hl
+    add hl, hl
+    add hl, hl
+    ld a, (_RAM_C30F_) ; X scroll?
+    neg
+    and $F8 ; subtract from e and round down to multiple of 8
+    add a, e
+    rrca
+    rrca
+    ld e, a
+    ld d, $00
+    add hl, de
+    ld de, $7800 ; offset into tilemap
+    add hl, de
+    ex de, hl
 	pop hl
+  ; then load tilemap
+  ; patch start @ 3053
 --:
 	push bc
-	ld b, c
-	ld c, $BE
-	push de
+    ld b, c
+    ld c, $BE
+    push de
 -:
-	di
-	rst $08	; _LABEL_8_VRAMAddressToDE
-	ei
-	dec b
-	ld a, (hl)
-	out (Port_VDPData), a
-	inc hl
-	ld c, e
-	inc e
-	inc e
-	ld a, (_RAM_C104_TilemapHighByte)
-	or (hl)
-	out (Port_VDPData), a
-	inc hl
-	ld a, c
-	and $3F
-	add a, $02
-	cp $40
-	jr c, +
-	ld a, c
-	and $C0
-	ld e, a
+      di
+        rst $08	; _LABEL_8_VRAMAddressToDE
+      ei
+      dec b
+      ld a, (hl)
+      out (Port_VDPData), a
+      inc hl
+      ld c, e
+      inc e
+      inc e
+      ld a, (_RAM_C104_TilemapHighByte)
+      or (hl)
+      out (Port_VDPData), a
+      inc hl
+      ld a, c
+      and $3F
+      add a, $02
+      cp $40
+      jr c, +
+      ld a, c
+      and $C0
+      ld e, a
 +:
-	djnz -
-	pop de
-	push hl
-	ld hl, $0040
-	add hl, de
-	ex de, hl
-	ld a, d
-	cp $7F
-	jr nz, +
-	ld a, $78
+      djnz -
+    pop de
+    push hl
+      ld hl, $0040
+      add hl, de
+      ex de, hl
+      ld a, d
+      cp $7F
+      jr nz, +
+      ld a, $78
 +:
-	pop hl
+    pop hl
 	pop bc
 	dec b
 	jp nz, --
 	ret
+  ; patch end @ 308d
 
 ; Data from 308E to 30CD (64 bytes)
 .db $87 $21 $BE $30 $16 $00 $5F $19 $7E $E6 $7F $5F $FD $7E $16 $E5
@@ -6657,7 +6675,7 @@ _LABEL_30CE_:
 	bit 7, (hl)
 	jp z, +
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	ld a, (_RAM_C10A_)
 	or a
 	jp nz, _LABEL_54E_
@@ -8538,7 +8556,7 @@ _LABEL_401E_:
 	ld (_RAM_C104_TilemapHighByte), a
 	ld hl, _DATA_403D_
 	ld bc, $0602
-	jp _LABEL_302_
+	jp _LABEL_302_EmitTilemapRect
 
 ; Data from 403D to 4048 (12 bytes)
 _DATA_403D_:
@@ -9276,7 +9294,7 @@ _LABEL_4541_:
 	set 7, (hl)
 	ld e, a
 	ld d, $00
-	call _LABEL_515B_
+	call _LABEL_515B_BCDToNumber
 	ld a, l
 	and $78
 	rrca
@@ -9993,7 +10011,7 @@ _LABEL_4B02_:
 -:
 	push bc
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	call _LABEL_164E_
 	call _LABEL_54E_
 	pop bc
@@ -10025,7 +10043,7 @@ _LABEL_4B3F_:
 -:
 	push bc
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	call _LABEL_164E_
 	call _LABEL_54E_
 	pop bc
@@ -10117,7 +10135,7 @@ _LABEL_4C06_:
 	ld bc, $0303
 	ld a, $09
 	ld (_RAM_C104_TilemapHighByte), a
-	call _LABEL_302_
+	call _LABEL_302_EmitTilemapRect
 	ei
 	ld hl, _DATA_4C6C_
 	ld de, $C000
@@ -10771,33 +10789,33 @@ _DATA_512A_:
 .db $87 $06 $00 $4F $09 $06 $02 $AF $1A $9E $27 $12 $13 $23 $10 $F8
 .db $C9
 
-_LABEL_515B_:
-	ld a, d
+_LABEL_515B_BCDToNumber:
+	ld a, d ; hundreds digit
 	and $0F
 	ld h, $00
 	ld l, a
 	add hl, hl
-	add hl, hl
+	add hl, hl ; x4
 	push hl
-	add hl, hl
-	add hl, hl
-	add hl, hl
-	push hl
-	add hl, hl
+    add hl, hl
+    add hl, hl
+    add hl, hl ; x32
+    push hl
+      add hl, hl ; x64
+    pop bc
+    add hl, bc
 	pop bc
-	add hl, bc
-	pop bc
-	add hl, bc
+	add hl, bc ; total x100
 	ld a, e
-	and $F0
+	and $F0 ; tens digit
 	rrca
-	ld b, a
+	ld b, a ; x8
 	rrca
-	rrca
-	add a, b
+	rrca ; x2
+	add a, b ; total x10
 	ld c, a
 	ld b, $00
-	ld a, e
+	ld a, e ; units
 	and $0F
 	ld e, a
 	ld d, b
@@ -11909,7 +11927,7 @@ _LABEL_595B_:
     ld de, $7800
     ld bc, $0380
     ld hl, $0000
-    call _LABEL_2E5_
+    call _LABEL_2E5_BlankTilemap
     call _LABEL_276_8x16SpritesOff
     call _LABEL_263_SpriteTableAddress3f00
 	ei
@@ -12155,47 +12173,49 @@ _DATA_5B33_:
 
 ; 1st entry of Jump Table from 5B33 (indexed by _RAM_C809_)
 _LABEL_5B3B_:
-	ld hl, (_RAM_C11D_)
+	ld hl, (_RAM_C11D_TextRevealDelayCounter)
 	dec hl
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ld a, l
 	or h
 	ret nz
 	ld hl, _RAM_C809_
 	inc (hl)
 	ld hl, $0001
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ret
 
 ; 2nd entry of Jump Table from 5B33 (indexed by _RAM_C809_)
 _LABEL_5B50_:
-	ld hl, (_RAM_C11D_)
+	ld hl, (_RAM_C11D_TextRevealDelayCounter)
 	dec hl
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ld a, l
 	or h
 	ret nz
 	ld hl, $000C
-	ld (_RAM_C11D_), hl
-	ld hl, _RAM_C80B_
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
+	ld hl, _RAM_C80B_RevealTextIndex
 	inc (hl)
 	ld a, (hl)
+  ; start patch @ 5b65
 	cp $18
 	jr nc, _LABEL_5BAB_
-	ld hl, _DATA_5BBE_ - 1
+	ld hl, _DATA_5BBE_TextRevealTilemapStartIndices - 1
 	ld c, a
 	ld b, $00
 	add hl, bc
 	ld a, (hl)
-	ld hl, _RAM_C855_
+	ld hl, _RAM_C855_TextRevealTilemap
 	ld b, $04
 -:
 	ld (hl), a
 	inc a
 	inc hl
 	djnz -
+  ; end patch @ 5b7a
 	ld hl, (_RAM_C802_StartTilemapAddress)
-	ld a, (_RAM_C80B_)
+	ld a, (_RAM_C80B_RevealTextIndex)
 	cp $0E
 	jr nz, +
 	ld bc, $0090
@@ -12207,12 +12227,12 @@ _LABEL_5B50_:
 	add hl, bc
 	ld (_RAM_C802_StartTilemapAddress), hl
 	ld a, $01
-	ld (_RAM_C80A_), a
-	ld a, (_RAM_C80B_)
+	ld (_RAM_C80A_RevealTextFlag), a
+	ld a, (_RAM_C80B_RevealTextIndex)
 	dec a
 	ld c, a
 	ld b, $00
-	ld hl, _RAM_C859_
+	ld hl, _RAM_C859_TextBuffer
 	add hl, bc
 	ld a, (hl)
 	cp $99 ; space
@@ -12223,7 +12243,7 @@ _LABEL_5B50_:
 
 _LABEL_5BAB_:
 	ld hl, $0080
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ld hl, _RAM_C809_
 	inc (hl)
 	ld bc, (_RAM_C872_)
@@ -12234,15 +12254,15 @@ _LABEL_5BAB_:
 	ret
 
 ; Data from 5BBE to 5BD4 (23 bytes)
-_DATA_5BBE_:
+_DATA_5BBE_TextRevealTilemapStartIndices:
 .db $80 $84 $88 $8C $90 $94 $98 $9C $A0 $A4 $A8 $AC $B0 $B4 $B8 $BC
 .db $C0 $C4 $C8 $CC $D0 $D4 $D8
 
 ; 3rd entry of Jump Table from 5B33 (indexed by _RAM_C809_)
 _LABEL_5BD5_:
-	ld hl, (_RAM_C11D_)
+	ld hl, (_RAM_C11D_TextRevealDelayCounter)
 	dec hl
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ld a, l
 	or h
 	ret nz
@@ -12250,9 +12270,9 @@ _LABEL_5BD5_:
 
 ; 4th entry of Jump Table from 5B33 (indexed by _RAM_C809_)
 _LABEL_5BE2_:
-	ld hl, (_RAM_C11D_)
+	ld hl, (_RAM_C11D_TextRevealDelayCounter)
 	dec hl
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ld a, l
 	or h
 	ret nz
@@ -12260,47 +12280,48 @@ _LABEL_5BE2_:
 	ld (_RAM_C10D_), a
 	ret
 
-_LABEL_5BF2_:
-	ld a, (_RAM_C80A_)
+_LABEL_5BF2_RevealText:
+	ld a, (_RAM_C80A_RevealTextFlag)
 	or a
 	ret z
 	xor a
-	ld (_RAM_C80A_), a
-	ld hl, _RAM_C855_
+	ld (_RAM_C80A_RevealTextFlag), a
+	ld hl, _RAM_C855_TextRevealTilemap
 	ld de, (_RAM_C802_StartTilemapAddress)
-	ld bc, $0202
+	ld bc, $0202 ; dimensions
 	xor a
 	ld (_RAM_C104_TilemapHighByte), a
-	jp _LABEL_302_
+	jp _LABEL_302_EmitTilemapRect
 
 ; Data from 5C0C to 5C22 (23 bytes)
-_DATA_5C0C_:
+_DATA_5C0C_PointsLostRemaining:
 .db $0D $46 $1C $46 $99 $99 $99 $99 $1C $46 $99 $99 $99 $3B $1A $1C
 .db $46 $99 $99 $99 $99 $1C $46
 
 _LABEL_5C23_:
+; Police screen
 	di
 	rst $10	; _LABEL_10_ScreenOff
-	ld de, $82FD
+	ld de, $82FD ; Switch tilemap address
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	ld de, $7000
 	ld bc, $0300
 	ld hl, $0000
-	call _LABEL_2E5_
+	call _LABEL_2E5_BlankTilemap
 	call _LABEL_263_SpriteTableAddress3f00
 	ei
-	call _LABEL_61B9_
+	call _LABEL_61B9_ ; ?
 	ld a, $87
 	ld (Paging_Slot2), a
-	ld hl, _DATA_63F6_
+	ld hl, _DATA_63F6_PoliceScreenPalette
 	ld de, $C000
 	ld bc, $0011
-	call _LABEL_77B6_CopyToVRAM
-	call _LABEL_4C95_
-	call _LABEL_5A53_
+	call _LABEL_77B6_CopyToVRAM ; load palette
+	call _LABEL_4C95_ ; inits some state
+	call _LABEL_5A53_ ; text box with border
 	ld a, $88
 	ld (Paging_Slot2), a
-	ld hl, _DATA_23CEE_
+	ld hl, _DATA_23CEE_PoliceTiles
 	ld de, $6080
 	call _LABEL_633D_LoadTilesRLE
 	ld a, $87
@@ -12310,18 +12331,19 @@ _LABEL_5C23_:
 	ld hl, _DATA_1DF1D_
 	ld de, $748E
 	ld bc, $0408
-	call _LABEL_630C_
+	call _LABEL_630C_DrawTilemap
 	ld hl, _DATA_1DF3D_
 	ld de, $74A2
 	ld bc, $0403
-	call _LABEL_630C_
+	call _LABEL_630C_DrawTilemap
 	ld hl, _DATA_1DF49_
 	ld de, $74AA
 	ld bc, $0403
-	call _LABEL_630C_
+	call _LABEL_630C_DrawTilemap
+  ; start code patch @ 5c8f
 	ld a, $8A
 	ld (Paging_Slot2), a
-	ld hl, _DATA_2BF04_
+	ld hl, _DATA_2BF04_PoliceScreenKanji ; TODO: remove this?
 	ld de, $6600
 	call _LABEL_633D_LoadTilesRLE
 	ld a, $87
@@ -12337,25 +12359,30 @@ _LABEL_5C23_:
 ++:
 	ld de, $709A
 	ld bc, $0204
-	call _LABEL_630C_
-	ld a, (_RAM_C874_)
+	call _LABEL_630C_DrawTilemap ; draw kanji to tilemap
+  ; end patch @ 5cb9
+	
+  ld a, (_RAM_C874_)
 	call _LABEL_5D95_
 
-	ld hl, _DATA_5C0C_ ; base text
-	ld de, _RAM_C859_ ; buffer
-	ld bc, $0017
+  ; start patch @ 5cc0
+	ld hl, _DATA_5C0C_PointsLostRemaining ; base text
+	ld de, _RAM_C859_TextBuffer ; buffer
+	ld bc, $0017 ; too short now
 	ldir
   
-	ld hl, _RAM_C871_
+  ; insert score digits
+	ld hl, _RAM_C871_YTBD_PointsLost_Hundreds
 	ld c, $05
-	call _LABEL_5D22_
-	ld hl, _RAM_C873_
+	call _LABEL_5D22_ScoreToBuffer
+	ld hl, _RAM_C873_YTBD_PointsRemaining_Hundreds
 	ld c, $12
-	call _LABEL_5D22_
+	call _LABEL_5D22_ScoreToBuffer
 	ld a, $02
 	ld (_RAM_C80C_), a
 
-	ld hl, _RAM_C859_ ; load tiles to VRAM
+  ; Then load the tiles needed
+	ld hl, _RAM_C859_TextBuffer ; load tiles to VRAM
 	ld b, $17
 	ld de, $5000
 	call _LABEL_6308_SetVRAMAddressToDE
@@ -12364,46 +12391,59 @@ _LABEL_5C23_:
 	ld a, (_RAM_C872_)
 	cp $60
 	jr nc, +
-	ld a, (_RAM_C873_)
+	ld a, (_RAM_C873_YTBD_PointsRemaining_Hundreds)
 	or a
 	jr nz, +
-	ld a, $0D
+	ld a, $0D ; first 13
 	ld (_RAM_C80C_), a
 
-	ld hl, _RAM_C866_ ; Load tiles to VRAM again, last 10 only
+	ld hl, _RAM_C859_TextBuffer + 13 ; _RAM_C866_ ; Load tiles to VRAM again, last 10 only
 	ld b, $0A
 	ld de, $5680
 	call _LABEL_6308_SetVRAMAddressToDE
 	call _LABEL_5D62_LoadFontTilesWithColour
+  ; end patch @ 5d0d
 +:
 	ld hl, $7288
 	ld (_RAM_C802_StartTilemapAddress), hl
 	ld hl, _RAM_C809_
 	ld (hl), $00
 	ld hl, $0060
-	ld (_RAM_C11D_), hl
-	jp _LABEL_18_ScreenOn
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
+	jp _LABEL_18_ScreenOn ; and ret
 
-_LABEL_5D22_:
-	ld a, (hl)
+_LABEL_5D22_ScoreToBuffer:
+; c = offset into text buffer
+; hl points to score
+	ld a, (hl) ; read byte to a
 	dec hl
-	ld b, (hl)
-	ld de, $C859
+	ld b, (hl) ; preceding to b
+
+  ; hl points into text buffer
+	ld de, _RAM_C859_TextBuffer
 	ld l, c
 	ld h, $00
 	add hl, de
+  
+  ; mask a
 	and $0F
 	jr z, +
+  ; offset
 	add a, $9A
+  ; load back to buffer
 	ld (hl), a
+  ; get high nibble of b
 	ld a, b
 	and $F0
 	rrca
 	rrca
 	rrca
 	rrca
+  ; same again
+  ; offset
 	add a, $9A
 	inc hl
+  ; write to buffer
 	ld (hl), a
 	ld a, b
 	and $0F
@@ -12523,7 +12563,7 @@ _LABEL_5DD6_:
 	ld bc, $00E0
 	ld hl, $0000
 	di
-	call _LABEL_2E5_
+	call _LABEL_2E5_BlankTilemap
 	ei
 	ld a, $0D
 	ld (_RAM_C120_GameState), a
@@ -12607,7 +12647,7 @@ _LABEL_5E6C_:
 	call _LABEL_5AED_
 _LABEL_5EB5_:
 	ld hl, $0258
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ld hl, _RAM_C70C_
 	set 7, (hl)
 	jp _LABEL_18_ScreenOn
@@ -12616,9 +12656,9 @@ _LABEL_5EC3_:
 	ld a, (_RAM_C109_)
 	and $30
 	jr nz, +
-	ld hl, (_RAM_C11D_)
+	ld hl, (_RAM_C11D_TextRevealDelayCounter)
 	dec hl
-	ld (_RAM_C11D_), hl
+	ld (_RAM_C11D_TextRevealDelayCounter), hl
 	ld a, l
 	or h
 	ret nz
@@ -12948,7 +12988,7 @@ _LABEL_619B_:
 	ld de, $7800
 	ld bc, $0380
 	ld hl, $0000
-	call _LABEL_2E5_
+	call _LABEL_2E5_BlankTilemap
 	call _LABEL_276_8x16SpritesOff
 	call _LABEL_263_SpriteTableAddress3f00
 	ei
@@ -13200,7 +13240,7 @@ _LABEL_6308_SetVRAMAddressToDE:
 	ei
 	ret
 
-_LABEL_630C_:
+_LABEL_630C_DrawTilemap:
 	push bc
 	call _LABEL_6308_SetVRAMAddressToDE
 	ld b, c
@@ -13215,7 +13255,7 @@ _LABEL_630C_:
 	add hl, bc
 	ex de, hl
 	pop bc
-	djnz _LABEL_630C_
+	djnz _LABEL_630C_DrawTilemap
 	ret
 
 _LABEL_6327_LoadTilemap:
@@ -13304,7 +13344,7 @@ _DATA_63D6_Palette:
 .db $08 $00 $3F $38 $3C $03 $0F $30 $20 $2A $00 $00 $00 $00 $00 $00
 
 ; Data from 63F6 to 6406 (17 bytes)
-_DATA_63F6_:
+_DATA_63F6_PoliceScreenPalette:
 .db $08 $00 $3F $20 $2F $2B $0B $16 $04 $2A $30 $3E $01 $0F $00 $03
 .db $08
 
@@ -14415,11 +14455,13 @@ _LABEL_6DA2_:
 	ld de, $0000
 	call _LABEL_673E_
 	ld a, (iy+22)
+  ; patch start @ 6dca
 	ld hl, _DATA_6DF3_
 	call _LABEL_6191_ReadAthPointerFromHL
 	ld (iy+4), l
 	ld (iy+5), h
 	ld (iy+21), $FF
+  ; patch end @ 6dd9
 ; 93rd entry of Jump Table from 1672 (indexed by _RAM_C400_)
 _LABEL_6DDA_:
 	bit 7, (iy+0)
@@ -15299,7 +15341,7 @@ _LABEL_74A1_:
 	ld d, a
 	add a, a
 	add a, d
-	call _LABEL_782D_
+	call _LABEL_782D_PyonkichiShowBox
 	jp _LABEL_758C_
 
 ; 14th entry of Jump Table from 312E (indexed by _RAM_C70C_)
@@ -15644,7 +15686,7 @@ _LABEL_77B6_CopyToVRAM:
 	ei
 	jp _LABEL_2BB_WritetoVRAM
 
-_LABEL_77BC_:
+_LABEL_77BC_EmitTilemapRow:
 	ld a, e
 	and $3F
 	add a, c
@@ -15736,114 +15778,123 @@ _LABEL_781C_:
 	djnz _LABEL_781C_
 	ret
 
-_LABEL_782D_:
+_LABEL_782D_PyonkichiShowBox:
+  ; a = ?
+  ; _RAM_C303_ = scroll position?
 	push af
-	ld hl, _RAM_CA00_
-	exx
-	ld a, (_RAM_C303_)
-	and $F8
-	ld d, $00
-	add a, a
-	rl d
-	add a, a
-	rl d
-	add a, a
-	rl d
-	ld e, a
-	ld hl, $3800
-	add hl, de
-	ld (_RAM_C7A4_), hl
-	ld a, $8C
-	ld (Paging_Slot2), a
-	pop af
-	push hl
-	ld e, a
-	ld d, $00
-	ld hl, _DATA_78FC_
-	add hl, de
-	ld e, (hl)
-	inc hl
-	ld d, (hl)
-	inc hl
-	push hl
-	ex de, hl
-	ld de, $58E0
-	ld a, $04
-	call _LABEL_633D_LoadTilesRLE
-	pop hl
-	ld c, (hl)
-	inc hl
-	ld b, (hl)
-	inc hl
-	ld e, (hl)
-	inc hl
-	ld d, (hl)
-	pop hl
-_LABEL_786F_:
-	ld a, $01
-	call _LABEL_C1C_
-	di
-	ld a, l
-	out (Port_VDPAddress), a
-	ld a, h
-	out (Port_VDPAddress), a
-	ei
-	exx
-	ld b, $40
-	ld c, Port_VDPData
-	jp _LABEL_7884_
+    ld hl, _RAM_CA00_TilemapBackup
+    exx
+      ; compute tilemap address from scroll position
+      ld a, (_RAM_C303_)
+      and $F8
+      ld d, $00
+      add a, a
+      rl d
+      add a, a
+      rl d
+      add a, a
+      rl d
+      ld e, a
+      ld hl, $3800
+      add hl, de
+      ld (_RAM_C7A4_PyonkichiBoxTilemapAddress), hl
+      ld a, $8C ; guess the script is here?
+      ld (Paging_Slot2), a
+      pop af ; get original a back
+      push hl
+        ld e, a
+        ld d, $00
+        ld hl, _DATA_78FC_PyonkichiQuestionsTable ; table of script entries, indexes are multiples of 6
+        ; First entry is the tile data
+        add hl, de
+        ld e, (hl)
+        inc hl
+        ld d, (hl)
+        inc hl
+        push hl
+          ex de, hl
+          ld de, $58E0 ; Tilemap address
+          ld a, $04 ; bitplanes
+          call _LABEL_633D_LoadTilesRLE
+        pop hl
+        ; Next is dimensions?
+        ld c, (hl)
+        inc hl
+        ld b, (hl)
+        inc hl
+        ; Then tilemap?
+        ld e, (hl)
+        inc hl
+        ld d, (hl)
+      pop hl ; get tilemap address back
 
-_LABEL_7884_:
-	ini
-	nop
-	nop
-	jp nz, _LABEL_7884_
-	exx
-	push bc
-	push hl
-	push de
-	ld a, (_RAM_C30F_)
-	and $F8
-	neg
-	rrca
-	rrca
-	ld e, a
-	ld d, $00
-	add hl, de
-	ld a, $40
-	or h
-	ld h, a
-	pop de
-	ex de, hl
-	ld b, $01
-	ld a, $8C
-	ld (Paging_Slot2), a
-	call _LABEL_77BC_
-	ex de, hl
-	pop hl
-	ld a, $3F
-	and h
-	ld h, a
-	ld bc, $0040
-	add hl, bc
-	ld a, h
-	cp $3F
-	jp c, +
-	ld h, $38
+-:    ld a, $01
+      call _LABEL_C1C_WaitForVBLank
+      ; set the write address
+      di
+        ld a, l
+        out (Port_VDPAddress), a
+        ld a, h
+        out (Port_VDPAddress), a
+      ei
+    exx
+    ld b, $40 ; bytes count
+    ld c, Port_VDPData
+    jp + ; no-op
 +:
-	pop bc
-	djnz _LABEL_786F_
-	ret
+-:
+    ini
+    nop
+    nop
+    jp nz, - ; read 64 bytes = 1 tilemap row
+    exx
+      ; b = row count
+      ; c = tilemap width in bytes?
+      push bc
+        push hl
+          push de
+            ld a, (_RAM_C30F_) ; x scroll
+            and $F8 ; compute where to write
+            neg
+            rrca
+            rrca
+            ld e, a
+            ld d, $00
+            add hl, de
+            ld a, $40
+            or h
+            ld h, a
+          pop de
+          ex de, hl
+          ld b, $01 ; rows?
+          ld a, $8C
+          ld (Paging_Slot2), a
+          call _LABEL_77BC_EmitTilemapRow
+          ex de, hl
+        pop hl
+        ; move forward one row, wrapping as needed
+        ld a, $3F
+        and h
+        ld h, a
+        ld bc, $0040
+        add hl, bc
+        ld a, h
+        cp $3F
+        jp c, +
+        ld h, $38
++:    pop bc
+      djnz -
+      ret
 
 _LABEL_78C2_:
-	ld de, (_RAM_C7A4_)
-	ld hl, _RAM_CA00_
+	ld de, (_RAM_C7A4_PyonkichiBoxTilemapAddress)
+	ld hl, _RAM_CA00_TilemapBackup
 	ld b, $08
 	ld c, Port_VDPData
 -:
 	push af
 	ld a, $01
-	call _LABEL_C1C_
+	call _LABEL_C1C_WaitForVBLank
 	pop af
 	ld a, e
 	out (Port_VDPAddress), a
@@ -15874,9 +15925,10 @@ _LABEL_78E2_:
 	ret
 
 ; Pointer Table from 78FC to 790D (9 entries, indexed by unknown)
-_DATA_78FC_:
-.dw _DATA_3333E_ _DATA_81C_ _DATA_339E8_ _DATA_3349A_ _DATA_626_ _DATA_33AC8_ _DATA_336B4_ _DATA_628_
-.dw _DATA_33BAC_
+_DATA_78FC_PyonkichiQuestionsTable:
+.dw _DATA_3333E_PyonkichiQuestion1TilesRLE $081C _DATA_339E8_ 
+.dw _DATA_3349A_PyonkichiQuestion2TilesRLE $0626 _DATA_33AC8_ 
+.dw _DATA_336B4_ $0628 _DATA_33BAC_
 
 ; Data from 790E to 793D (48 bytes)
 _DATA_790E_:
@@ -19725,9 +19777,22 @@ _DATA_14ED2_:
 ; 1st entry of Pointer Table from 6DF3 (indexed by _RAM_C416_)
 ; Data from 14FD2 to 14FFF (46 bytes)
 _DATA_14FD2_:
-.db $0F $00 $00 $7B $00 $08 $7C $00 $10 $7C $00 $18 $7C $00 $20 $7D
-.db $08 $00 $7E $08 $08 $7F $08 $10 $80 $08 $18 $81 $08 $20 $82 $10
-.db $00 $83 $10 $08 $84 $10 $10 $85 $10 $18 $84 $10 $20 $86
+.db $0F 
+.db $00 $00 $7B 
+.db $00 $08 $7C 
+.db $00 $10 $7C 
+.db $00 $18 $7C 
+.db $00 $20 $7D
+.db $08 $00 $7E 
+.db $08 $08 $7F 
+.db $08 $10 $80 
+.db $08 $18 $81 
+.db $08 $20 $82 
+.db $10 $00 $83 
+.db $10 $08 $84 
+.db $10 $10 $85 
+.db $10 $18 $84 
+.db $10 $20 $86
 
 ; 2nd entry of Pointer Table from 6DF3 (indexed by _RAM_C416_)
 ; Data from 15000 to 15048 (73 bytes)
@@ -22967,7 +23032,7 @@ _DATA_23C6E_:
 .db $18 $00 $00 $00 $18 $00 $00 $00 $18 $00 $00 $00 $18 $00 $00 $00
 
 ; Data from 23CEE to 23FFF (786 bytes)
-_DATA_23CEE_:
+_DATA_23CEE_PoliceTiles:
 .db $07 $00 $81 $01 $03 $00 $8D $01 $40 $67 $ED $4B $78 $FC $FC $FE
 .db $00 $FF $9C $39 $05 $00 $83 $98 $DC $CA $07 $00 $81 $31 $06 $00
 .db $02 $C0 $9E $02 $05 $0B $13 $A6 $7E $00 $00 $96 $9C $39 $33 $66
@@ -23125,7 +23190,7 @@ _DATA_27DA6_:
 .incbin "Game De Check! Koutsuu Anzen [Proto] (JP)_DATA_28000_.inc"
 
 ; Data from 2BF04 to 2BFFF (252 bytes)
-_DATA_2BF04_:
+_DATA_2BF04_PoliceScreenKanji:
 .db $7F $00 $81 $00 $00 $B3 $60 $33 $31 $07 $00 $37 $FB $33 $CC $FC
 .db $98 $FE $00 $FC $0C $FC $30 $1F $18 $18 $1F $18 $1A $1B $04 $FE
 .db $00 $08 $FE $0E $0C $0C $30 $37 $33 $37 $30 $68 $E7 $43 $60 $FE
@@ -24817,7 +24882,7 @@ _DATA_32F81_:
 
 ; 1st entry of Pointer Table from 78FC (indexed by unknown)
 ; Data from 3333E to 33499 (348 bytes)
-_DATA_3333E_:
+_DATA_3333E_PyonkichiQuestion1TilesRLE:
 .db $0A $FF $81 $BF $03 $DF $02 $BF $04 $FF $90 $CF $F7 $F7 $FB $FF
 .db $FF $F8 $F6 $EE $DE $DD $BD $FF $FF $1F $EF $02 $F7 $03 $FB $02
 .db $FD $85 $FB $F8 $A7 $97 $F7 $05 $FF $88 $4F $77 $7B $FB $FB $F7
@@ -24843,7 +24908,7 @@ _DATA_3333E_:
 
 ; 4th entry of Pointer Table from 78FC (indexed by unknown)
 ; Data from 3349A to 336B3 (538 bytes)
-_DATA_3349A_:
+_DATA_3349A_PyonkichiQuestion2TilesRLE:
 .db $0C $FF $83 $FE $71 $8F $05 $FF $A0 $0F $F7 $FB $FB $F9 $FD $FD
 .db $EE $F0 $FE $DF $E0 $FB $FD $F7 $9B $7F $FF $4F $3F $FF $FF $F8
 .db $F6 $EE $DE $DD $BD $FF $FF $1F $EF $02 $F7 $02 $FB $82 $FF $FC

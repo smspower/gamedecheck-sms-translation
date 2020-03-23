@@ -31,8 +31,8 @@ $10158  $10177  4           1bpp box
 $10178  $1032f  55          1bpp text - Goal, Start, ...
 
 $10550  $1070e  32          Text: numbers
-$1070f  $108ec  36          Text
-$108ed  $10966  8           Text
+$1070f  $108ec  36          Text for YTBD part 1
+$108ed  $10966  8           Text for YTBD part 2
 
 $18000  $189ac  122         Logo text
 $189ad  $18b6c              Tilemap for above
@@ -71,7 +71,7 @@ $268C0  $27332  142         ?
 
 $28000  $2f9f1  Lots        Rabbit sprites 4bpp uncompressed with some metadata
 
-$2BF04  $2bf94  16          Text
+$2BF04  $2bf94  16          Police screen kanji for violation, accident
 
 $2FB18  $2fbd1  10          1, 2, 3
 $2FBD2  $2fc24  4           Hand
@@ -81,10 +81,10 @@ $2ff03  $2ff87  4           ?
 $30000  $30eaf  198         Street background?
 
 $32ED0  $32f3c  9           ?
-$32F81  $3333d  67          Text
-$3333e  $33499  23          Text
-$3349A  $336b3  38          Text
-$336B4  $339e7  57          Text
+$32F81  $3333d  67          Speech bubbles for Pyonkichi's Adventure
+$3333e  $33499  23          Pyonkichi question 0
+$3349A  $336b3  38          Pyonkichi question 2
+$336B4  $339e7  57          Pyonkichi question 6
 
 $33F03  $33f86  4           ? Same as earlier
 

@@ -1,6 +1,5 @@
 .unbackground $2ca4 $2cc5
 .unbackground $2d50 $2d5d
-.unbackground $5c0c $5c22
 .unbackground $5fdf $5fe3
 .unbackground $1d398 $1d3a0
 .unbackground $1d3a1 $1d3a8
@@ -64,20 +63,16 @@ Script2ca4: .asc "Select Mode", $ff, $ff, $fd, "        Car", $ff, $ff, $ff, "  
 Script2d50: .asc "The game is over.", $fe
 .ends
 .bank 0 slot 0
-.section "Script5c0c" free
-Script5c0c: .asc "Lost    Points     Remaining    Points"
-.ends
-.bank 0 slot 0
 .section "Script5fdf" free
 Script5fdf: .asc "Results", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d398" free
-Script1d398: .asc "ドライビングアイ", $fe
+Script1d398: .asc " Driving Eye ", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3a1" free
-Script1d3a1: .asc "Sense of Speed", $fe
+Script1d3a1: .asc " Speed Sense ", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d3a9" free
@@ -113,7 +108,7 @@ Script1d3fb: .asc "Move left or right", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d404" free
-Script1d404: .asc "Press when you see", $fe
+Script1d404: .asc "Push when parrot waves __", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d412" free
@@ -133,7 +128,7 @@ Script1d428: .asc "Practice", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d42e" free
-Script1d42e: .asc "Starting the test", $fe
+Script1d42e: .asc "Start of the test", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d439" free
@@ -145,11 +140,11 @@ Script1d491: .asc "You will start with 100", $ff, "points. If there are any", $f
 .ends
 .bank 7 slot 2
 .section "Script1d4f0" free
-Script1d4f0: .asc "You did    ", $fe
+Script1d4f0: .asc "You have committed a", $ff, "violation.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d4fe" free
-Script1d4fe: .asc "You caused 　　", $fd, $fe
+Script1d4fe: .asc "You have caused an", $ff, "accident.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d50f" free
@@ -161,19 +156,19 @@ Script1d51a: .asc "Game Over", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d522" free
-Script1d522: .asc "うごいているものをみわけるし", $fd, "りょくと、ひろうしやすいかど", $fd, "うかをみるためのテストです。", $fd, "　まどのそとをよこぎるものが", $fd, "なにかをあててください。", $fe
+Script1d522: .asc "This will test your ability", $ff, "to recognize moving objects", $ff, "and whether or not you", $ff, "become easily tired.", $fd, "Please guess at which", $ff, "objects pass by outside the", $ff, "window.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d56b" free
-Script1d56b: .asc "ただしいスピードかんかくを", $fd, "もっているか、あせりやすい", $fd, "けいこうがないかをみるため", $fd, "のテストです。", $fd, "　はしってくるどうぶつを、", $fd, "つかまえてください。", $fe
+Script1d56b: .asc "This will test if you have", $ff, "a proper sense of speed", $ff, "and that you don't have a", $ff, "tendency to become", $ff, "impatient easily.", $fd, "Try to catch each animal", $ff, "as it flies by.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d5b6" free
-Script1d5b6: .asc "ちゅういりょくをてきせいには", $fd, "いぶんできるか、またそのちゅ", $fd, "ういりょくをじぞくできるかを", $fd, "みるためのテストです。まえを", $fd, "はしっているオートバイのあと", $fd, "を、ついていってください。", $fe
+Script1d5b6: .asc "This will test your", $ff, "attentiveness and how long", $ff, "that attentiveness lasts.", $fd, "Please follow behind the", $ff, "motorcycle in front of you.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d60f" free
-Script1d60f: .asc "[Awaiting translation]", $fe
+Script1d60f: .asc "This will test your correct", $ff, "judgement of, and quick", $ff, "response to, complicated", $ff, "situations.", $fd, "When the parot waves a flag,", $ff, "push the button that matches", $ff, "its color.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1d668" free
@@ -189,75 +184,75 @@ Script1da14: .asc "Combined Results", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da1d" free
-Script1da1d: .asc "ドライビングアイ", $fe
+Script1da1d: .asc "Driving Eye", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da26" free
-Script1da26: .asc "[Sense of Speed]", $fe
+Script1da26: .asc "Speed Sense", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da2e" free
-Script1da2e: .asc "~Driving Technique~", $fe
+Script1da2e: .asc "Driving Technique", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da3a" free
-Script1da3a: .asc "~Risk Control~", $fe
+Script1da3a: .asc "Risk Control", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da5e" free
-Script1da5e: .asc "Your driving sense is", $fd, "very high level. This is", $fd, "how you should safely", $fd, "drive.", $fe
+Script1da5e: .asc "Your driving sense is very", $ff, "high level.", $fd, "This is how you should", $ff, "safely drive.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1da96" free
-Script1da96: .asc "Your driving sense is", $fd, "high level. Keep up", $fd, "your patience and", $fd, "your safe driving.", $fe
+Script1da96: .asc "Your driving sense is high", $ff, "level.", $fd, "Keep up your patience and", $ff, "your safe driving.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dace" free
-Script1dace: .asc "あなたのドライビングセンスは", $fd, "りょうこうです。これからも、", $fd, "スピードとしゃかんきょりに、", $fd, "ちゅういし、あんぜんうんてん", $fd, "にこころがけましょう。", $fe
+Script1dace: .asc "You are a fine driver.", $fd, "Keep an eye on your speed", $ff, "and the distance between", $ff, "cars when driving.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1db16" free
-Script1db16: .asc "あなたはあせったり、あわてや", $fd, "すいけいこうがあるので、ひご", $fd, "ろからこころをおちつけて、き", $fd, "もちをうんてんにしゅうちゅう", $fd, "するようにつとめましょう。", $fe
+Script1db16: .asc "You have a tendency to be", $ff, "impatient and easily panic.", $fd, "Calm yourself and", $ff, "concentrate on driving.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1db60" free
-Script1db60: .asc "こうそくどうろをうんてんする", $fd, "ときや、つかれているときには", $fd, "しりょくがていかするので、２", $fd, "じかんに１かいはきゅうけいを", $fd, "とるようにしましょう。", $fe
+Script1db60: .asc "When driving on the highway,", $ff, "your eyesight will diminish", $ff, "as you become tired. Be sure", $ff, "to take a break every two", $ff, "hours.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dba8" free
-Script1dba8: .asc "　こうそくどうろやよるのドラ", $fd, "イブは、しりょくがていかしや", $fd, "すいので、とくにちゅういし、", $fd, "つかれているときのドライブは", $fd, "ひかえましょう。", $fe
+Script1dba8: .asc "It easy for your eyesight to", $ff, "diminish while driving on", $ff, "the highway or at night, so", $ff, "be extra cautious and", $ff, "refrain from driving when", $ff, "tired.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dbed" free
-Script1dbed: .asc "　あなたは、あせりやすいけい", $fd, "こうがあるので、くるまのかげ", $fd, "からのこどものとびだしなどに", $fd, "ちゅういし、しんちょうなうん", $fd, "てんにこころがけましょう。", $fe
+Script1dbed: .asc "You have a tendency to be", $ff, "impatient, so be sure to", $ff, "drive carefully and watch", $ff, "out for things like children", $ff, "running into the street.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dc37" free
-Script1dc37: .asc "しんごうやひょうしきをはやめ", $fd, "にみるとともに、うせつやしん", $fd, "ろへんこうのさいには、けっし", $fd, "てむりをしないようにきをつけ", $fd, "ましょう。", $fe
+Script1dc37: .asc "You must be careful to not", $ff, "react strongly as soon as", $ff, "you see traffic signals or", $ff, "signs, or when making right", $ff, "turns or changing direction.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dc79" free
-Script1dc79: .asc "しゃかんきよりをじゅうぶんに", $fd, "とって、スピードはひかえめに", $fd, "し、つねに、こころによゆうを", $fd, "もって、あんぜんうんてんに、", $fd, "こころがけましょう。", $fe
+Script1dc79: .asc "Maintain plenty of distance", $ff, "between vehicles, maintain a", $ff, "sensible speed, and always", $ff, "remain calm in order to", $ff, "drive safely.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dcc0" free
-Script1dcc0: .asc "せまいどうろやみとおしのわる", $fd, "いところではむりをせず、また", $fd, "とっさのばあいにもあわてずに", $fd, "たいおうできるように、ひごろ", $fd, "からこころがけましょう。", $fe
+Script1dcc0: .asc "Do not force your way", $ff, "through narrow roads or", $ff, "places with bad visibility,", $ff, "and remember to keep calm", $ff, "during an emergency.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dd09" free
-Script1dd09: .asc "　あなたはちょっとしたことで", $fd, "きぶんがどうようしやすいので", $fd, "、つねにこころをおちつけて、", $fd, "うんてんにしゅうちゅうするよ", $fd, "うにこころがけましょう。", $fe
+Script1dd09: .asc "You become agitated easily,", $ff, "so remember to always keep", $ff, "yourself calm and", $ff, "concentrate on driving.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dd52" free
-Script1dd52: .asc "うしろのくるまからせかされて", $fd, "もあせったりあわてたりしない", $fd, "で、じぶんのテンポをまもって", $fd, "おちついてうんてんするように", $fd, "つとめましょう。", $fe
+Script1dd52: .asc "Even if a car behind you is", $ff, "trying to rush you, do not", $ff, "panic. Continue at your own", $ff, "pace, calm down and", $ff, "concentrate on driving.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dd97" free
-Script1dd97: .asc "あせったりあわてたり、かんじ", $fd, "ょうてきにカーッとならないよ", $fd, "うに、つねにれいせいなうんて", $fd, "んをこころがけ、スピードのだ", $fd, "しすぎにちゅういしましょう。", $fe
+Script1dd97: .asc "Be sure to always keep your", $ff, "cool when driving and not", $ff, "become panicked or emotional", $ff, "and upset. Make sure you", $ff, "don't drive at an unsafe", $ff, "speed.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dde2" free
-Script1dde2: .asc "Advice", $fe
+Script1dde2: .asc "Advice    ", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dde8" free
@@ -265,23 +260,23 @@ Script1dde8: .asc "The test is over.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1ddf6" free
-Script1ddf6: .asc "Select Game", $fd, $ff, "    Driving Sense Test", $fd, "    You are the Best Driver", $fd, "    Pyonkichi's Adventure", $fe
+Script1ddf6: .asc "Please choose a game.", $fd, $ff, "    Driving Sense Test", $fd, "    You're The Best Driver", $fd, "    Pyonkichi's Adventure", $fe
 .ends
 .bank 7 slot 2
 .section "Script1de3b" free
-Script1de3b: .asc "You are a flawless", $fd, "driver.", $fd, "This is how", $fd, "you should safely drive.", $fe
+Script1de3b: .asc "You are a flawless driver.", $fd, "This is how you should", $ff, "safely drive.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1de70" free
-Script1de70: .asc "You are an excellent", $fd, " driver. Keep up", $fd, "your safe driving.", $fe
+Script1de70: .asc "You are an excellent driver.", $fd, "Keep up your safe driving.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dea2" free
-Script1dea2: .asc "You are a safe driver.", $fd, "Keep an eye on your", $fd, "speed and the distance between", $fd, "cars when ", $fd, "driving.", $fe
+Script1dea2: .asc "You are a safe driver.", $fd, "Keep an eye on your speed", $ff, "and the distance between", $ff, "cars when driving.", $fe
 .ends
 .bank 7 slot 2
 .section "Script1dee4" free
-Script1dee4: .asc "You are an average", $fd, "driver. Be sure to be", $fd, "extra cautious when", $fd, "driving while tired.", $fe
+Script1dee4: .asc "You are an average driver.", $fd, "Be sure to be extra cautious", $ff, "when driving while tired.", $fe
 .ends
   PatchW $2d2e Script2ca4
   PatchW $2d36 Script2d50
@@ -349,4 +344,3 @@ Script1dee4: .asc "You are an average", $fd, "driver. Be sure to be", $fd, "extr
   PatchW $5e55 Script1d668
   PatchW $5ea1 Script1d671
   PatchW $5fa2 Script5fdf
-  PatchW $5cc1 Script5c0c
