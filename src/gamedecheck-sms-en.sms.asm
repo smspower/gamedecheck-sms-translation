@@ -8,7 +8,7 @@ slotsize $4000
 slot 2 $8000 "PagedROM"
 .endme
 
-;.define 1MB
+.define 1MB
 
 .ifdef 1MB
 .define BankCount 1024/16 ; 1MB expansion
@@ -54,7 +54,7 @@ banks BankCount-2
 .define RAM_ScriptRendererCharacterCount          $c805 ; db How many characters we have loaded so far
 .define RAM_ScriptRendererDrawnCharsBufferPointer $c807 ; dw Points to a buffer holding the indices of characters drawn so far
 .define RAM_Score_YTBD                            $c872 ; dw Score in BCD
-
+.define RAM_Protection                            $dff0 ; dw Our anti-hacking check. If the splash screen is skipped, this will be left at zero and the game crashes during script rendering.
 
 ; Original game functions we call
 .define DrawBox                      $0948
@@ -185,14 +185,12 @@ Font:
 .ends
 
 ; Next we hack the font engine for 8x16
-.unbackground $0626e $06288
-  ROMPosition $0626e ; This replaces a function at this address.
-.section "Character loader" force
+  START_CODE_PATCH $0626e $06288 ; This replaces a function at this address.
 LoadCharacterTilesAndDraw:
   ; Increment the tile drawing address
+  ld hl, 32 * 2
   ld de, (RAM_ScriptRendererVRAMAddress) ; CharacterDrawingVRAMAddress
-  ld hl, 32 * 2 ; 2 tiles
-  add hl, de
+  add hl,de
   ld (RAM_ScriptRendererVRAMAddress), hl
   ; Multiply by 16 (bytes per character)
   ld h, 0
@@ -205,7 +203,7 @@ LoadCharacterTilesAndDraw:
   add hl, bc
   ; Load tiles
   jp LoadCharacterTilesAndDrawToTilemap
-.ends
+  END_CODE_PATCH_HARD
 
   PatchB $6226 2 ; tiles per character
 
@@ -251,7 +249,8 @@ DrawTilemapEntry:
   ld bc, (RAM_ScriptRendererDrawnCharsBufferPointer) ; get the pointed value in l
   ld a, (bc)
   ld l, a ; that's the index of the first tile we want to draw
-  ld bc, $0200 | Port_VDPData ; we want to draw 2 rows
+  ;ld bc, $0200 | Port_VDPData ; we want to draw 2 rows
+  ld bc,(RAM_Protection) ; replacing the previous
 -:
   call SetVRAMAddressToDEScreenOn
   out (c), l ; Tile itself
@@ -1316,7 +1315,7 @@ PyonkichiSpeechBubble\1: .incbin "Pyonkichi-speechbubbles-\1.tiles.zx7"
 
 
 ; Splash screen
-  ; We hook at the startup...
+  ; We hook at startup...
   START_CODE_PATCH $009d $009f
   call Splash
   END_CODE_PATCH_HARD
@@ -1340,8 +1339,47 @@ Splash:
   call $2ba ; load
   
   rst $18 ; screen on
+
+.ifdef 1MB
+  ; Read bytes from each fake bank and add them up
+  ld b,BankCount-16
+  ld a,16 ; start bank
+  ld de,-$4d8b ; sum - we modify this to give a zero result
+-:push bc
+    ld (PAGING),a
+    inc a
+    push af
+      ; Hey, this is nearly the same as the BIOS!
+      ld bc,$1000 ; We reduce the amount we check to speed it up though.
+      ld hl,$8000
+--:   ; Add byte at (hl) to de
+      ld a,e
+      add (hl)
+      ld e,a
+      ld a,d
+      adc a,0
+      ld d,a
+      ; next byte
+      inc hl
+      ; count down
+      dec bc
+      ld a,b
+      or c
+      jr nz,--
+    pop af
+  pop bc
+  djnz -
+  foo:
+  ld a,d
+  or e
+  jr nz,- ; loop forever if failed...
+.else
   ld b,5
   call $0479+2 ; delay with custom length
+.endif
+  ld hl, $0200 | Port_VDPData ; secret value needed elsewhere...
+  ld (RAM_Protection),hl ; We store a seemingly important value here...
+
   rst $10  ; screen off
   call $0240 ; re-init VRAM
   jp $0425 ; detect FM and return

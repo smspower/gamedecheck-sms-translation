@@ -806,7 +806,9 @@ _LABEL_71_:
 	ldir
 	call _LABEL_479_Delay
 	call _LABEL_240_InitVDPAndVRAM
+  ; start code patch @ 009d
 	call _LABEL_415_DetectFM
+  ; end code patch @ 009f
 	call _LABEL_442_DetectKeyboard
 	rst $18	; _LABEL_18_ScreenOn
 	ei
