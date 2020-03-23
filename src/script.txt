@@ -148,10 +148,8 @@ $1d56b: This will test if you have[LF]a proper sense of speed[LF]and that you do
 ドライビングテクニック[EOS]
 $1d3a9:  Driving Technique [EOS]
 
-; Is there a typo in Japanese here...? 'ibun' doesn't really make sense, though 'zuibun' would.
-; Double checked the game, it's not an issue with the text dump
 ちゅういりょくをてきせいには[LF+]いぶんできるか、またそのちゅ[LF+]ういりょくをじぞくできるかを[LF+]みるためのテストです。まえを[LF+]はしっているオートバイのあと[LF+]を、ついていってください。[EOS]
-$1d5b6: This will test your[LF]attentiveness and how long[LF]that attentiveness lasts.[LF+]Please follow behind the[LF]motorcycle in front of you.[EOS]
+$1d5b6: This will test how well[LF]you can divide and maintain[LF]your attention.[LF+]Please follow behind the[LF]motorcycle in front of you.[EOS]
 
 リスクコントロール[EOS]
 $1d3b5:  Risk Control [EOS]
