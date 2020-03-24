@@ -8,3 +8,4 @@ linkfile
 build_config.cmd
 *.bin
 *.pscompr
+text.inc
