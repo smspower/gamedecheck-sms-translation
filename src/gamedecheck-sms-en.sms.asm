@@ -125,7 +125,7 @@ PatchAt\1:
 ; no need for that, we have loads of space.
 
 ; Add SDSC header. This also fixes the checksum.
-.sdsctag 0.1, "Game de Check English translation", "https://smspower.org/Translations/GameDeCheck-SMS-EN", "SMS Power!"
+.sdsctag 1.0, "Game de Check! Koutsuu Anzen English translation", "https://smspower.org/Translations/GameDeCheckKoutsuuAnzen-SMS-EN", "SMS Power!"
 
 ; The original game has a bug in its "turn screen off/on" routines.
 ; When turning the screen on or off it's important to not have an interrupt happen,
