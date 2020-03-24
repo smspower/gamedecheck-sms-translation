@@ -1200,57 +1200,114 @@ PyonkichiSpeechBubble:
 	ld (iy+5), a
 	ld (iy+21), $FF
   jp $6dda
+  
+; Indices into table (hex):
+; Scenario 2: pig on train tracks
+; 1 あそぼうよ。 Let's play.
+; 2 うん。 Yeah.
+; f あぶないよ。 Watch out!
+; 7 はい。 Yes.
+; Scenario 2: skating fox in car park
+; 3 きょうそうしようよ。 Let's race.
+; 2 うん。 Yeah.
+; 3 きょうそうしようよ。 Let's race.
+; 5 やめようよ。 Stop it.
+; 6 あぶないから。 That's dangerous.
+; 2 うん。 Yeah.
+; 12 バイバイ Bye bye
+; 12 バイバイ Bye bye
+; Scenario 4, 7: pig in road
+; d, 2, e; f, 7
+; d おもしろい？ Having fun?
+; 2 うん。 Yeah.
+; e わいわい Yay!
+; f あぶないよ。 Watch out!
+; 7 はい。 Yes.
+; Scenario 4: flower shop
+; 14, b, 15, 
+; 14 いらっしゃい。 Welcome.
+; b おはな ください。 One flower, please.
+; 15 まいど！ Thanks!
+; Scenario 5: fox across road
+; 11, 0
+; 11 お～い Hey!
+; 0 やあ！ Hi!
+; Scenario 5: fox crossing road
+; f, 7
+; f あぶないよ。 Watch out!
+; 7 はい。 Yes.
+; Scenario 5: goodbye fox
+; 12
+; 12 バイバイ Bye bye
+; Scenario 6: cycling fox in car park
+; 0, 1, 2, 3, 8; 3, 16, 17, 2
+; 0 やあ！ Hi!
+; 1 あそぼうよ。 Let's play.
+; 2 うん。 Yeah.
+; 3 きょうそうしようよ。 Let's race.
+; 8 うん。 Yeah.
+; 3 きょうそうしようよ。 Let's race.
+; 16 やめようよ！ Stop it!
+; 17 あぶないから。 That's dangerous.
+; Scenario 6: pig in road
+; d, 2, e, e; f, 7
+; d おもしろい？ Having fun?
+; 2 うん。 Yeah.
+; e わいわい Yay!
+; e わいわい Yay!
+; f あぶないよ。 Watch out!
+; 7 はい。 Yes.
 
 _TilesTable:
   ; There are 24 entries with some duplicates.
 .db :PyonkichiSpeechBubble1
-.dw PyonkichiSpeechBubble1, _Tiles32x24 ;　やあ！ Hi!
+.dw PyonkichiSpeechBubble1, _Tiles32x24 ; 0 やあ！ Hi!
 .db :PyonkichiSpeechBubble2
-.dw PyonkichiSpeechBubble2, _Tiles64x24 ;　あそぼうよ。 Let's play.
+.dw PyonkichiSpeechBubble2, _Tiles64x24 ; 1 あそぼうよ。 Let's play.
 .db :PyonkichiSpeechBubble3
-.dw PyonkichiSpeechBubble3, _Tiles48x24 ;　うん。 Yeah.
+.dw PyonkichiSpeechBubble3, _Tiles48x24 ; 2 うん。 Yeah.
 .db :PyonkichiSpeechBubble4
-.dw PyonkichiSpeechBubble4, _Tiles64x24 ;　きょうそうしようよ。 Let's race.
+.dw PyonkichiSpeechBubble4, _Tiles64x24 ; 3 きょうそうしようよ。 Let's race.
 .db :PyonkichiSpeechBubble5
-.dw PyonkichiSpeechBubble5, _Tiles56x24 ;　やめようよ。 Stop it.
+.dw PyonkichiSpeechBubble5, _Tiles56x24 ; やめようよ。 Stop it. (unused)
 .db :PyonkichiSpeechBubble5
-.dw PyonkichiSpeechBubble5, _Tiles56x24 ;　やめようよ。 Stop it.
+.dw PyonkichiSpeechBubble5, _Tiles56x24 ; 5 やめようよ。 Stop it.
 .db :PyonkichiSpeechBubble6
-.dw PyonkichiSpeechBubble6, _Tiles64x32 ;　あぶないから。 That's dangerous.
+.dw PyonkichiSpeechBubble6, _Tiles64x32 ; 6 あぶないから。 That's dangerous.
 .db :PyonkichiSpeechBubble7
-.dw PyonkichiSpeechBubble7, _Tiles40x24 ;　はい。 Yes.
+.dw PyonkichiSpeechBubble7, _Tiles40x24 ; 7 はい。 Yes.
 .db :PyonkichiSpeechBubble3
-.dw PyonkichiSpeechBubble3, _Tiles48x24 ;　うん。 Yeah.
+.dw PyonkichiSpeechBubble3, _Tiles48x24 ; 8 うん。 Yeah.
 .db :PyonkichiSpeechBubble7
-.dw PyonkichiSpeechBubble7, _Tiles40x24 ;　はい。 Yes.
+.dw PyonkichiSpeechBubble7, _Tiles40x24 ; はい。 Yes. (unused)
 .db :PyonkichiSpeechBubble8
-.dw PyonkichiSpeechBubble8, _Tiles64x32 ;　おはな　ください。 One flower, please.
+.dw PyonkichiSpeechBubble8, _Tiles64x32 ; おはな ください。 One flower, please. (unused)
 .db :PyonkichiSpeechBubble8
-.dw PyonkichiSpeechBubble8, _Tiles64x32 ;　おはな　ください。 One flower, please.
+.dw PyonkichiSpeechBubble8, _Tiles64x32 ; b おはな ください。 One flower, please.
 .db :PyonkichiSpeechBubble9
-.dw PyonkichiSpeechBubble9, _Tiles64x24 ;　ピョンこちゃん。 Pyonko-chan.
+.dw PyonkichiSpeechBubble9, _Tiles64x24 ; c ピョンこちゃん。 Pyonko-chan.
 .db :PyonkichiSpeechBubble10
-.dw PyonkichiSpeechBubble10,_Tiles64x24 ;　おもしろい？ Sounds fun?
+.dw PyonkichiSpeechBubble10,_Tiles64x24 ; d おもしろい？ Having fun?
 .db :PyonkichiSpeechBubble11
-.dw PyonkichiSpeechBubble11,_Tiles40x24 ;　わいわい Yay!
+.dw PyonkichiSpeechBubble11,_Tiles40x24 ; e わいわい Yay!
 .db :PyonkichiSpeechBubble12
-.dw PyonkichiSpeechBubble12,_Tiles64x24 ;　あぶないよ。 Watch out!
+.dw PyonkichiSpeechBubble12,_Tiles64x24 ; f あぶないよ。 Watch out!
 .db :PyonkichiSpeechBubble13
-.dw PyonkichiSpeechBubble13,_Tiles40x24 ;　わ～[glitch, one missing tile]
+.dw PyonkichiSpeechBubble13,_Tiles40x24 ; わ～[glitch, one missing tile] (unused)
 .db :PyonkichiSpeechBubble13
-.dw PyonkichiSpeechBubble13,_Tiles40x24 ;　お～い Hey!
+.dw PyonkichiSpeechBubble13,_Tiles40x24 ; 11 お～い Hey!
 .db :PyonkichiSpeechBubble14
-.dw PyonkichiSpeechBubble14,_Tiles64x24 ;　バイバイ Bye bye
+.dw PyonkichiSpeechBubble14,_Tiles64x24 ; 12 バイバイ Bye bye
 .db :PyonkichiSpeechBubble15
-.dw PyonkichiSpeechBubble15,_Tiles64x24 ;　いらっしゃい。 Welcome.
+.dw PyonkichiSpeechBubble15,_Tiles64x24 ; いらっしゃい。 Welcome. (unused)
 .db :PyonkichiSpeechBubble15
-.dw PyonkichiSpeechBubble15,_Tiles64x24 ;　いらっしゃい。 Welcome.
+.dw PyonkichiSpeechBubble15,_Tiles64x24 ; 14 いらっしゃい。 Welcome.
 .db :PyonkichiSpeechBubble16
-.dw PyonkichiSpeechBubble16,_Tiles56x24 ;　まいど！ Thanks!
+.dw PyonkichiSpeechBubble16,_Tiles56x24 ; 15 まいど！ Thanks!
 .db :PyonkichiSpeechBubble17
-.dw PyonkichiSpeechBubble17,_Tiles56x24 ;　やめようよ！ Stop it!
+.dw PyonkichiSpeechBubble17,_Tiles56x24 ; 16 やめようよ！ Stop it!
 .db :PyonkichiSpeechBubble6
-.dw PyonkichiSpeechBubble6, _Tiles64x32 ;　あぶないから。 That's dangerous.
+.dw PyonkichiSpeechBubble6, _Tiles64x32 ; 17 あぶないから。 That's dangerous.
 
 ; Sprite data format is
 ; db n ; count of entries
