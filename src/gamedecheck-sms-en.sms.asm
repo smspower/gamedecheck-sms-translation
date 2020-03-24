@@ -301,7 +301,7 @@ TitleScreenLogoPatch:
   ld (PAGING),a
   ld hl, TitleScreenTilemap
   TilemapWriteAddressToDE 0, 0
-  call zx7_decompress
+  jp zx7_decompress ; and ret
 .ends
 
 ; Title screen logo loader code (part 2)
