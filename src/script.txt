@@ -157,7 +157,7 @@ $1d5b6: This will test your[LF]attentiveness and how long[LF]that attentiveness 
 $1d3b5:  Risk Control [EOS]
 
 ふくざつなじょうきょうのもと[LF+]で、てきせつなはんだんと、き[LF+]びんなしょちができるかをみる[LF+]ためのテストです。オゥムがさ[LF+]しだす、はたのいろにしたがっ[LF+]てボタンをおしてください。[EOS]
-$1d60f: This will test your correct[LF]judgement of, and quick[LF]response to, complicated[LF]situations.[LF+]When the parot waves a flag,[LF]push the button that matches[LF]its color.[EOS]
+$1d60f: This will test your correct[LF]judgement of, and quick[LF]response to, complicated[LF]situations.[LF+]When the parrot waves a[LF]flag, push the button that[LF]matches its color.[EOS]
 
 せんたくボタン。[EOS]
 $1d3d8: Move Cursor[EOS]
