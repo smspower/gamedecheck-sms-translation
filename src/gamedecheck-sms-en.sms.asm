@@ -1439,7 +1439,7 @@ Splash:
 
   rst $10  ; screen off
   call $0240 ; re-init VRAM
-  jp $0425 ; detect FM and return
+  jp $0415 ; detect FM and return
 .ends
 
 .bank 2 slot "PagedROM"
