@@ -1121,11 +1121,22 @@ LoadColouredTiles:
   .incbin "signs.tiles.bin"
   END_CODE_PATCH_HARD
 
+.unbackground $1b565 $1bfff ; tile data x2 plus unused space
+.bank 6 slot "PagedROM"
+.section "YTBD Sprite tiles 1" free
+YTBDSpriteTiles1:
   ; The km/h overlay has a 1px error...
-  START_CODE_PATCH $1b87a $1bfff ; blank after the original data
   .incbin "bestdriver-sprites1.tiles.pscompr"
-  END_CODE_PATCH_HARD
-  
+.ends
+.section "YTBD Sprite tiles 2" free
+YTBDSpriteTiles2:
+  ; Sign also appears here...
+  .incbin "bestdriver-sprites2.tiles.pscompr"
+.ends
+
+  ; Patch references
+  PatchW $293b YTBDSpriteTiles1
+  PatchW $48bb YTBDSpriteTiles2
   
   ; Pyonkichi's Adventure
   

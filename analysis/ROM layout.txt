@@ -46,7 +46,7 @@ $198ef  $19bae              Title screen logo tiles
 $19baf  $1b1ae  352         4bpp uncompressed: car, bike
 $1b1af  $1b418  32          ?
 $1b419  $1b564  12          ?
-$1b565  $1b879  49          ?
+$1b565  $1b879  49          First-person driving tiles
 $1b87a  $1be24  76          Driving HUD sprites
 
 $1c000  $1ce77  927         Japanese font tiles
