@@ -1,27 +1,53 @@
+Game de Check! Koutsuu Anzen Japanese to English translation
+============================================================
 
-REQUIRED SOFTWARE
+This is a translation patch for Game de Check! Koutsuu Anzen, a traffic safety 
+"edutainment" title from 1987 for the Sega Master System. For more information,
+visit:
 
-- bmp2tile 0.50+ 
-  https://github.com/maxim-zhao/bmp2tile/releases
+  https://www.smspower.org/Games/GameDeCheckKoutsuuAnzen-SMS
 
-- bmp2tilecompressors Build 26+
-  https://github.com/maxim-zhao/bmp2tilecompressors/releases
-  Unzip .dll in same folder as bmp2tile
 
-- WLA-DX 2020-03+
-  https://ci.appveyor.com/project/maxim-zhao/wla-dx-6yqhq
+How to use it
+=============
 
-- Python 3.x+
+You will need a copy of the ROM, which has these properties:
 
-- Original game dump, stored in "src/Game De Check! Koutsuu Anzen [Proto] (JP).sms"
-  Expected CRC32 is 9AFAB511
+Size:   262144 bytes
+CRC32:  9afab511
+MD5:    840ba96cf77b465d3d0d389dac7861d7
+SHA1:   72353c77efa078e88483858201f5bdf832f5c01c
 
-CONFIGURATION
+And an IPS patching tool, such as Floating IPS. See here for more:
 
-- Copy build_config_default.cmd to build_config.cmd (build_config.cmd will be ignored by git)
-- Edit build_config.cmd with your own path.
+  https://www.smspower.org/Hacks/HowToUseBPSAndIPSPatchFiles
+  
+Alternatively, some emulators let you load IPS files.
 
-BUILD
 
-- Go to src/ and run make.cmd
+Credits
+=======
 
+Translation: RyogaMasaki
+Translation coding: Maxim
+
+Hacking and translation help: Bock
+Hacking help: Calindro
+Graphics help: marklincadet
+
+
+Technical details
+=================
+
+- Replaced title screens with reinterpretations using ZX7 compression
+- Replaced 1bpp 16x16 dynamic font loader with 8x16 variant
+- Python script dumper and re-insertion generator
+- Patched graphics in several places
+- Replaced some graphics with dynamic font loader
+- Also patched some bugs in the original game:
+  - Sometimes fails to turn screen on/off due to VBlank race
+  - Mis-drawn pixel in speedometer
+
+Source will be available at:
+
+  https://github.com/smspower/gamedecheck-sms-translation/

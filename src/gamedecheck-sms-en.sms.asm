@@ -1455,7 +1455,6 @@ Splash:
     pop af
   pop bc
   djnz -
-  foo:
   ld a,d
   or e
   jr nz,- ; loop forever if failed...

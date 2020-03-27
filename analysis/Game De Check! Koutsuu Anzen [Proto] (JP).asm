@@ -880,7 +880,7 @@ _LABEL_FB_:
 	add a, $04
 	ld (_RAM_C082_), a
 	xor a
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	jp _LABEL_29B_BlankSpriteTableAndMirror
 
 _LABEL_130_:
@@ -913,7 +913,7 @@ _LABEL_130_:
 	ld a, (hl)
 	ld (_RAM_C402_), a
 	ld a, $89
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	jp _LABEL_54E_
 
 _LABEL_16B_:
@@ -1491,7 +1491,7 @@ _LABEL_4DB_TrampolineTo_LABEL_38D58_:
 	ld (Paging_Slot2), a
 	ret
 
-_LABEL_4EE_BufferPush:
+_LABEL_4EE_QueueSound:
 	push hl
 	push bc
     push af
@@ -3551,7 +3551,7 @@ _DATA_192F_:
 	ld (_RAM_C118_), hl
 	ei
 	ld a, $C7
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 _LABEL_195C_:
 	ld de, $7C00
@@ -3650,7 +3650,7 @@ _LABEL_199B_:
 	ld bc, $0404
 	call _LABEL_948_DrawBoc
 	ld a, $8C
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ld a, $78
 	ld (_RAM_C118_), a
 	ei
@@ -3739,13 +3739,13 @@ _LABEL_1A7C_:
 +:
 	ld hl, _DATA_10470_TilemapCorrect
 	ld a, $8A
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	jp +++
 
 ++:
 	ld hl, _DATA_104E0_TilemapIncorrect
 	ld a, $8B
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 +++:
 	ld a, $84
 	ld (Paging_Slot2), a
@@ -3873,7 +3873,7 @@ _LABEL_1B2B_:
 	ld hl, $0120
 	ld (_RAM_C118_), hl
 	ld a, $8D
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ; 4th entry of Jump Table from 192F (indexed by _RAM_C123_)
 _LABEL_1BC3_:
@@ -3932,7 +3932,7 @@ _LABEL_1C29_:
 	xor a
 	ld (_RAM_C118_), a
 	ld a, $C0
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ei
 ; 1st entry of Jump Table from 18E6 (indexed by _RAM_C10D_)
 _LABEL_1C41_:
@@ -3992,7 +3992,7 @@ _DATA_1C79_:
 	ld (_RAM_C120_GameState), a
 	call _LABEL_595B_
 	ld a, $C7
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ld hl, $0384
 	ld (_RAM_C118_), hl
 	ei
@@ -4047,7 +4047,7 @@ _LABEL_1CD8_:
 +:
 	set 7, (hl)
 	ld a, $8C
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ld a, $3C
 	ld (_RAM_C118_), a
 	ld de, $82FD
@@ -4082,7 +4082,7 @@ _LABEL_1CFF_:
 	ld a, (_RAM_C34E_)
 	or a
 	ret z
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	xor a
 	ld (_RAM_C34E_), a
 	ret
@@ -4190,7 +4190,7 @@ _LABEL_1D60_:
 	ld hl, $0120
 	ld (_RAM_C118_), hl
 	ld a, $8D
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ; 6th entry of Jump Table from 1C79 (indexed by _RAM_C123_)
 _LABEL_1E0B_:
@@ -4262,7 +4262,7 @@ _LABEL_1E8B_:
 	xor a
 	ld (_RAM_C118_), a
 	ld a, $C0
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ; 3rd entry of Jump Table from 18CE (indexed by _RAM_C10D_)
 _LABEL_1EA6_:
@@ -4293,7 +4293,7 @@ _DATA_1EB9_:
 	ld (_RAM_C340_), a
 	ei
 	ld a, $C7
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ; 3rd entry of Jump Table from 18E6 (indexed by _RAM_C10D_)
 _LABEL_1EE6_:
@@ -4431,7 +4431,7 @@ _LABEL_1FF8_:
 	ld a, $01
 	ld (_RAM_C300_), a
 	ld a, $C4
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ; 5th entry of Jump Table from 1EB9 (indexed by _RAM_C123_)
 _LABEL_200D_:
@@ -4465,7 +4465,7 @@ _LABEL_200D_:
 	ld hl, $012C
 	ld (_RAM_C118_), hl
 	ld a, $DB
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ei
 	ret
 
@@ -4584,7 +4584,7 @@ _LABEL_208C_:
 	ld (hl), $00
 	ldir
 	ld a, $8D
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ld de, $0180
 	ld (_RAM_C118_), de
 	ei
@@ -4615,7 +4615,7 @@ _LABEL_2146_:
 	xor a
 	ld (_RAM_C118_), a
 	ld a, $C0
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ld hl, $00B8
 	ld a, (_RAM_C348_)
 	or a
@@ -4663,7 +4663,7 @@ _DATA_2195_:
 	ld (_RAM_C340_), a
 	ei
 	ld a, $C7
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ; 1st entry of Jump Table from 2195 (indexed by _RAM_C123_)
 _LABEL_21D0_:
@@ -4771,7 +4771,7 @@ _LABEL_2200_:
 	ld a, $B4
 	ld (_RAM_C118_), a
 	ld a, $8C
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ld a, $0F
 	ld (_RAM_C400_), a
 	ld a, $11
@@ -4790,7 +4790,7 @@ _LABEL_22B7_:
 +:
 	set 7, (hl)
 	ld a, $C3
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ld a, $01
 	ld (_RAM_C300_), a
 	ld hl, $FF00
@@ -4891,7 +4891,7 @@ _LABEL_22D3_:
 	ld (_RAM_C118_), hl
 	ei
 	ld a, $8D
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ; 5th entry of Jump Table from 2195 (indexed by _RAM_C123_)
 _LABEL_2399_:
@@ -4941,7 +4941,7 @@ _LABEL_23C0_:
 	xor a
 	ld (_RAM_C118_), a
 	ld a, $C0
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ; 4th entry of Jump Table from 18E6 (indexed by _RAM_C10D_)
 _LABEL_23EB_:
@@ -5051,7 +5051,7 @@ _LABEL_2485_:
 	rst $10	; _LABEL_10_ScreenOff
 	call _LABEL_578D_
 	ld a, $9C
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ei
 	jp _LABEL_18_ScreenOn
 
@@ -5117,7 +5117,7 @@ _LABEL_24AF_:
 	rst $18	; _LABEL_18_ScreenOn
 	ei
 	ld a, $C7
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 _LABEL_2521_:
 	set 7, (hl)
@@ -5157,7 +5157,7 @@ _LABEL_254C_:
 	sbc hl, de
 	jr nz, +
 	ld a, $DB
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 +:
 	ld a, d
 	or e
@@ -5472,7 +5472,7 @@ _LABEL_274A_:
 	xor a
 	ld (_RAM_C10D_), a
 	ld a, $C7
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	jp _LABEL_18_ScreenOn
 
 ; 6th entry of Jump Table from CE (indexed by _RAM_C101_)
@@ -5603,7 +5603,7 @@ _LABEL_2852_:
 	ld hl, $0100
 	ld (_RAM_C872_), hl
 	ld a, $C0
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ; 3rd entry of Jump Table from 2730 (indexed by _RAM_C10D_)
 _LABEL_288E_:
@@ -5634,7 +5634,7 @@ _LABEL_288E_:
 	ld a, $02
 	ld (_RAM_C340_), a
 	ld a, $C6
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ++:
 	set 7, (hl)
@@ -5724,7 +5724,7 @@ _LABEL_288E_:
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	ei
 	ld a, $8C
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ; 4th entry of Jump Table from 2730 (indexed by _RAM_C10D_)
 _LABEL_2996_:
@@ -5806,7 +5806,7 @@ _LABEL_29DA_:
 	or $0A
 	ld (_RAM_C120_GameState), a
 	ld a, $D6
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	jp _LABEL_5C23_
 
 ; 7th entry of Jump Table from 2730 (indexed by _RAM_C10D_)
@@ -5894,7 +5894,7 @@ _LABEL_2AB7_:
 	ld a, (hl)
 	ld (_RAM_C402_), a
 	ld a, $89
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 +:
 	ld (hl), $01
@@ -6007,8 +6007,8 @@ _LABEL_2BB8_:
 	call _LABEL_5DD6_
 	ld de, $0200
 	ld (_RAM_C118_), de
-	ld a, $CB
-	jp _LABEL_4EE_BufferPush
+	ld a, $CB ; Alex Kidd jingle
+	jp _LABEL_4EE_QueueSound
 
 _LABEL_2BEA_:
 	ld a, $01
@@ -6069,7 +6069,7 @@ _LABEL_2C2D_:
 	xor a
 	ld (_RAM_C118_), a
 	ld a, $8D
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
   ; patch begin @ 2c47
 	ld a, $84
 	ld (Paging_Slot2), a
@@ -6116,7 +6116,7 @@ _LABEL_2C77_:
 	ld a, $78
 	ld (_RAM_C118_), a
 	ld a, $D6
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 _script_2ca4:
 ; えらんでください。[LF][LF][LF+]
@@ -6246,7 +6246,7 @@ _LABEL_2D95_:
 	ld a, $02
 	ld (_RAM_C10D_), a
 	ld a, $D8
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	jp _LABEL_2D5E_
 
 ; 1st entry of Jump Table from 2D8D (indexed by _RAM_C34E_)
@@ -6773,7 +6773,7 @@ _LABEL_3182_:
 	ld a, (hl)
 	ld (iy+3), a
 	ld a, $89
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 +++:
 	ld a, (iy+10)
@@ -6827,7 +6827,7 @@ _LABEL_31E4_:
 	ret nz
 	set 6, (iy+1)
 	ld a, $88
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 _LABEL_3228_:
 	set 7, (iy+1)
@@ -6882,7 +6882,7 @@ _LABEL_3228_:
 	ld hl, $00C6
 	ld (_RAM_C118_), hl
 	ld a, $C1
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ; 4th entry of Jump Table from 1672 (indexed by _RAM_C400_)
 _LABEL_328B_:
@@ -6908,7 +6908,7 @@ _LABEL_328B_:
 	jp z, +++
 -:
 	ld a, $D8
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ld a, (_RAM_C123_)
 	and $0F
 	inc a
@@ -7000,7 +7000,7 @@ _LABEL_3354_:
 	ld hl, _DATA_14175_
 	add hl, de
 	ld a, (hl)
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	inc hl
 	ld a, (hl)
 	ld (iy+6), a
@@ -7029,7 +7029,7 @@ _LABEL_3370_:
 	ld a, $07
 	ld (_RAM_C480_), a
 	ld a, $85
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	call _LABEL_34EA_
 	ld a, (ix+3)
 	sub (iy+3)
@@ -7070,7 +7070,7 @@ _LABEL_3370_:
 	pop af
 	ld (Paging_Slot2), a
 	ld a, $87
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ld a, (_RAM_C348_)
 	or a
 	ret z
@@ -7295,7 +7295,7 @@ _LABEL_356E_:
 	ld (iy+18), a
 	ld (iy+20), d
 	ld a, $86
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	bit 7, d
 	jr z, +
 	ld (iy+4), <_DATA_14489_
@@ -7679,7 +7679,7 @@ _LABEL_38BC_:
 	ret c
 	ld (iy+0), $01
 	ld a, $D8
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 _LABEL_38D5_:
 	ld ix, _RAM_C420_
 	ld hl, _RAM_C300_
@@ -7717,7 +7717,7 @@ _LABEL_38FA_:
 	ret nc
 	ld (iy+0), $01
 	ld a, $D8
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 +:
 	set 7, (iy+1)
@@ -7732,7 +7732,7 @@ _LABEL_38FA_:
 	ld hl, _DATA_145CD_
 +:
 	ld a, b
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	jp _LABEL_5E8_
 
 ; 12th entry of Jump Table from 1672 (indexed by _RAM_C400_)
@@ -7827,7 +7827,7 @@ _LABEL_39B8_:
 	ld (iy+4), $1C
 	ld (iy+10), $0A
 	ld a, $93
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 _LABEL_3A16_:
 	ld a, $85
@@ -7943,7 +7943,7 @@ _LABEL_3A85_:
 	ld a, $96
 -:
 	ld (iy+64), $01
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 +:
 	ld (iy+26), d
@@ -8036,12 +8036,12 @@ _LABEL_3B90_:
 	cp (iy+25)
 	jp nz, +
 	ld a, $8A
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 +:
 	ld (iy+1), $00
 	ld a, $8B
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 _LABEL_3BC2_:
 	ld hl, _LABEL_C4F_	; Overriding return address
@@ -8054,7 +8054,7 @@ _LABEL_3BC2_:
 	ld hl, $FF00
 	ld (_RAM_C303_), hl
 	ld a, $A4
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ld a, $02
 	jp _LABEL_3B90_
 
@@ -8190,7 +8190,7 @@ _LABEL_3CF6_:
 	ret z
 _LABEL_3D05_:
 	ld a, $C3
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ld (iy+0), $0F
 	ld (iy+1), $00
 	ld hl, _RAM_C300_
@@ -8288,7 +8288,7 @@ _LABEL_3D9B_:
 	ld a, (hl)
 	ld (iy+5), a
 	ld a, $9B
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ; 19th entry of Jump Table from 1672 (indexed by _RAM_C400_)
 _LABEL_3DE1_:
@@ -8344,7 +8344,7 @@ _LABEL_3E41_:
 	ld de, _DATA_14C0C_
 	call _LABEL_CC4_
 	ld a, $99
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ; 20th entry of Jump Table from 1672 (indexed by _RAM_C400_)
 _LABEL_3E6B_:
@@ -8369,7 +8369,7 @@ _LABEL_3E6B_:
 +:
 	set 7, (iy+1)
 	ld a, $98
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ld hl, _DATA_14C5F_
 	jp _LABEL_5E8_
 
@@ -8412,13 +8412,13 @@ _LABEL_3ECC_:
 	ret c
 	ld (iy+0), $01
 	ld a, $D8
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 +:
 	set 7, (iy+1)
 	ld (iy+3), $F7
 	ld a, $D4
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ld de, _DATA_14C76_
 	call _LABEL_CC4_
 	ld hl, _DATA_14C6E_
@@ -8450,7 +8450,7 @@ _LABEL_3F17_:
 
 ++:
 	ld a, $98
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	set 6, (iy+1)
 +++:
 	ld h, (iy+18)
@@ -8938,7 +8938,7 @@ _LABEL_42CA_:
 	cp $E0
 	ret nc
 	ld a, $DB
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	jp _LABEL_C26_
 
 _LABEL_42DE_:
@@ -9025,7 +9025,7 @@ _LABEL_430C_:
 	ld a, $01
 	ld (_RAM_C4A0_), a
 	ld a, $D8
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 _LABEL_436C_:
 	call _LABEL_43C2_
@@ -10593,7 +10593,7 @@ _LABEL_4FC9_:
 	inc a
 	ld (_RAM_C123_), a
 	ld a, $DB
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 _LABEL_4FE5_:
 	ld a, (_RAM_C102_VDPRegister0Value)
@@ -20794,7 +20794,7 @@ _LABEL_1677C_:
 	dec (iy+12)
 	ret nz
 	ld a, $D8
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	jp _LABEL_C26_
 
 +:
@@ -20805,7 +20805,7 @@ _LABEL_1677C_:
 	ld (iy+5), $A3
 	ld (iy+4), $78
 	ld a, $D9
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ; 28th entry of Jump Table from 1672 (indexed by _RAM_C400_)
 _LABEL_167AB_:
@@ -20832,7 +20832,7 @@ _LABEL_167AB_:
 	ld (iy+2), $20
 	ld (iy+3), $78
 	ld a, $D9
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ; 29th entry of Jump Table from 1672 (indexed by _RAM_C400_)
 _LABEL_167E1_:
@@ -20972,7 +20972,7 @@ _LABEL_168BC_:
 	or a
 	ret nz
 	ld a, $D8
-	jp _LABEL_4EE_BufferPush
+	jp _LABEL_4EE_QueueSound
 
 ++:
 	set 6, (iy+1)
@@ -21201,7 +21201,7 @@ _LABEL_16AB1_:
 	res 4, a
 	ld (_RAM_C100_), a
 	ld a, $93
-	call _LABEL_4EE_BufferPush
+	call _LABEL_4EE_QueueSound
 	ld de, _DATA_163CC_
 	jp _LABEL_CC4_
 
