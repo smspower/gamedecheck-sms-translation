@@ -1421,9 +1421,17 @@ Splash:
   call zx7_decompress
   ld hl,SplashPalette
   ld de,$c000
-  ld bc,16
+  ld bc,_sizeof_SplashPalette
   call $2ba ; load
-  
+  ; Repeat for sprite palette
+  ld hl,SplashPalette
+  ld de,$c010
+  ld bc,_sizeof_SplashPalette
+  call $2ba ; load
+  ; Set border to index 0
+  ld de,$8700
+  rst $8
+    
   rst $18 ; screen on
 
 .ifdef 1MB
