@@ -734,7 +734,7 @@ _LABEL_30_Delay:
 _LABEL_38_:
 	jp _LABEL_B9F_
 
-_LABEL_3B_:
+_LABEL_3B_FunctionTableLookupAndCall:
 	add a, a
 	ld e, a
 	ld d, $00
@@ -818,7 +818,7 @@ _LABEL_71_:
 	exx
 	and $3F
 	ld hl, _DATA_B5_
-	call _LABEL_3B_
+	call _LABEL_3B_FunctionTableLookupAndCall
 	jp -
 
 ; Jump Table from B5 to C2 (7 entries, indexed by _RAM_C101_)
@@ -829,7 +829,7 @@ _LABEL_C3_:
 	ld a, (_RAM_C101_)
 	and $3F
 	ld hl, _DATA_CE_
-	jp _LABEL_3B_
+	jp _LABEL_3B_FunctionTableLookupAndCall
 
 ; Jump Table from CE to DB (7 entries, indexed by _RAM_C101_)
 _DATA_CE_:
@@ -922,7 +922,7 @@ _LABEL_16B_:
 	rst $10	; _LABEL_10_ScreenOff
 	call _LABEL_276_8x16SpritesOff
 	call _LABEL_29B_BlankSpriteTableAndMirror
-	call _LABEL_2DC_
+	call _LABEL_2DC_BlankTilemap
 	call _LABEL_269_SpriteTableAddress2f00
 	call _LABEL_2BA7_LoadPalette
   ; patch start @ 17e
@@ -1129,7 +1129,7 @@ _LABEL_2CD_Load1bppTilemap:
 	jr nz, -
 	ret
 
-_LABEL_2DC_:
+_LABEL_2DC_BlankTilemap:
 	ld de, $7800
 	ld bc, $0380
 	ld hl, $0000
@@ -1888,7 +1888,7 @@ _LABEL_9F7_:
 	and $7F
 	sub $04
 	ld hl, _DATA_A25_
-	call _LABEL_3B_
+	call _LABEL_3B_FunctionTableLookupAndCall
 	ld hl, (_RAM_C118_)
 	dec hl
 	ld (_RAM_C118_), hl
@@ -1916,7 +1916,7 @@ _DATA_A25_:
 	set 7, (hl)
 	di
 	rst $10	; _LABEL_10_ScreenOff
-	call _LABEL_2DC_
+	call _LABEL_2DC_BlankTilemap
 	call _LABEL_488_MutePSG
 	ld hl, $0300
 	ld (_RAM_C118_), hl
@@ -3255,7 +3255,7 @@ _LABEL_1668_:
 	ld a, $85
 	ld (Paging_Slot2), a
 	ex af, af'
-	jp _LABEL_3B_
+	jp _LABEL_3B_FunctionTableLookupAndCall
 
 ; Jump Table from 1672 to 1747 (107 entries, indexed by _RAM_C400_)
 _DATA_1672_:
@@ -3478,7 +3478,7 @@ _LABEL_18A9_:
 	and $7F
 	exx
 	ld hl, _DATA_18CE_
-	call _LABEL_3B_
+	call _LABEL_3B_FunctionTableLookupAndCall
 	jp _LABEL_54E_
 
 ; Jump Table from 18CE to 18D7 (5 entries, indexed by _RAM_C10D_)
@@ -3492,7 +3492,7 @@ _LABEL_18D8_:
 	ret z
 	and $7F
 	ld hl, _DATA_18E6_
-	jp _LABEL_3B_
+	jp _LABEL_3B_FunctionTableLookupAndCall
 
 ; Jump Table from 18E6 to 18EF (5 entries, indexed by _RAM_C10D_)
 _DATA_18E6_:
@@ -3516,10 +3516,10 @@ _LABEL_1903_:
 	ldir
 	ret
 
-_LABEL_1911_:
+_LABEL_1911_StopSound:
 	ld a, $84
 	ld (Paging_Slot2), a
-	call _LABEL_10AD5_
+	call _LABEL_10AD5_StopSound
 	jp _LABEL_11339_
 
 ; 1st entry of Jump Table from 18CE (indexed by _RAM_C10D_)
@@ -3532,7 +3532,7 @@ _LABEL_191C_:
 	and $3F
 	exx
 	ld hl, _DATA_192F_
-	jp _LABEL_3B_
+	jp _LABEL_3B_FunctionTableLookupAndCall
 
 ; Jump Table from 192F to 193C (7 entries, indexed by _RAM_C123_)
 _DATA_192F_:
@@ -3889,7 +3889,7 @@ _LABEL_1BC3_:
 	di
 	rst $10	; _LABEL_10_ScreenOff
 	call _LABEL_26F_8x16SpritesOn
-	call _LABEL_2DC_
+	call _LABEL_2DC_BlankTilemap
 	call _LABEL_263_SpriteTableAddress3f00
 	ld a, $82
 	ld (Paging_Slot2), a
@@ -3975,7 +3975,7 @@ _LABEL_1C66_:
 	exx
 	and $0F
 	ld hl, _DATA_1C79_
-	jp _LABEL_3B_
+	jp _LABEL_3B_FunctionTableLookupAndCall
 
 ; Jump Table from 1C79 to 1C84 (6 entries, indexed by _RAM_C123_)
 _DATA_1C79_:
@@ -4130,7 +4130,7 @@ _LABEL_1D60_:
 
 +:
 	set 7, (hl)
-	call _LABEL_1911_
+	call _LABEL_1911_StopSound
 	di
 	call _LABEL_29B_BlankSpriteTableAndMirror
 	call _LABEL_269_SpriteTableAddress2f00
@@ -4252,7 +4252,7 @@ _LABEL_1E0B_:
 
 _LABEL_1E8B_:
 	set 7, (hl)
-	call _LABEL_1911_
+	call _LABEL_1911_StopSound
 	di
 	ld a, (_RAM_C348_)
 	or $06
@@ -4274,7 +4274,7 @@ _LABEL_1EA6_:
 	exx
 	ld hl, _DATA_1EB9_
 	and $0F
-	jp _LABEL_3B_
+	jp _LABEL_3B_FunctionTableLookupAndCall
 
 ; Jump Table from 1EB9 to 1EC6 (7 entries, indexed by _RAM_C123_)
 _DATA_1EB9_:
@@ -4366,7 +4366,7 @@ _LABEL_1F39_:
 	ld de, $8900
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	call _LABEL_29B_BlankSpriteTableAndMirror
-	call _LABEL_2DC_
+	call _LABEL_2DC_BlankTilemap
 	ld a, $83
 	ld (Paging_Slot2), a
 	ld de, $4000
@@ -4520,7 +4520,7 @@ _LABEL_208C_:
 
 +:
 	set 7, (hl)
-	call _LABEL_1911_
+	call _LABEL_1911_StopSound
 	di
 	ld de, (_RAM_C0A1_)
 	call _LABEL_515B_BCDToNumber
@@ -4606,7 +4606,7 @@ _LABEL_2146_:
 
 +:
 	set 7, (hl)
-	call _LABEL_1911_
+	call _LABEL_1911_StopSound
 	di
 	ld a, (_RAM_C348_)
 	or $06
@@ -4636,7 +4636,7 @@ _LABEL_2182_:
 	exx
 	and $3F
 	ld hl, _DATA_2195_
-	jp _LABEL_3B_
+	jp _LABEL_3B_FunctionTableLookupAndCall
 
 ; Jump Table from 2195 to 21A0 (6 entries, indexed by _RAM_C123_)
 _DATA_2195_:
@@ -4645,7 +4645,7 @@ _DATA_2195_:
 +:
 	set 7, (hl)
 	di
-	call _LABEL_1911_
+	call _LABEL_1911_StopSound
 	call _LABEL_18F2_
 	ld de, $8800
 	rst $08	; _LABEL_8_VRAMAddressToDE
@@ -4723,7 +4723,7 @@ _LABEL_2200_:
 	set 7, (hl)
 	di
 	rst $10	; _LABEL_10_ScreenOff
-	call _LABEL_2DC_
+	call _LABEL_2DC_BlankTilemap
 	call _LABEL_26F_8x16SpritesOn
 	call _LABEL_263_SpriteTableAddress3f00
 	call _LABEL_1903_
@@ -4817,7 +4817,7 @@ _LABEL_22D3_:
 
 +:
 	set 7, (hl)
-	call _LABEL_1911_
+	call _LABEL_1911_StopSound
 	ld a, (_RAM_C348_)
 	or a
 	ld a, $01
@@ -4931,7 +4931,7 @@ _LABEL_23C0_:
 
 +:
 	set 7, (hl)
-	call _LABEL_1911_
+	call _LABEL_1911_StopSound
 	di
 	ld a, (_RAM_C348_)
 	or $06
@@ -4958,7 +4958,7 @@ _LABEL_23F1_:
 	and $3F
 	exx
 	ld hl, _DATA_2404_
-	jp _LABEL_3B_
+	jp _LABEL_3B_FunctionTableLookupAndCall
 
 ; Jump Table from 2404 to 240B (4 entries, indexed by _RAM_C123_)
 _DATA_2404_:
@@ -5072,7 +5072,7 @@ _LABEL_24AF_:
 	call _LABEL_10_ScreenOff
 	ld de, $81C0
 	rst $08	; _LABEL_8_VRAMAddressToDE
-	call _LABEL_2DC_
+	call _LABEL_2DC_BlankTilemap
 	ld a, $84
 	ld (Paging_Slot2), a
 	ld hl, _DATA_10158_TilesBorders1bpp
@@ -5123,10 +5123,10 @@ _LABEL_2521_:
 	set 7, (hl)
 	call _LABEL_10_ScreenOff
 	call _LABEL_29B_BlankSpriteTableAndMirror
-	call _LABEL_2DC_
+	call _LABEL_2DC_BlankTilemap
 	call _LABEL_269_SpriteTableAddress2f00
 	call _LABEL_18F2_
-	call _LABEL_1911_
+	call _LABEL_1911_StopSound
 	ld de, $8800
 	rst $08	; _LABEL_8_VRAMAddressToDE
 	inc d
@@ -5164,8 +5164,8 @@ _LABEL_254C_:
 	ret nz
 ++:
 	di
-	call _LABEL_1911_
-	call _LABEL_2DC_
+	call _LABEL_1911_StopSound
+	call _LABEL_2DC_BlankTilemap
 	xor a
 	ld (_RAM_C10D_), a
 	ld (_RAM_C123_), a
@@ -5182,7 +5182,7 @@ _LABEL_2591_:
 	di
 	set 7, (hl)
 	rst $10	; _LABEL_10_ScreenOff
-	call _LABEL_2DC_
+	call _LABEL_2DC_BlankTilemap
 	ld de, $7A44
 	ld bc, $021A
 	xor a
@@ -5439,7 +5439,7 @@ _LABEL_2700_:
 	and $3F
 	exx
 	ld hl, _DATA_2730_
-	call _LABEL_3B_
+	call _LABEL_3B_FunctionTableLookupAndCall
 	ld a, $8E
 	ld (Paging_Slot2), a
 	call _LABEL_38000_
@@ -5454,7 +5454,7 @@ _LABEL_274A_:
 	set 7, (hl)
 	di
 	rst $10	; _LABEL_10_ScreenOff
-	call _LABEL_2DC_
+	call _LABEL_2DC_BlankTilemap
 	call _LABEL_29B_BlankSpriteTableAndMirror
 	call _LABEL_1903_
 	call _LABEL_276_8x16SpritesOff
@@ -5531,7 +5531,7 @@ _LABEL_27D9_:
 	ret nz
 	di
 	rst $10	; _LABEL_10_ScreenOff
-	call _LABEL_2DC_
+	call _LABEL_2DC_BlankTilemap
 	call _LABEL_29B_BlankSpriteTableAndMirror
 	call _LABEL_1903_
 	call _LABEL_276_8x16SpritesOff
@@ -5633,7 +5633,7 @@ _LABEL_288E_:
 	call _LABEL_633D_LoadTilesRLE
 	ld a, $02
 	ld (_RAM_C340_), a
-	ld a, $C6
+	ld a, $C6 ; Alex Kidd BMX Trial
 	jp _LABEL_4EE_QueueSound
 
 ++:
@@ -5906,7 +5906,7 @@ _LABEL_2AB7_:
 	rst $10	; _LABEL_10_ScreenOff
 	call _LABEL_276_8x16SpritesOff
 	call _LABEL_29B_BlankSpriteTableAndMirror
-	call _LABEL_2DC_
+	call _LABEL_2DC_BlankTilemap
 	call _LABEL_269_SpriteTableAddress2f00
 	call _LABEL_2BA7_LoadPalette
 	xor a
@@ -6002,9 +6002,9 @@ _LABEL_2BB8_:
 +:
 	set 7, (hl)
 	di
-	call _LABEL_2DC_
-	call _LABEL_1911_
-	call _LABEL_5DD6_
+	call _LABEL_2DC_BlankTilemap
+	call _LABEL_1911_StopSound
+	call _LABEL_5DD6_ShowGameOver
 	ld de, $0200
 	ld (_RAM_C118_), de
 	ld a, $CB ; Alex Kidd jingle
@@ -6234,7 +6234,7 @@ _LABEL_2D7E_:
 	ld a, (_RAM_C34E_)
 	and $7F
 	ld hl, _DATA_2D8D_
-	jp _LABEL_3B_
+	jp _LABEL_3B_FunctionTableLookupAndCall
 
 ; Jump Table from 2D8D to 2D94 (4 entries, indexed by _RAM_C34E_)
 _DATA_2D8D_:
@@ -6477,7 +6477,7 @@ _LABEL_2EEA_:
 	ld a, (iy+23)
 	and $0F
 	ld hl, _DATA_2F80_
-	jp _LABEL_3B_
+	jp _LABEL_3B_FunctionTableLookupAndCall
 
 ; Jump Table from 2F80 to 2F8F (8 entries, indexed by _RAM_C4D7_)
 _DATA_2F80_:
@@ -6683,13 +6683,13 @@ _LABEL_30CE_:
 	jp nz, _LABEL_54E_
 	ld a, (_RAM_C70C_)
 	ld hl, _DATA_312E_
-	jp _LABEL_3B_
+	jp _LABEL_3B_FunctionTableLookupAndCall
 
 +:
 	set 7, (hl)
 	di
 	rst $10	; _LABEL_10_ScreenOff
-	call _LABEL_2DC_
+	call _LABEL_2DC_BlankTilemap
 	call _LABEL_29B_BlankSpriteTableAndMirror
 	call _LABEL_276_8x16SpritesOff
 	call _LABEL_269_SpriteTableAddress2f00
@@ -7066,7 +7066,7 @@ _LABEL_3370_:
 	push af
 	ld a, $84
 	ld (Paging_Slot2), a
-	call _LABEL_10AD5_
+	call _LABEL_10AD5_StopSound
 	pop af
 	ld (Paging_Slot2), a
 	ld a, $87
@@ -8677,7 +8677,7 @@ _LABEL_410A_:
 	or a
 	ret z
 	ld hl, _DATA_4115_ - 2
-	jp _LABEL_3B_
+	jp _LABEL_3B_FunctionTableLookupAndCall
 
 ; Jump Table from 4115 to 411A (3 entries, indexed by _RAM_C340_)
 _DATA_4115_:
@@ -9653,7 +9653,7 @@ _LABEL_4826_:
 	and $7F
 	exx
 	ld hl, _DATA_4843_
-	jp _LABEL_3B_
+	jp _LABEL_3B_FunctionTableLookupAndCall
 
 ; Jump Table from 4843 to 4846 (2 entries, indexed by _RAM_C80F_)
 _DATA_4843_:
@@ -12167,7 +12167,7 @@ _LABEL_5B29_:
 	ld hl, _RAM_C809_
 	ld a, (hl)
 	ld hl, _DATA_5B33_
-	jp _LABEL_3B_
+	jp _LABEL_3B_FunctionTableLookupAndCall
 
 ; Jump Table from 5B33 to 5B3A (4 entries, indexed by _RAM_C809_)
 _DATA_5B33_:
@@ -12560,7 +12560,7 @@ _LABEL_5D95_:
 _DATA_5DC8_:
 .db $07 $00 $09 $00 $12 $00 $15 $00 $18 $00 $29 $00 $00 $01
 
-_LABEL_5DD6_:
+_LABEL_5DD6_ShowGameOver:
 	ld de, $7040
 	ld bc, $00E0
 	ld hl, $0000
@@ -12802,7 +12802,7 @@ _LABEL_6029_:
 	jr z, -
 	ld a, (iy+24)
 	ld hl, _DATA_603E_
-	call _LABEL_3B_
+	call _LABEL_3B_FunctionTableLookupAndCall
 	call _LABEL_7257_
 	jp _LABEL_7272_
 
@@ -13730,7 +13730,7 @@ _LABEL_6770_:
 	inc hl
 	ld a, (hl)
 	ld hl, _DATA_67BA_
-	call _LABEL_3B_
+	call _LABEL_3B_FunctionTableLookupAndCall
 	ex af, af'
 +:
 	dec a
@@ -13950,7 +13950,7 @@ _LABEL_696F_:
 	inc hl
 	ld a, (hl)
 	ld hl, _DATA_69B1_
-	call _LABEL_3B_
+	call _LABEL_3B_FunctionTableLookupAndCall
 	ex af, af'
 +:
 	dec a
@@ -14076,7 +14076,7 @@ _LABEL_6A5C_:
 	inc hl
 	ld a, (hl)
 	ld hl, _DATA_6AA1_
-	call _LABEL_3B_
+	call _LABEL_3B_FunctionTableLookupAndCall
 	ex af, af'
 +:
 	dec a
@@ -14190,7 +14190,7 @@ _LABEL_6B4E_:
 	inc hl
 	ld a, (hl)
 	ld hl, _DATA_6B98_
-	call _LABEL_3B_
+	call _LABEL_3B_FunctionTableLookupAndCall
 	ex af, af'
 +:
 	dec a
@@ -15069,7 +15069,7 @@ _LABEL_7272_:
 _LABEL_729C_:
 	di
 	call _LABEL_10_ScreenOff
-	call _LABEL_2DC_
+	call _LABEL_2DC_BlankTilemap
 	call _LABEL_29B_BlankSpriteTableAndMirror
 	xor a
 	out (Port_VDPAddress), a
@@ -15138,7 +15138,7 @@ _LABEL_7310_:
 	call _LABEL_11339_
 	di
 	call _LABEL_10_ScreenOff
-	call _LABEL_2DC_
+	call _LABEL_2DC_BlankTilemap
 	call _LABEL_29B_BlankSpriteTableAndMirror
 	ld a, $26
 	out (Port_VDPAddress), a
@@ -15413,7 +15413,7 @@ _LABEL_752F_:
 	ld a, (iy+0)
 	or a
 	ld hl, _DATA_1672_ - 2
-	call nz, _LABEL_3B_
+	call nz, _LABEL_3B_FunctionTableLookupAndCall
 	jp _LABEL_54E_
 
 ; 20th entry of Jump Table from 312E (indexed by _RAM_C70C_)
@@ -15437,7 +15437,7 @@ _LABEL_7558_:
 	ld a, (iy+0)
 	or a
 	ld hl, _DATA_1672_ - 2
-	call nz, _LABEL_3B_
+	call nz, _LABEL_3B_FunctionTableLookupAndCall
 	call _LABEL_54E_
 	ld hl, (_RAM_C70D_)
 	dec hl
@@ -16808,7 +16808,7 @@ _LABEL_10ACC_:
 	ret
 
 ; 4th entry of Jump Table from 10C8B (indexed by _RAM_DE03_)
-_LABEL_10AD5_:
+_LABEL_10AD5_StopSound:
 	ld a, $25
 	out (Port_FMAddress), a
 	ld a, $DF
@@ -16877,7 +16877,7 @@ _DATA_10C71_:
 
 ; Jump Table from 10C8B to 10C92 (4 entries, indexed by _RAM_DE03_)
 _DATA_10C8B_:
-.dw _LABEL_10A93_ _LABEL_10A93_ _LABEL_10A93_ _LABEL_10AD5_
+.dw _LABEL_10A93_ _LABEL_10A93_ _LABEL_10A93_ _LABEL_10AD5_StopSound
 
 _LABEL_10C93_:
 	ld a, (_RAM_DE03_)
@@ -21278,7 +21278,7 @@ _LABEL_16B8B_:
 	ld a, (iy+23)
 	and $0F
 	ld hl, _DATA_16B96_
-	jp _LABEL_3B_
+	jp _LABEL_3B_FunctionTableLookupAndCall
 
 ; Jump Table from 16B96 to 16BA5 (8 entries, indexed by _RAM_C417_)
 _DATA_16B96_:
@@ -25160,7 +25160,7 @@ _LABEL_38000_:
 	or a
 	ret z
 	ld hl, _DATA_38010_ - 2
-	call _LABEL_3B_
+	call _LABEL_3B_FunctionTableLookupAndCall
 	xor a
 	ld (_RAM_C34C_), a
 	ret
