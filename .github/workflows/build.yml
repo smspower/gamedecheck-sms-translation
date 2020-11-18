@@ -20,7 +20,7 @@ jobs:
     - name: get rom
       shell: pwsh
       run: |
-        Invoke-WebRequest -Uri https://www.smspower.org/maxim/uploads/Blag/secret.zip -OutFile rom.zip
+        Invoke-WebRequest -Uri ${{ secrets.ROM_URL }} -OutFile rom.zip
         7z x rom.zip -osrc
 
     - name: build
