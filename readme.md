@@ -5,7 +5,7 @@ This is a translation patch for Game de Check! Koutsuu Anzen, a traffic safety
 "edutainment" title from 1987 for the Sega Master System. For more information,
 visit:
 
-  [](https://www.smspower.org/Games/GameDeCheckKoutsuuAnzen-SMS)
+  <https://www.smspower.org/Games/GameDeCheckKoutsuuAnzen-SMS>
 
 
 How to use it
@@ -13,14 +13,14 @@ How to use it
 
 You will need a copy of the ROM, which has these properties:
 
-Size:   | 262144 bytes
-CRC32:  | 9afab511
-MD5:    | 840ba96cf77b465d3d0d389dac7861d7
-SHA1:   | 72353c77efa078e88483858201f5bdf832f5c01c
+| Size:   | 262144 bytes                             |
+| CRC32:  | 9afab511                                 |
+| MD5:    | 840ba96cf77b465d3d0d389dac7861d7         |
+| SHA1:   | 72353c77efa078e88483858201f5bdf832f5c01c |
 
 And an IPS patching tool, such as Floating IPS. See here for more:
 
-  [](https://www.smspower.org/Hacks/HowToUseBPSAndIPSPatchFiles)
+  <https://www.smspower.org/Hacks/HowToUseBPSAndIPSPatchFiles>
 
 Alternatively, some emulators let you load IPS files.
 
@@ -50,4 +50,4 @@ Technical details
 
 Source is available at:
 
-  [](https://github.com/smspower/gamedecheck-sms-translation/)
+  <https://github.com/smspower/gamedecheck-sms-translation/>
