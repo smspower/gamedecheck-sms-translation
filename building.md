@@ -1,4 +1,4 @@
-REQUIRED SOFTWARE
+Required software
 =================
 
 - [bmp2tile 0.50+](https://github.com/maxim-zhao/bmp2tile/releases)
@@ -13,13 +13,13 @@ REQUIRED SOFTWARE
 - Original game dump, stored in "src/Game De Check! Koutsuu Anzen [Proto] (JP).sms"
   Expected CRC32 is 9AFAB511
 
-CONFIGURATION
+Configuration
 =============
 
 - Copy build_config_default.cmd to build_config.cmd (build_config.cmd will be ignored by git)
 - Edit build_config.cmd with your own path.
 
-BUILD
+Build
 =====
 
 - Go to src/ and run make.cmd

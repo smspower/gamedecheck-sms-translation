@@ -13,10 +13,10 @@ How to use it
 
 You will need a copy of the ROM, which has these properties:
 
-| Size:   | 262144 bytes                             |
-| CRC32:  | 9afab511                                 |
-| MD5:    | 840ba96cf77b465d3d0d389dac7861d7         |
-| SHA1:   | 72353c77efa078e88483858201f5bdf832f5c01c |
+- Size:   262144 bytes
+- CRC32:  9afab511
+- MD5:    840ba96cf77b465d3d0d389dac7861d7
+- SHA1:   72353c77efa078e88483858201f5bdf832f5c01c
 
 And an IPS patching tool, such as Floating IPS. See here for more:
 
@@ -28,12 +28,12 @@ Alternatively, some emulators let you load IPS files.
 Credits
 =======
 
-Translation: RyogaMasaki
-Translation coding: Maxim
+- Translation: RyogaMasaki
+- Translation coding: Maxim
 
-Hacking and translation help: Bock
-Hacking help: Calindro
-Graphics help: marklincadet
+- Hacking and translation help: Bock
+- Hacking help: Calindro
+- Graphics help: marklincadet
 
 
 Technical details
